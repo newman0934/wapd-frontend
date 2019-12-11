@@ -1,20 +1,31 @@
 <template>
   <div id="app">
-    <div id="nav">
-    </div>
-    <router-view/>
+    <navigation />
+    <main role="main" class="mt-5 bg-white">
+      <router-view />
+    </main>
+    <indexFooter />
   </div>
 </template>
+
 <script>
-import "bootstrap"
-import "bootstrap/dist/css/bootstrap.min.css"
+import "bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+import navigation from "./components/navigation";
+import indexFooter from "./components/footer"
+
 export default {
-  name:"App"
-}
+  name: "App",
+  components: {
+    navigation,
+    indexFooter
+  }
+};
 </script>
+
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
