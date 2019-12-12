@@ -8,9 +8,20 @@ import adminCategories from "../views/adminCategories"
 import adminProduct from "../views/adminProduct"
 import adminProducts from "../views/adminProducts"
 import adminProductEdit from "../views/adminProductEdit"
-import adminProductNew from "../views/adminProductNew"
+import adminProductCreate from "../views/adminProductCreate"
 import adminUsers from "../views/adminUsers"
-import user from "../views/user"
+import adminUserOrders from "../views/adminUserOrders"
+import adminOrders from "../views/adminOrders"
+import adminOrder from "../views/order"
+import adminOrderEdit from "../views/adminOrderEdit"
+import userEdit from "../views/userEdit"
+import userForgetPassword from "../views/userForgetPassword"
+import userChangePassword from "../views/userChangePassword"
+import userWishList from "../views/userWishList"
+import cart from "../views/cart"
+import orders from "../views/orders"
+import order from "../views/order"
+
 
 Vue.use(VueRouter)
 
@@ -36,9 +47,39 @@ const routes = [
     component: Product
   },
   {
-    path: "/users/:id",
-    name: "user",
-    component: user
+    path: "/users/:id/passowrd_forget",
+    name: "userForgetPassword",
+    component: userForgetPassword
+  },
+  {
+    path: "/users/:id/password_change",
+    name: "userChangePassword",
+    component: userChangePassword
+  },
+  {
+    path: "/users/:id/edit",
+    name: "userEdit",
+    component: userEdit
+  },
+  {
+    path: "/users/:id/wishlist",
+    name: "userWishList",
+    component: userWishList
+  },
+  {
+    path: "/users/:id/cart",
+    name: "cart",
+    component: cart
+  },
+  {
+    path: "users/:id/orders",
+    name: "orders",
+    component: orders
+  },
+  {
+    path: "users/:id/orders/:order_id",
+    name: "order",
+    component: order
   },
   {
     path: "/admin/categories",
@@ -49,6 +90,26 @@ const routes = [
     path: "/admin/users",
     name: "adminUsers",
     component: adminUsers
+  },
+  {
+    path: "/admin/users/:id/orders",
+    name: "adminUserorders",
+    component: adminUserOrders
+  },
+  {
+    path: "/admin/orders",
+    name: "adminOrders",
+    component: adminOrders
+  },
+  {
+    path: "/admin/orders/:id",
+    name: "adminOrder",
+    component: adminOrder
+  },
+  {
+    path: "/admin/orders/:id/edit",
+    name: "adminOrderEdit",
+    component: adminOrderEdit
   },
   {
     path: "/admin/products",
@@ -66,9 +127,9 @@ const routes = [
     component: adminProductEdit
   },
   {
-    path: "/admin/products/:id/new",
-    name: "adminProductNew",
-    component: adminProductNew
+    path: "/admin/products/create",
+    name: "adminProductCreate",
+    component: adminProductCreate
   },
   {
     path:"*",
