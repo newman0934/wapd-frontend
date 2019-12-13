@@ -2,8 +2,9 @@
   <div class="container py-5">
     <!--NavTabs-->
     <div class="row">
-      <div class="col-md-2 border">
+      <div class="col-md-2">
         <!--leftCategoryNav-->
+        <h5>分類</h5>
         <leftCategoryNav />
       </div>
       <div class="col-md-10">
@@ -32,6 +33,16 @@ export default {
   components: {
     leftCategoryNav,
     productCard
+  },
+  data() {
+    return {
+      proucts: [],
+      categories: [],
+      categoryId: "",
+      currentPage: 1,
+      totalPage: 0,
+      isLoading: true
+    };
   }
 };
 </script>
