@@ -21,23 +21,30 @@ import userWishList from "../views/userWishList"
 import cart from "../views/cart"
 import orders from "../views/orders"
 import order from "../views/order"
+import signIn from "../views/signIn"
+
 
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path:"/",
-    name:"root",
+    path: "/",
+    name: "root",
     redirect: "/index"
   },
   {
-    path:"/index",
-    name:"index",
+    path: "/signIn",
+    name: "signIn",
+    component: signIn
+  },
+  {
+    path: "/index",
+    name: "index",
     component: Index
   },
   {
-    path:"/products",
+    path: "/products",
     name: "products",
     component: Products
   },
@@ -132,9 +139,9 @@ const routes = [
     component: adminProductCreate
   },
   {
-    path:"*",
-    name:"notFound",
-    component:notFound
+    path: "*",
+    name: "notFound",
+    component: notFound
   }
 ]
 
