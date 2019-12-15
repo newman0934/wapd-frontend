@@ -11,7 +11,8 @@ import { faLine } from "@fortawesome/free-brands-svg-icons"
 import { faInstagram } from "@fortawesome/free-brands-svg-icons"
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-library.add(faUser, faSearch, faBars, faShoppingCart, faFacebook, faLine, faInstagram);
+library.add(faUser, faSearch, faBars, faShoppingCart, faFacebook, faLine, faInstagram );
+
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false
