@@ -1,5 +1,11 @@
 <template>
-      <div class="container py-5">
-    <h1 class="mt-5">後台新增商品頁面</h1>
-  </div>
+ <admin-nav></admin-nav>
 </template>
+<script>
+import adminNav from "./../components/adminNav";
+export default {
+  components: {
+    adminNav
+  }
+};
+</script>
