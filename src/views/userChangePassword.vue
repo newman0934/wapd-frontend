@@ -1,6 +1,5 @@
 <template>
-  <div class="container py-5">
-    <userNavTabs />
+  <div class="container">
     <div class="d-flex justify-content-center">
       <form class="w-75 mt-4">
         <div class="form-label-group mb-2">
@@ -40,10 +39,5 @@
   </div>
 </template>
 <script>
-import userNavTabs from "./../components/userNavTabs";
-export default {
-  components: {
-    userNavTabs
-  }
-};
+export default {};
 </script>

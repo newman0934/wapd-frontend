@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container py-5">
     <div class="card border-white w-100">
       <div class="card-img user-bg">
         <img src="https://picsum.photos/id/177/2515/1830" class="img-fluid" alt="user-bg" />
@@ -22,6 +22,7 @@
         <a class="nav-link" href="#">Wish List</a>
       </li>
     </ul>
+    <router-view />
   </div>
 </template>
 <style scoped>

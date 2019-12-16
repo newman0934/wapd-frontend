@@ -22,6 +22,8 @@ import cart from "../views/cart"
 import orders from "../views/orders"
 import order from "../views/order"
 import signIn from "../views/signIn"
+import user from "../views/user"
+
 
 
 
@@ -59,34 +61,41 @@ const routes = [
     component: userForgetPassword
   },
   {
-    path: "/users/:id/password_change",
-    name: "userChangePassword",
-    component: userChangePassword
-  },
-  {
-    path: "/users/:id/edit",
-    name: "userEdit",
-    component: userEdit
-  },
-  {
-    path: "/users/:id/wishlist",
-    name: "userWishList",
-    component: userWishList
-  },
-  {
     path: "/users/:id/cart",
     name: "cart",
     component: cart
   },
   {
-    path: "users/:id/orders",
-    name: "orders",
-    component: orders
-  },
-  {
-    path: "users/:id/orders/:order_id",
-    name: "order",
-    component: order
+    path: "/users/:id",
+    name: "users",
+    component: user,
+    children: [
+      {
+        path: "orders",
+        name: "orders",
+        component: orders
+      },
+      {
+        path: "orders/:order_id",
+        name: "order",
+        component: order
+      },
+      {
+        path: "password_change",
+        name: "userChangePassword",
+        component: userChangePassword
+      },
+      {
+        path: "edit",
+        name: "userEdit",
+        component: userEdit
+      },
+      {
+        path: "wishlist",
+        name: "userWishList",
+        component: userWishList
+      },
+    ]
   },
   {
     path: "/admin/categories",
