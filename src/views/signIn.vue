@@ -68,10 +68,10 @@
               <div class="form-label-group mb-3">
                 <input
                   id="password-check"
-                  name="passwordCheck"
+                  name="password-check"
                   type="password"
                   class="form-control"
-                  placeholder="Re enter ths password"
+                  placeholder="Re-enter ths password"
                   required
                 />
               </div>
