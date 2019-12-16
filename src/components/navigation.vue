@@ -55,11 +55,11 @@
 </template>
 <style>
 .container{
-    max-width: 1200px;
+    max-width: 90%;
 }
 .navigation-wrap {
   background-color: #958C8B;
-  font-size: 16px;
+  font-size: 20px;
 }
 .navigation-wrap a, .navigation-wrap .navbar-toggler-icon, .bar {
   color: #ffffff;

@@ -1,16 +1,22 @@
 <template>
-  <div class="container py-5">
-    <h1 class="mt-5">首頁</h1>
-    <h1 class="mt-5">首頁</h1>
-    <h1 class="mt-5">首頁</h1>
-    <h1 class="mt-5">首頁</h1>
-    <h1 class="mt-5">首頁</h1>
-    <h1 class="mt-5">首頁</h1>
-    <h1 class="mt-5">首頁</h1>
-    <h1 class="mt-5">首頁</h1>
-    <h1 class="mt-5">首頁</h1>
-    <h1 class="mt-5">首頁</h1><h1 class="mt-5">首頁</h1><h1 class="mt-5">首頁</h1><h1 class="mt-5">首頁</h1><h1 class="mt-5">首頁</h1><h1 class="mt-5">首頁</h1><h1 class="mt-5">首頁</h1><h1 class="mt-5">首頁</h1><h1 class="mt-5">首頁</h1><h1 class="mt-5">首頁</h1><h1 class="mt-5">首頁</h1><h1 class="mt-5">首頁</h1><h1 class="mt-5">首頁</h1><h1 class="mt-5">首頁</h1><h1 class="mt-5">首頁</h1><h1 class="mt-5">首頁</h1><h1 class="mt-5">首頁</h1><h1 class="mt-5">首頁</h1><h1 class="mt-5">首頁</h1><h1 class="mt-5">首頁</h1><h1 class="mt-5">首頁</h1><h1 class="mt-5">首頁</h1><h1 class="mt-5">首頁</h1><h1 class="mt-5">首頁</h1>
-    
+  <div class="py-5">
+    <index-carousel></index-carousel>
+    <index-product-slider></index-product-slider>
+    <index-category></index-category>
   </div>
 
 </template>
+<script>
+import indexCarousel from "./../components/indexCarousel"
+import indexProductSlider from "./../components/indexProductSlider"
+import indexCategory from "./../components/indexCategory"
+
+export default {
+  components: {
+    indexCarousel,
+    indexProductSlider,
+    indexCategory
+  }
+}
+</script>
+

@@ -39,18 +39,10 @@
             <a href="#!">email</a>
           </li>
         </ul>
-
       </div>
-      <!-- Grid column -->
-
       <hr class="clearfix w-100 d-md-none">
-
-      <!-- Grid column -->
       <div class="col-md-3 mx-auto">
-
-        <!-- Links -->
         <h5 class="font-weight-bold text-uppercase mt-3 mb-4">Notice</h5>
-
         <ul class="list-unstyled">
           <li>
             <a href="#">退換貨須知</a>
@@ -78,18 +70,18 @@
 </footer>
 </template>
 <style>
-footer{
-  background-color: #958C8B;
+footer {
+  background-color: #958c8b;
   color: #3b1c15;
   font-size: 20px;
 }
 
-footer a{
-color:#ffffff;
-transition: all 0.5s;
+footer a {
+  color: #ffffff;
+  transition: all 0.5s;
 }
 
-footer a:hover{
-  color:#3b1c15;
+footer a:hover {
+  color: #3b1c15;
 }
 </style>
