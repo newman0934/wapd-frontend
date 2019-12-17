@@ -9,7 +9,7 @@
         </h1>
       </div>
 
-      <table class="table">
+      <table class="table-responsive table-striped">
         <thead class="thead-dark">
           <tr>
             <th scope="col">id</th>
