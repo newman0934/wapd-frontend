@@ -1,7 +1,7 @@
 <template>
   <div class="adminOrder">
     <admin-nav></admin-nav>
-    <table class="userInfo table-responsive table-striped container mb-5">
+    <table class="userInfo table-responsive-md container mb-5">
       <tbody>
         <tr>
           <td class="font-weight-bold">訂單編號</td>
@@ -100,7 +100,7 @@ export default {
 </script>
 <style scoped>
 .userInfo tbody tr {
-  border: none;
+  border: none ;
 }
 
 .adminOrder a {
