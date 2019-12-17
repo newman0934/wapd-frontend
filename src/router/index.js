@@ -20,6 +20,7 @@ import userChangePassword from "../views/userChangePassword"
 import userWishList from "../views/userWishList"
 import cart from "../views/cart"
 import checkout from "../views/checkout"
+import paymentComplete from "../views/paymentComplete"
 import orders from "../views/orders"
 import order from "../views/order"
 import signIn from "../views/signIn"
@@ -70,6 +71,11 @@ const routes = [
     path: "/users/:id/checkout",
     name: "checkout",
     component: checkout
+  },
+  {
+    path: "/users/:id/paymentcomplete",
+    name: "paymentComplete",
+    component: paymentComplete
   },
   {
     path: "/users/:id",
