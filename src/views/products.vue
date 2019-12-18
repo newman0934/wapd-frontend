@@ -37,6 +37,15 @@ export default {
       isLoading: true
     };
   },
+  created() {
+    const { page, categoryId } = this.$route.query;
+    this.fetchProducts({ page, categoryId });
+  },
+  beforeRouteUpdate(to, from, next) {
+    const { page, categoryId } = to.query;
+    this.fetchProducts({ page, categoryId });
+    next();
+  },
   methods: {
     async fetchProducts({ page = 1, categoryId = "" }) {
       try {
@@ -59,10 +68,6 @@ export default {
         });
       }
     }
-  },
-  created() {
-    const { page, categoryId } = this.$route.query;
-    this.fetchProducts({ page, categoryId });
   }
 };
 </script>
