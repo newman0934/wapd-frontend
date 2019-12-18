@@ -9,23 +9,24 @@
         <div class="row">
           <productCard v-for="product in products" :key="product.id" :initial-product="product" />
         </div>
+        <productsPagination />
       </div>
     </div>
-
-    <!--productsPagination-->
   </div>
 </template>
 <script>
 /* eslint-disable */
 import leftCategoryNav from "./../components/leftCategoryNav";
 import productCard from "./../components/productCard";
+import productsPagination from "./../components/productsPagination";
 import productsAPI from "./../apis/products";
 import { Toast } from "./../utils/helpers";
 
 export default {
   components: {
     leftCategoryNav,
-    productCard
+    productCard,
+    productsPagination
   },
   data() {
     return {
