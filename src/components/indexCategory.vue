@@ -15,7 +15,7 @@
 .indexCategory .col-sm-4{
     position: relative;
 }
-.mask{
+.indexCategory .mask{
     display: flex;
     position: absolute;
     justify-content: center;
@@ -28,7 +28,7 @@
     color: rgba(0, 0, 0, 0);
     transition: all 0.5s;
 }
-.mask:hover{
+.indexCategory .mask:hover{
     background-color:rgba(100, 100, 100, 0.5);
     color: white;
     font-size:40px;
