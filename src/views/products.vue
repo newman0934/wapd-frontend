@@ -7,12 +7,7 @@
       </div>
       <div class="col-md-10">
         <div class="row">
-          <!--productCard-->
-          <productCard />
-          <productCard />
-          <productCard />
-          <productCard />
-          <productCard />
+          <productCard v-for="product in products" :key="product.id" :initial-product="product" />
         </div>
       </div>
     </div>
@@ -34,7 +29,7 @@ export default {
   },
   data() {
     return {
-      proucts: [],
+      products: [],
       categories: [],
       categoryId: "",
       currentPage: 1,
@@ -52,7 +47,7 @@ export default {
         if (statusText !== "OK") {
           throw new Error(statusText);
         }
-        this.proucts = data.productResult.rows;
+        this.products = data.productResult.rows;
         this.categories = data.categories;
         this.categoryId = data.categoryId;
         this.currentPage = data.page;
