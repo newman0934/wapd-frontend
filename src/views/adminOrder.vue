@@ -1,38 +1,43 @@
 <template>
   <div class="adminOrder">
     <admin-nav></admin-nav>
-    <table class="userInfo table-responsive-md container mb-5">
-      <tbody>
-        <tr>
-          <td class="font-weight-bold">訂單編號</td>
-          <td>12345678</td>
-          <td class="font-weight-bold">收件人</td>
-          <td>Caesar</td>
-          <td class="font-weight-bold">收件人電話</td>
-          <td>0911111111</td>
-        </tr>
-        <tr>
-          <td class="font-weight-bold">Email</td>
-          <td>text@gmail.com</td>
-          <td class="font-weight-bold">付款方式</td>
-          <td>信用卡</td>
-          <td class="font-weight-bold">付款狀態</td>
-          <td>已支付</td>
-        </tr>
-        <tr>
-          <td class="font-weight-bold">配送方式</td>
-          <td>便利商店</td>
-          <td class="font-weight-bold">配送地址</td>
-          <td>全家中山店</td>
-          <td class="font-weight-bold">優惠券</td>
-          <td>開發者優惠</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-responsive-md">
+      <h3 class="text-left container">會員資料</h3>
+      <table class="userInfo table container mb-5">
+        <tbody>
+          <tr>
+            <td class="font-weight-bold">訂單編號</td>
+            <td>12345678</td>
+            <td class="font-weight-bold">收件人</td>
+            <td>Caesar</td>
+            <td class="font-weight-bold">收件人電話</td>
+            <td>0911111111</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold">Email</td>
+            <td>text@gmail.com</td>
+            <td class="font-weight-bold">付款方式</td>
+            <td>信用卡</td>
+            <td class="font-weight-bold">付款狀態</td>
+            <td>已支付</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold">配送方式</td>
+            <td>便利商店</td>
+            <td class="font-weight-bold">配送地址</td>
+            <td>全家中山店</td>
+            <td class="font-weight-bold">優惠券</td>
+            <td>開發者優惠</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
     <div class="container">
       <h3 class="text-left">訂購商品</h3>
-      <table class="table">
-        <thead>
+      <div class="table-responsive-md">
+      <table class="table table-striped">
+        <thead class="thead-dark">
           <tr>
             <th>商品編號</th>
             <th>品名</th>
@@ -65,6 +70,8 @@
           </tr>
         </tbody>
       </table>
+      </div>
+
       <div class="container text-right">
         <h3 class="my-2">
           原價：
@@ -100,7 +107,7 @@ export default {
 </script>
 <style scoped>
 .userInfo tbody tr {
-  border: none ;
+  border: none;
 }
 
 .adminOrder a {
