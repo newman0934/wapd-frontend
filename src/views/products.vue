@@ -9,7 +9,12 @@
         <div class="row">
           <productCard v-for="product in products" :key="product.id" :initial-product="product" />
         </div>
-        <productsPagination />
+        <productsPagination
+          v-if="totalPage>1"
+          :category-id="categoryId"
+          :current-page="currentPage"
+          :total-page="totalPage"
+        />
       </div>
     </div>
   </div>
