@@ -9,6 +9,8 @@ import adminProduct from "../views/adminProduct"
 import adminProducts from "../views/adminProducts"
 import adminProductEdit from "../views/adminProductEdit"
 import adminProductCreate from "../views/adminProductCreate"
+import adminProductStatus from "../views/adminProductStatus.vue"
+import adminProductStatusCreate from "../views/adminProductStatusCreate.vue"
 import adminUsers from "../views/adminUsers"
 import adminUserOrders from "../views/adminUserOrders"
 import adminOrders from "../views/adminOrders"
@@ -148,6 +150,16 @@ const routes = [
     path: "/admin/products/create",
     name: "adminProductCreate",
     component: adminProductCreate
+  },
+  {
+    path: "/admin/products/:id/status",
+    name: "adminProductStatus",
+    component: adminProductStatus
+  },
+  {
+    path: "/admin/Products/:id/status/create",
+    name: "adminProductStatusCreate",
+    component: adminProductStatusCreate
   },
   {
     path: "/admin/products/:id",
