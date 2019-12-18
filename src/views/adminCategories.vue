@@ -15,59 +15,60 @@
           </div>
         </form>
       </div>
-
-      <table class="table-responsive table-striped">
-        <thead class="thead-dark">
-          <tr>
-            <th scope="col">id</th>
-            <th scope="col">類別名稱</th>
-            <th scope="col">編輯</th>
-            <th scope="col">刪除</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="col">1</th>
-            <th scope="col">西裝</th>
-            <th scope="col">
-              <a class="btn btn-outline-primary" href="#">編輯</a>
-            </th>
-            <th scope="col">
-              <a class="btn btn-outline-danger" href="#">刪除</a>
-            </th>
-          </tr>
-          <tr>
-            <th scope="col">2</th>
-            <th scope="col">上衣</th>
-            <th scope="col">
-              <a class="btn btn-outline-primary" href="#">編輯</a>
-            </th>
-            <th scope="col">
-              <a class="btn btn-outline-danger" href="#">刪除</a>
-            </th>
-          </tr>
-          <tr>
-            <th scope="col">3</th>
-            <th scope="col">褲子</th>
-            <th scope="col">
-              <a class="btn btn-outline-primary" href="#">編輯</a>
-            </th>
-            <th scope="col">
-              <a class="btn btn-outline-danger" href="#">刪除</a>
-            </th>
-          </tr>
-          <tr>
-            <th scope="col">4</th>
-            <th scope="col">鞋子</th>
-            <th scope="col">
-              <a class="btn btn-outline-primary" href="#">編輯</a>
-            </th>
-            <th scope="col">
-              <a class="btn btn-outline-danger" href="#">刪除</a>
-            </th>
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-responsive-md">
+        <table class="table table-striped">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">id</th>
+              <th scope="col">類別名稱</th>
+              <th scope="col">編輯</th>
+              <th scope="col">刪除</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="col">1</th>
+              <th scope="col">西裝</th>
+              <th scope="col">
+                <a class="btn btn-outline-primary" href="#">編輯</a>
+              </th>
+              <th scope="col">
+                <a class="btn btn-outline-danger" href="#">刪除</a>
+              </th>
+            </tr>
+            <tr>
+              <th scope="col">2</th>
+              <th scope="col">上衣</th>
+              <th scope="col">
+                <a class="btn btn-outline-primary" href="#">編輯</a>
+              </th>
+              <th scope="col">
+                <a class="btn btn-outline-danger" href="#">刪除</a>
+              </th>
+            </tr>
+            <tr>
+              <th scope="col">3</th>
+              <th scope="col">褲子</th>
+              <th scope="col">
+                <a class="btn btn-outline-primary" href="#">編輯</a>
+              </th>
+              <th scope="col">
+                <a class="btn btn-outline-danger" href="#">刪除</a>
+              </th>
+            </tr>
+            <tr>
+              <th scope="col">4</th>
+              <th scope="col">鞋子</th>
+              <th scope="col">
+                <a class="btn btn-outline-primary" href="#">編輯</a>
+              </th>
+              <th scope="col">
+                <a class="btn btn-outline-danger" href="#">刪除</a>
+              </th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </template>

@@ -130,11 +130,6 @@ const routes = [
     component: adminOrders
   },
   {
-    path: "/admin/orders/:id",
-    name: "adminOrder",
-    component: adminOrder
-  },
-  {
     path: "/admin/orders/:id/edit",
     name: "adminOrderEdit",
     component: adminOrderEdit
@@ -143,11 +138,6 @@ const routes = [
     path: "/admin/products",
     name: "adminProducts",
     component: adminProducts,
-  },
-  {
-    path: "/admin/products/:id",
-    name: "adminProduct",
-    component: adminProduct
   },
   {
     path: "/admin/products/:id/edit",
@@ -159,6 +149,17 @@ const routes = [
     name: "adminProductCreate",
     component: adminProductCreate
   },
+  {
+    path: "/admin/products/:id",
+    name: "adminProduct",
+    component: adminProduct
+  },
+  {
+    path: "/admin/orders/:id",
+    name: "adminOrder",
+    component: adminOrder
+  },
+
   {
     path: "*",
     name: "notFound",
