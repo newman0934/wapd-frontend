@@ -5,10 +5,7 @@
         <h1 class="product-name">I'm Product</h1>
       </div>
       <div class="row mb-4">
-        <h5 class="product-price">
-          $ I'm Price
-          <font-awesome-icon :icon="['fab', 'hand-point-right']" size="3x" />
-        </h5>
+        <h5 class="product-price">$ I'm Price</h5>
       </div>
 
       <p>商品描述</p>
