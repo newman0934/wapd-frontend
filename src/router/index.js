@@ -28,11 +28,18 @@ import orders from "../views/orders"
 import order from "../views/order"
 import signIn from "../views/signIn"
 import user from "../views/user"
-
-
-
+import store from '../store'
 
 Vue.use(VueRouter)
+
+const authorizeIsAdmin = (to, from, next) => {
+  const currentUser = store.state.current
+  if (currentUser && !currentUser.role) {
+    next('/404')
+    return
+  }
+  next()
+}
 
 const routes = [
   {
@@ -115,67 +122,80 @@ const routes = [
   {
     path: "/admin/categories",
     name: "adminCategories",
-    component: adminCategories
+    component: adminCategories,
+    beforeEnter: authorizeIsAdmin
   },
   {
     path: "/admin/users",
     name: "adminUsers",
-    component: adminUsers
+    component: adminUsers,
+    beforeEnter: authorizeIsAdmin
   },
   {
     path: "/admin/users/:id/orders",
     name: "adminUserorders",
-    component: adminUserOrders
+    component: adminUserOrders,
+    beforeEnter: authorizeIsAdmin
   },
   {
     path: "/admin/orders",
     name: "adminOrders",
-    component: adminOrders
+    component: adminOrders,
+    beforeEnter: authorizeIsAdmin
   },
   {
     path: "/admin/orders/:id/edit",
     name: "adminOrderEdit",
-    component: adminOrderEdit
+    component: adminOrderEdit,
+    beforeEnter: authorizeIsAdmin
   },
   {
     path: "/admin/products",
     name: "adminProducts",
     component: adminProducts,
+    beforeEnter: authorizeIsAdmin
   },
   {
     path: "/admin/products/:id/edit",
     name: "adminProductEdit",
-    component: adminProductEdit
+    component: adminProductEdit,
+    beforeEnter: authorizeIsAdmin
   },
   {
     path: "/admin/products/create",
     name: "adminProductCreate",
-    component: adminProductCreate
+    component: adminProductCreate,
+    beforeEnter: authorizeIsAdmin
   },
   {
     path: "/admin/products/:id/status",
     name: "adminProductStatus",
-    component: adminProductStatus
+    component: adminProductStatus,
+    beforeEnter: authorizeIsAdmin
   },
   {
     path: "/admin/products/:id/status/create",
     name: "adminProductStatusCreate",
-    component: adminProductStatusCreate
+    component: adminProductStatusCreate,
+    beforeEnter: authorizeIsAdmin
   },
   {
     path: "/admin/products/:id/status/edit",
     name: "adminProductStatusEdit",
-    component: adminProductStatusEdit
+    component: adminProductStatusEdit,
+    beforeEnter: authorizeIsAdmin
   },
   {
     path: "/admin/products/:id",
     name: "adminProduct",
-    component: adminProduct
+    component: adminProduct,
+    beforeEnter: authorizeIsAdmin
   },
   {
     path: "/admin/orders/:id",
     name: "adminOrder",
-    component: adminOrder
+    component: adminOrder,
+    beforeEnter: authorizeIsAdmin
   },
 
   {
@@ -187,6 +207,32 @@ const routes = [
 
 const router = new VueRouter({
   routes
+})
+
+router.beforeEach(async (to, from, next) => {
+  const tokenInLocalStorage = localStorage.getItem('token')
+  const tokenInStore = store.state.token
+  let isAuthenticated = store.state.isAuthenticated
+  if (tokenInLocalStorage && tokenInLocalStorage !== tokenInStore) {
+    isAuthenticated = await store.dispatch('fetchCurrentUser')
+  }
+  // 對於不需要驗證 token 的頁面
+  const pathsWithoutAuthentication = ['signIn', 'index', 'products', 'product', 'userForgetPassword']
+  if (pathsWithoutAuthentication.includes(to.name)) {
+    next()
+    return
+  }
+  // 如果 token 無效
+  if (!isAuthenticated && to.name !== 'sign-in') {
+    next('/signin')
+    return
+  }
+  // 如果 token 有效
+  if (isAuthenticated && to.name === 'sign-in') {
+    next('/products')
+    return
+  }
+  next()
 })
 
 export default router
