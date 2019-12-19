@@ -42,3 +42,43 @@
     </table>
   </div>
 </template>
+<script>
+/* eslint-disable */
+import usersAPI from "./../apis/users";
+import { mapState } from "vuex";
+import { Toast } from "./../utils/helpers";
+export default {
+  data() {
+    return {
+      data: []
+    };
+  },
+  computed: {
+    ...mapState(["currentUser"])
+  },
+  created() {
+    const { id } = this.$route.params;
+    if (id.toString() !== this.currentUser.id.toString()) {
+      this.$router.push({ name: "notFound" });
+      return;
+    }
+    this.fetchUserOrders(id);
+  },
+  methods: {
+    async fetchUserOrders(userId) {
+      try {
+        const { data, statusText } = await usersAPI.getUserOrders({ userId });
+        if (statusText !== "OK") {
+          throw new Error(statusText);
+        }
+        console.log(data);
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "Cannot fetch user orders, please try later."
+        });
+      }
+    }
+  }
+};
+</script>
