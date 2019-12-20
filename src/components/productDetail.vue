@@ -2,13 +2,13 @@
   <div>
     <form>
       <div class="row">
-        <h1 class="product-name">I'm Product</h1>
+        <h1 class="product-name">{{product.name}}</h1>
       </div>
       <div class="row mb-4">
-        <h5 class="product-price">$ I'm Price</h5>
+        <h5 class="product-price">NTD {{product.sellPrice}}</h5>
       </div>
 
-      <p>商品描述</p>
+      <p>{{product.description}}</p>
 
       <div class="input-group mb-3">
         <div class="input-group-prepend">
@@ -16,9 +16,7 @@
         </div>
         <select class="custom-select" name="size" id="size">
           <option selected>Choose...</option>
-          <option value="1">M</option>
-          <option value="2">L</option>
-          <option value="3">Xl</option>
+          <option v-for="size in product.sizeSet" :key="size">{{size}}</option>
         </select>
       </div>
 
@@ -28,17 +26,24 @@
         </div>
         <select class="custom-select" name="color" id="color">
           <option selected>Choose...</option>
-          <option value="1">red</option>
-          <option value="2">brown</option>
-          <option value="3">blue</option>
+          <option v-for="color in product.colorSet" :key="color">{{color}}</option>
         </select>
       </div>
 
       <div class="input-group mb-3">
         <div class="input-group-prepend">
-          <button class="btn btn-outline-secondary" type="button">Quentity</button>
+          <button class="btn btn-outline-secondary" type="button">Quantity</button>
         </div>
-        <input type="number" name="quentity" value="0" data-decimals="0" min="0" max="30" step="1" />
+        <input
+          type="number"
+          name="quentity"
+          v-model="quantity"
+          value="0"
+          data-decimals="0"
+          min="0"
+          max="10"
+          step="1"
+        />
       </div>
 
       <button type="submit" class="btn btn-outline-secondary btn-block">Add to cart</button>
@@ -99,3 +104,30 @@
     </div>
   </div>
 </template>
+<script>
+/* eslint-disable */
+export default {
+  props: {
+    initialProduct: {
+      type: Object,
+      required: true
+    }
+  },
+  data() {
+    return {
+      product: this.initialProduct,
+      quantity: 0
+    };
+  },
+  created() {},
+  watch: {
+    initialProduct(product) {
+      this.product = {
+        ...this.product,
+        ...product
+      };
+    }
+  },
+  methods: {}
+};
+</script>

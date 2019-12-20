@@ -49,13 +49,13 @@ export default {
       const colorItems = this.product.ProductStatuses.map(item => item.Color);
       const colorSet = colorItems.map(item => item.color);
       let colorUnique = new Set(colorSet);
-      return colorUnique;
+      return [...colorUnique];
     },
     fetchSizeSet() {
       const sizeItems = this.product.ProductStatuses.map(item => item.Size);
       const sizeSet = sizeItems.map(item => item.size);
       let sizeUnique = new Set(sizeSet);
-      return sizeUnique;
+      return [...sizeUnique];
     }
   }
 };
