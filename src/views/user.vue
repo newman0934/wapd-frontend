@@ -5,26 +5,56 @@
         <img src="https://picsum.photos/id/177/2515/1830" class="img-fluid" alt="user-bg" />
       </div>
       <div class="card-img-overlay mt-5">
-        <h4>Hi, user@example.com</h4>
+        <h4>Hi, {{email}}</h4>
       </div>
     </div>
     <ul class="nav nav-tabs mt-2">
       <li class="nav-item">
-        <a class="nav-link active" href="#">訂單查詢</a>
+        <router-link class="nav-link" :to="{name:'orders'}">訂單查詢</router-link>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">帳號管理</a>
+        <router-link class="nav-link" :to="{name:'userEdit'}">帳號管理</router-link>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">重設密碼</a>
+        <router-link class="nav-link" :to="{name:'userChangePassword'}">重設密碼</router-link>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Wish List</a>
+        <router-link class="nav-link" :to="{name:'userWishList'}">Wish List</router-link>
       </li>
     </ul>
     <router-view />
   </div>
 </template>
+<script>
+import { mapState } from "vuex";
+export default {
+  data() {
+    return {
+      id: 0,
+      name: "",
+      email: ""
+    };
+  },
+  computed: {
+    ...mapState(["currentUser"])
+  },
+  created() {
+    const { id } = this.$route.params;
+    if (id.toString() !== this.currentUser.id.toString()) {
+      this.$router.push({ name: "notFound" });
+      return;
+    }
+    this.setUser();
+  },
+  methods: {
+    setUser() {
+      this.id = this.currentUser.id;
+      this.name = this.currentUser.name;
+      this.email = this.currentUser.email;
+    }
+  }
+};
+</script>
 <style scoped>
 .user-bg {
   height: 150px;
