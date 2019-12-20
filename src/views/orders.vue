@@ -50,6 +50,13 @@ export default {
     }
     this.fetchUserOrders(id);
   },
+  beforeRouteUpdate(to, from, next) {
+    const { id } = to.params;
+    if (id.toString() !== this.currentUser.id.toString()) {
+      this.$router.push({ name: "notFound" });
+      return;
+    }
+  },
   methods: {
     async fetchUserOrders(userId) {
       try {

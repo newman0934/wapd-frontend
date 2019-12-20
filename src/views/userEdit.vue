@@ -88,6 +88,13 @@ export default {
     }
     this.setUser();
   },
+  beforeRouteUpdate(to, from, next) {
+    const { id } = to.params;
+    if (id.toString() !== this.currentUser.id.toString()) {
+      this.$router.push({ name: "notFound" });
+      return;
+    }
+  },
   methods: {
     setUser() {
       this.id = this.currentUser.id;
