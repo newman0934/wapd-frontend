@@ -26,45 +26,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="col">1</th>
-              <th scope="col">西裝</th>
-              <th scope="col">
-                <a class="btn btn-outline-primary" href="#">編輯</a>
-              </th>
-              <th scope="col">
-                <a class="btn btn-outline-danger" href="#">刪除</a>
-              </th>
-            </tr>
-            <tr>
-              <th scope="col">2</th>
-              <th scope="col">上衣</th>
-              <th scope="col">
-                <a class="btn btn-outline-primary" href="#">編輯</a>
-              </th>
-              <th scope="col">
-                <a class="btn btn-outline-danger" href="#">刪除</a>
-              </th>
-            </tr>
-            <tr>
-              <th scope="col">3</th>
-              <th scope="col">褲子</th>
-              <th scope="col">
-                <a class="btn btn-outline-primary" href="#">編輯</a>
-              </th>
-              <th scope="col">
-                <a class="btn btn-outline-danger" href="#">刪除</a>
-              </th>
-            </tr>
-            <tr>
-              <th scope="col">4</th>
-              <th scope="col">鞋子</th>
-              <th scope="col">
-                <a class="btn btn-outline-primary" href="#">編輯</a>
-              </th>
-              <th scope="col">
-                <a class="btn btn-outline-danger" href="#">刪除</a>
-              </th>
+            <tr v-for="category in categories" :key="category.id">
+              <td scope="row">{{category.id}}</td>
+              <td scope="row">{{category.category}}</td>
+              <td scope="row"><button class="btn btn-block">Edit</button></td>
+              <td scope="row"><button class="btn btn-block">delete</button></td>
             </tr>
           </tbody>
         </table>
@@ -74,11 +40,45 @@
 </template>
 
 <script>
+/* eslint-disable */
 import adminNav from "./../components/adminNav";
+import adminAPI from "./../apis/admin"
+import { Toast} from "./../utils/helpers"
 
 export default {
   components: {
     adminNav
+  },
+  data(){
+    return {
+      categories:[]
+    }
+  },
+  created(){
+    this.fetchCategories()
+  },
+  methods: {
+    async fetchCategories(){
+      try{
+        const { data, statusText} = await adminAPI.categories.get()
+        console.log(data)
+
+        if(statusText !== "OK"){
+          throw new Error(statusText)
+        }
+        this.categories = data.categories.map(category => ({
+          ...category
+        }))
+
+      }catch(error){
+        Toast.fire({
+          type:"error",
+          title:"無法取得餐廳類別"
+        })
+      }
+
+
+    }
   }
 };
 </script>
