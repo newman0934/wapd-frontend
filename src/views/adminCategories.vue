@@ -7,10 +7,10 @@
         <form class="my-4">
           <div class="form-row">
             <div class="col-auto">
-              <input type="text" class="form-control" placeholder="新增類別..." />
+              <input v-model="newCategoryName" type="text" class="form-control" placeholder="新增類別..." />
             </div>
             <div class="col-auto">
-              <button type="button" class="btn btn-primary">新增</button>
+              <button type="button" class="btn btn-primary" @click.stop.prevent="createCategory">新增</button>
             </div>
           </div>
         </form>
@@ -51,7 +51,8 @@ export default {
   },
   data(){
     return {
-      categories:[]
+      categories:[],
+      newCategoryName:""
     }
   },
   created(){
@@ -61,7 +62,6 @@ export default {
     async fetchCategories(){
       try{
         const { data, statusText} = await adminAPI.categories.get()
-        console.log(data)
 
         if(statusText !== "OK"){
           throw new Error(statusText)
@@ -76,8 +76,28 @@ export default {
           title:"無法取得餐廳類別"
         })
       }
+    },
+    async createCategory(){
+      try{
+        const {data, statusText} = await adminAPI.categories.create({
+          category: this.newCategoryName
+        })
+        console.log(data)
 
+        if (statusText !== "OK" || data.status !== "success") {
+          throw new Error(statusText);
+        }
 
+        this.categories.push({
+          ...data.category
+        })
+
+       this.newCategoryName = ""
+       this.fetchCategories()
+
+      }catch(error){
+        console.log(error)
+      }
     }
   }
 };

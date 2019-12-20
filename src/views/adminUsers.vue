@@ -82,10 +82,40 @@
 </template>
 <script>
 import adminNav from "./../components/adminNav";
+import adminAPI from "./../apis/admin"
+import { Toast} from "./../utils/helpers"
 
 export default {
   components: {
     adminNav
+  },
+  data() {
+    return {
+      users: []
+    }
+  },
+  created(){
+    this.fetchUsers()
+  },
+  methods:{
+    async fetchUsers(){
+      try{
+        const {data, stateText} = await adminAPI.users.get()
+
+        if(stateText !== "OK"){
+          throw new Error(stateText)
+        }
+
+        this.users = data.users.map(user => ({
+          ...user
+        }))
+      }catch(error){
+        Toast.fire({
+          type:"error",
+          title:"無法取得會員資料"
+        })
+      }
+    }
   }
 };
 </script>
