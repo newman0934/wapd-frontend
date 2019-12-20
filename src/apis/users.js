@@ -6,5 +6,8 @@ export default {
   },
   getUserOrders({ userId }) {
     return apiHelper.get(`/users/${userId}/orders`)
+  },
+  getUserOrder({ userId, orderId }) {
+    return apiHelper.get(`/users/${userId}/orders/${orderId}`)
   }
 }

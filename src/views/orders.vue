@@ -13,7 +13,7 @@
       <tbody>
         <tr v-for="order in orders" :key="order.id">
           <th scope="row" class="align-middle">
-            <router-link :to="{name:'order', params:{id:order.id}}">#{{order.sn}}</router-link>
+            <router-link :to="{name:'order', params:{ order_id:order.id }}">#{{order.sn}}</router-link>
             <p>@order date</p>
           </th>
           <td class="align-middle">

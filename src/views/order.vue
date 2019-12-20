@@ -98,3 +98,55 @@
     </div>
   </div>
 </template>
+<script>
+/* eslint-disable */
+import usersAPI from "./../apis/users";
+import { mapState } from "vuex";
+import { Toast } from "./../utils/helpers";
+export default {
+  data() {
+    return {
+      order: {
+        id: 0,
+        sn: "",
+        receiverName: "",
+        receiverAddress: "",
+        receiverPhone: "",
+        couponCode: "",
+        discountAmount: ""
+      },
+      items: []
+    };
+  },
+  computed: {
+    ...mapState(["currentUser"])
+  },
+  created() {
+    const { id, order_id } = this.$route.params;
+    if (id.toString() !== this.currentUser.id.toString()) {
+      this.$router.push({ name: "notFound" });
+      return;
+    }
+    this.fetchUserOrder(id, order_id);
+  },
+  methods: {
+    async fetchUserOrder(userId, orderId) {
+      try {
+        const { data, statusText } = await usersAPI.getUserOrder({
+          userId,
+          orderId
+        });
+        if (statusText !== "OK") {
+          throw new Error(statusText);
+        }
+        conosle.log(data, statusText);
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "Cannot fetch user order, please try later."
+        });
+      }
+    }
+  }
+};
+</script>
