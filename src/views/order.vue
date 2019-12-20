@@ -139,7 +139,7 @@ export default {
         if (statusText !== "OK") {
           throw new Error(statusText);
         }
-        conosle.log(data, statusText);
+        console.log(data, statusText);
       } catch (error) {
         Toast.fire({
           type: "error",

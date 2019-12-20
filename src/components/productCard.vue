@@ -48,17 +48,13 @@ export default {
     fetchColorSet() {
       const colorItems = this.product.ProductStatuses.map(item => item.Color);
       const colorSet = colorItems.map(item => item.color);
-      let colorUnique = colorSet.filter(function(item, index) {
-        return colorSet.indexOf(item) >= index;
-      });
+      let colorUnique = new Set(colorSet);
       return colorUnique;
     },
     fetchSizeSet() {
       const sizeItems = this.product.ProductStatuses.map(item => item.Size);
       const sizeSet = sizeItems.map(item => item.size);
-      let sizeUnique = sizeSet.filter(function(item, index) {
-        return sizeSet.indexOf(item) >= index;
-      });
+      let sizeUnique = new Set(sizeSet);
       return sizeUnique;
     }
   }
