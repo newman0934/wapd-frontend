@@ -13,5 +13,13 @@ export default {
         get(){
             return apiHelper.get("/admins/users")
         }
+    },
+    orders:{
+        get(){
+            return apiHelper.get("/admins/orders")
+        },
+        getDetail({orderId}){
+            return apiHelper.get(`/admins/orders/${orderId}`)
+        }
     }
 }

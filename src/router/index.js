@@ -192,7 +192,7 @@ const routes = [
     beforeEnter: authorizeIsAdmin
   },
   {
-    path: "/admin/orders/:id",
+    path: "/admin/orders/:order_id",
     name: "adminOrder",
     component: adminOrder,
     beforeEnter: authorizeIsAdmin
