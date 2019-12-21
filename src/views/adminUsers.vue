@@ -26,7 +26,7 @@
               <td scope="row">{{user.email}}</td>
               <td scope="row">{{user.address}}</td>
               <td scope="row">{{user.role}}</td>
-              <td scope="row"><button class="btn btn-dark">歷史訂單</button></td>
+              <td scope="row"><router-link :to="{name:'adminUserOrders', params:{ id:user.id }}">歷史訂單</router-link></td>
             </tr>
           </tbody>
         </table>

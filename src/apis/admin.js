@@ -7,11 +7,17 @@ export default {
         },
         create({name}){
             return apiHelper.post("/admins/categories", {name})
+        },
+        getProductStatus({id}){
+            return apiHelper.get(`/admins/products/${id}/stocks`)
         }
     },
     users:{
         get(){
             return apiHelper.get("/admins/users")
+        },
+        getOrder({id}){
+            return apiHelper.get(`/admins/users/${id}/orders`)
         }
     },
     orders:{

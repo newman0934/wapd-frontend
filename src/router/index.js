@@ -133,7 +133,7 @@ const routes = [
   },
   {
     path: "/admin/users/:id/orders",
-    name: "adminUserorders",
+    name: "adminUserOrders",
     component: adminUserOrders,
     beforeEnter: authorizeIsAdmin
   },

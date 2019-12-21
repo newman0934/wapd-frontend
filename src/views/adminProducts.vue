@@ -69,7 +69,7 @@
               </td>
               <td scope="col">上架</td>
               <td scope="col">
-                <a href="#" class="btn btn-outline-secondary">查詢</a>
+                <a href="#" class="btn btn-outline-secondary"><router-link :to="{name:'adminOrder', params:{ id:order.id }}">查詢</router-link></a>
               </td>
               <td scope="col">
                 <a href="#" class="btn btn-outline-secondary">編輯</a>

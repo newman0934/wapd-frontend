@@ -10,37 +10,14 @@
             <th>總計</th>
             <th>付款狀態</th>
             <th>運送狀態</th>
-            <th>訂單狀態</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1321564</td>
-            <td>5000</td>
-            <td>已付款</td>
-            <td>已出貨</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>562485</td>
-            <td>300</td>
-            <td>未付款</td>
-            <td>已出貨</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>7851</td>
-            <td>5000</td>
-            <td>已付款</td>
-            <td>客戶已收到貨</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>548</td>
-            <td>265648</td>
-            <td>已付款</td>
-            <td>已出貨</td>
-            <td></td>
+          <tr v-for="order in orders" :key="order.id">
+            <td>{{order.sn}}</td>
+            <td>{{order.total_price}}</td>
+            <td>{{order.payment_status}}</td>
+            <td>{{order.shipping_status}}</td>
           </tr>
         </tbody>
       </table>
@@ -52,10 +29,48 @@
   </div>
 </template>
 <script>
+/* eslint-disable */
 import adminNav from "./../components/adminNav";
+import adminAPI from "./../apis/admin";
+import { Toast } from "./../utils/helpers";
+import { mapState } from "vuex";
 export default {
   components: {
     adminNav
+  },
+  data() {
+    return {
+      orders: []
+    };
+  },
+  created() {
+    const { id } = this.$route.params;
+    this.fetchUserOrders(id);
+  },
+  beforeRouteUpdate(to, from, next) {
+    const { id } = to.params;
+    this.fetchUserOrders(id);
+    next();
+  },
+  methods: {
+    async fetchUserOrders(id) {
+      try {
+        const { data, statusText } = await adminAPI.users.getOrder({
+          id
+        });
+
+        console.log(data);
+        if (statusText !== "OK") {
+          throw new Error(statusText);
+        }
+        this.orders = data.users.orders;
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "無法取得會員訂單"
+        });
+      }
+    }
   }
 };
 </script>
