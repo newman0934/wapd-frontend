@@ -65,32 +65,24 @@ export default {
           throw new Error(statusText);
         }
         //get size and color set
-        const colorItems = data.productResult.ProductStatuses.map(
-          item => item.Color
-        );
-        const colorSet = colorItems.map(item => item.color);
-        const colorUnique = new Set(colorSet);
-        const sizeItems = data.productResult.ProductStatuses.map(
-          item => item.Size
-        );
-        const sizeSet = sizeItems.map(item => item.size);
-        const sizeUnique = new Set(sizeSet);
+        const colorUnique = new Set(data.product.color);
+        const sizeUnique = new Set(data.product.size);
 
         //match API to data()
         this.path = {
-          categoryName: data.productResult.Category.category,
-          name: data.productResult.name
+          categoryName: data.product.category,
+          name: data.product.name
         };
         this.product = {
-          id: data.productResult.id,
-          name: data.productResult.name,
-          sellPrice: data.productResult.sell_price,
-          originPricd: data.productResult.origin_price,
-          description: data.productResult.description,
+          id: data.product.id,
+          name: data.product.name,
+          sellPrice: data.product.sell_price,
+          originPricd: data.product.origin_price,
+          description: data.product.description,
           sizeSet: [...sizeUnique],
           colorSet: [...colorUnique]
         };
-        this.productImgs = data.productResult.Images;
+        this.productImgs = data.product.images;
       } catch (error) {
         Toast.fire({
           type: "error",
@@ -101,6 +93,3 @@ export default {
   }
 };
 </script>
-// const sizeSet = sizeItems.filter(function({ id }) {
-      //   return !this.has(id) && this.add(id);
-      // }, new Set());

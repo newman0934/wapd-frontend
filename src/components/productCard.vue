@@ -42,19 +42,15 @@ export default {
   },
   methods: {
     fetchImages() {
-      const image = this.product.Images[0].url;
+      const image = this.product.image[0].url;
       return image;
     },
     fetchColorSet() {
-      const colorItems = this.product.ProductStatuses.map(item => item.Color);
-      const colorSet = colorItems.map(item => item.color);
-      let colorUnique = new Set(colorSet);
+      let colorUnique = new Set(this.product.color);
       return [...colorUnique];
     },
     fetchSizeSet() {
-      const sizeItems = this.product.ProductStatuses.map(item => item.Size);
-      const sizeSet = sizeItems.map(item => item.size);
-      let sizeUnique = new Set(sizeSet);
+      let sizeUnique = new Set(this.product.size);
       return [...sizeUnique];
     }
   }
