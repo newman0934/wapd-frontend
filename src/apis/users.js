@@ -9,5 +9,11 @@ export default {
   },
   getUserOrder({ userId, orderId }) {
     return apiHelper.get(`/users/${userId}/orders/${orderId}`)
+  },
+  getUserFavorite({ userId }) {
+    return apiHelper.get(`/users/${userId}/wishlist`)
+  },
+  getUserCart({ userId }) {
+    return apiHelper.get(`/users/${userId}/cart`)
   }
 }
