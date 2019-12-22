@@ -133,7 +133,7 @@ const routes = [
   },
   {
     path: "/admin/users/:id/orders",
-    name: "adminUserorders",
+    name: "adminUserOrders",
     component: adminUserOrders,
     beforeEnter: authorizeIsAdmin
   },
@@ -192,7 +192,7 @@ const routes = [
     beforeEnter: authorizeIsAdmin
   },
   {
-    path: "/admin/orders/:id",
+    path: "/admin/orders/:order_id",
     name: "adminOrder",
     component: adminOrder,
     beforeEnter: authorizeIsAdmin
@@ -206,6 +206,7 @@ const routes = [
 ]
 
 const router = new VueRouter({
+  linkExactActiveClass: 'active',
   routes
 })
 
