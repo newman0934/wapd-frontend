@@ -29,6 +29,9 @@
             </tr>
           </tbody>
         </table>
+          <div class="container">
+      <button @click="goToBack" class="btn btn-outline-success mx-3 my-5">回上一頁</button>
+    </div>  
       </div>
     </div>
   </div>
@@ -73,6 +76,9 @@ export default {
           title: "無法取得商品狀態"
         });
       }
+    },
+    goToBack(){
+      this.$router.go(-1)
     }
   }
 };

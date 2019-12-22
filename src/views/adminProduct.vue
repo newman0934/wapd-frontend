@@ -37,7 +37,7 @@
     </div>
     <div class="container my-5">
       <div class="row justify-content-center">
-        <a class="btn btn-outline-primary mx-3" href="#">回上一頁</a>
+        <button @click="goToBack" class="btn btn-outline-primary mx-3">回上一頁</button>
         <a class="btn btn-outline-primary mx-3" href="#">編輯商品</a>
       </div>
     </div>
@@ -96,6 +96,9 @@ export default {
           title: "無法取得商品詳細資料"
         });
       }
+    },
+    goToBack(){
+      this.$router.go(-1)
     }
   }
 };

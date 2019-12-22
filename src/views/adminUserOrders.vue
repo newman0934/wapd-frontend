@@ -1,7 +1,7 @@
 <template>
   <div>
     <admin-nav></admin-nav>
-    <h3>Bernard的訂單</h3>
+    <h3>{{user.name}}的訂單</h3>
     <div class="table-responsive-md">
       <table class="table table-striped container mb-3">
         <thead class="thead-dark">
@@ -24,7 +24,7 @@
     </div>
 
     <div class="mb-5">
-      <a href="#" class="btn btn-outline-primary">回上一頁</a>
+     <button @click="goToBack()" class="btn btn-dark">回上一頁</button> 
     </div>
   </div>
 </template>
@@ -40,6 +40,9 @@ export default {
   },
   data() {
     return {
+      user:{
+        name:""
+      },
       orders: []
     };
   },
@@ -63,6 +66,9 @@ export default {
         if (statusText !== "OK") {
           throw new Error(statusText);
         }
+        this.user = {
+          name:data.users.name
+        }
         this.orders = data.users.orders;
       } catch (error) {
         Toast.fire({
@@ -70,6 +76,9 @@ export default {
           title: "無法取得會員訂單"
         });
       }
+    },
+    goToBack(){
+      this.$router.go(-1);
     }
   }
 };

@@ -29,8 +29,8 @@
             <tr v-for="category in categories" :key="category.id">
               <td scope="row">{{category.id}}</td>
               <td scope="row">{{category.category}}</td>
-              <td scope="row"><button class="btn btn-block">Edit</button></td>
-              <td scope="row"><button class="btn btn-block">delete</button></td>
+              <td scope="row"><button class="btn btn-dark">Edit</button></td>
+              <td scope="row"><button class="btn btn-danger">delete</button></td>
             </tr>
           </tbody>
         </table>

@@ -69,16 +69,16 @@
         </h3>
         <h3 class="my-2">
           金額：
-          <span>{{order.amount}}</span>
+          <span>{{order.totalPrice}}</span>
         </h3>
       </div>
       <div class="container text-left">
         <h3>備註</h3>
-        <div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laboriosam, nam voluptates fugiat ut doloribus voluptatem aspernatur cumque sed maxime libero dicta odio hic. Sequi nihil, laudantium est culpa quo libero, facere rem at perferendis error vel possimus perspiciatis? Ipsa dolorum rem tenetur non illo deleniti, nihil error id provident dolores aperiam aspernatur recusandae, quaerat enim perferendis numquam eligendi nostrum inventore beatae officia, mollitia iusto eaque! Voluptate et recusandae magni commodi laborum quae beatae illum eligendi a autem architecto ex deserunt quasi, corrupti, praesentium mollitia soluta repudiandae eveniet totam, suscipit aut! Quos quam suscipit quae necessitatibus vel distinctio molestias quaerat cum.</div>
+        <div>{{order.comment}}</div>
       </div>
     </div>
     <div class="container">
-      <a href="#" class="btn btn-outline-success mx-3 my-5">回上一頁</a>
+      <button @click="goToBack" class="btn btn-outline-success mx-3 my-5">回上一頁</button>
       <a href="#" class="btn btn-outline-success mx-3 my-5">編輯訂單</a>
     </div>
   </div>
@@ -104,7 +104,8 @@ export default {
         shippingStatus: "",
         shippingMethod: "",
         paymentStatus: "",
-        paymentMethod: ""
+        paymentMethod: "",
+        comment:""
       },
       coupon: [],
       productItems: [],
@@ -137,8 +138,10 @@ export default {
           receiverAddress: data.order.address,
           receiverPhone: data.order.phone,
           shippingStatus: data.order.shipping_status,
+          shippingMethod: data.order.shipping_method,
           paymentStatus: data.order.payment_status,
-          paymentMethod: data.order.payment_method
+          paymentMethod: data.order.payment_method,
+          comment:data.order.comment
         };
         this.coupon = data.order.coupon;
         this.productItems = data.order.orderItems;
@@ -150,6 +153,9 @@ export default {
         });
         console.log(error);
       }
+    },
+    goToBack(){
+      this.$router.go(-1)
     }
   }
 };

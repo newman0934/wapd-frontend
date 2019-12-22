@@ -27,10 +27,10 @@
               <td scope="row">{{order.receiver_name}}</td>
               <td scope="row">{{order.phone}}</td>
               <td scope="row">{{order.sn}}</td>
-              <td scope="row">{{order.id}}</td>
+              <td scope="row">{{order.total_price}}</td>
               <td scope="row">{{order.payment_method}}</td>
               <td scope="row">{{order.payment_status}}</td>
-              <td scope="row">{{order.id}}</td>
+              <td scope="row">{{order.shipping_status}}</td>
             </tr>
           </tbody>
         </table>
