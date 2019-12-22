@@ -86,7 +86,7 @@ export default {
       } catch (error) {
         Toast.fire({
           type: "error",
-          title: "Cannot fetch product information, please try later."
+          title: "無法取得商品資訊，請稍後再試"
         });
       }
     }
