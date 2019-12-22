@@ -7,49 +7,31 @@
         <tbody>
           <tr>
             <td>名稱</td>
-            <td colspan="3">西裝褲</td>
+            <td>{{product.name}}</td>
             <td>分類</td>
-            <td>5</td>
+            <td>{{product.category}}</td>
+            <td>狀態</td>
+            <td>{{product.status}}</td>
           </tr>
           <tr>
             <td>成本</td>
-            <td>420</td>
-            <td>價格</td>
-            <td>5640</td>
-            <td>狀態</td>
-            <td>上架</td>
+            <td>{{product.cost}}</td>
+            <td>原價</td>
+            <td>{{product.originPrice}}</td>
+            <td>販售價</td>
+            <td>{{product.sellPrice}}</td>
           </tr>
           <tr>
             <td>產品描述</td>
-            <td
-              colspan="5"
-            >Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum modi voluptatem tempore, nostrum dolorem omnis esse quo fugiat animi similique, mollitia assumenda maiores sint non hic nobis quaerat consectetur maxime voluptatibus eaque quasi exercitationem tempora aliquam? Velit deleniti, sed repellat vel assumenda aperiam fugiat id, distinctio ipsa quibusdam est laboriosam voluptates eos rem natus fugit inventore ea dicta dolore maiores facere quam? Deserunt necessitatibus voluptas adipisci inventore aperiam, id quos fuga assumenda est hic corrupti dolor ducimus aut nisi natus soluta quibusdam, molestias sunt ipsum doloremque libero vitae. Reprehenderit, sunt facere atque minus omnis unde corporis voluptates nihil culpa itaque?</td>
+            <td colspan="5">{{product.description}}</td>
           </tr>
         </tbody>
       </table>
     </div>
     <div class="container adminProductImg">
       <div class="row">
-        <div class="col-md-3 mb-3">
-          <img src="https://lorempixel.com/500/500" alt />
-        </div>
-        <div class="col-md-3 mb-3">
-          <img src="https://lorempixel.com/500/500" alt />
-        </div>
-        <div class="col-md-3 mb-3">
-          <img src="https://lorempixel.com/500/500" alt />
-        </div>
-        <div class="col-md-3 mb-3">
-          <img src="https://lorempixel.com/500/500" alt />
-        </div>
-        <div class="col-md-3 mb-3">
-          <img src="https://lorempixel.com/500/500" alt />
-        </div>
-        <div class="col-md-3 mb-3">
-          <img src="https://lorempixel.com/500/500" alt />
-        </div>
-        <div class="col-md-3 mb-3">
-          <img src="https://lorempixel.com/500/500" alt />
+        <div class="col-md-3 mb-3" v-for="image in images" :key="image.id">
+          <img :src="image.url" alt />
         </div>
       </div>
     </div>
@@ -62,10 +44,59 @@
   </div>
 </template>
 <script>
+/* eslint-disable */
 import adminNav from "./../components/adminNav";
+import adminAPI from "./../apis/admin";
+import { Toast } from "./../utils/helpers";
 export default {
   components: {
     adminNav
+  },
+  data() {
+    return {
+      product: {
+        name: "",
+        category: "",
+        cost: 0,
+        originPrice: 0,
+        sellPrice: 0,
+        status: 0,
+        description: ""
+      },
+      images: []
+    };
+  },
+  created() {
+    const { id } = this.$route.params;
+    this.fetchAdminProduct(id);
+  },
+  methods: {
+    async fetchAdminProduct(id) {
+      try {
+        const { data, statusText } = await adminAPI.products.getProductDetail({
+          id
+        });
+        console.log(data);
+        if (statusText !== "OK") {
+          throw new Error(statusText);
+        }
+        this.product = {
+          name: data.product.name,
+          category: data.product.category,
+          cost: data.product.cost,
+          originPrice: data.product.origin_price,
+          sellPrice: data.product.sell_price,
+          status: data.product.status,
+          description: data.product.description
+        };
+        this.images = data.product.images
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "無法取得商品詳細資料"
+        });
+      }
+    }
   }
 };
 </script>

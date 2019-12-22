@@ -26,8 +26,10 @@
           <tbody>
             <tr v-for="product in products" :key="product.id">
               <td scope="col">{{product.id}}</td>
-              <td scope="col">缺商品名</td>
-              <td scope="col">缺商品分類</td>
+              <td scope="col">
+                <router-link :to="{name:'adminProduct',params:{id:product.id}}">{{product.name}}</router-link>
+              </td>
+              <td scope="col">{{product.category}}</td>
               <td scope="col">{{product.cost}}</td>
               <td scope="col">{{product.sell_price}}</td>
               <td scope="col">
@@ -35,7 +37,10 @@
               </td>
               <td scope="col">{{product.status}}</td>
               <td scope="col">
-                <router-link class="btn btn-outline-secondary" :to="{name:'adminProductStatus', params:{ id: product.id}}">查詢</router-link>
+                <router-link
+                  class="btn btn-outline-secondary"
+                  :to="{name:'adminProductStatus', params:{ id: product.id}}"
+                >查詢</router-link>
               </td>
               <td scope="col">
                 <a href="#" class="btn btn-outline-secondary">編輯</a>
@@ -50,41 +55,41 @@
 <script>
 /* eslint-disable */
 import adminNav from "./../components/adminNav";
-import adminAPI from "./../apis/admin"
-import { Toast} from "./../utils/helpers"
+import adminAPI from "./../apis/admin";
+import { Toast } from "./../utils/helpers";
 import { mapState } from "vuex";
 export default {
   components: {
     adminNav
   },
-  data(){
+  data() {
     return {
-      products:[]
-    }
+      products: []
+    };
   },
-  computed:{
+  computed: {
     ...mapState(["currentUser"])
   },
-  created(){
-    this.fetchAdminProducts()
+  created() {
+    this.fetchAdminProducts();
   },
-  methods:{
-    async fetchAdminProducts(){
-      try{
-        const { data, statusText} = await adminAPI.products.get()
-        console.log(data)
-        if( statusText !== "OK"){
-          throw new Error(statusText)
+
+  methods: {
+    async fetchAdminProducts() {
+      try {
+        const { data, statusText } = await adminAPI.products.get();
+        console.log(data);
+        if (statusText !== "OK") {
+          throw new Error(statusText);
         }
 
-        this.products = data.products
-
-      }catch(error){
-        // Toast.fire({
-        //   type:"error",
-        //   title:"無法取得商品資料"
-        // })
-        console.log(error)
+        this.products = data.products;
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "無法取得商品資料"
+        });
+        console.log(error);
       }
     }
   }

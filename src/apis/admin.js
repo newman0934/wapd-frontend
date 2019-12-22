@@ -34,6 +34,9 @@ export default {
         },
         getStatus({id}){
             return apiHelper.get(`/admins/products/${id}/stocks`)
+        },
+        getProductDetail({id}){
+            return apiHelper.get(`/admins/products/${id}`)
         }
     }
 }
