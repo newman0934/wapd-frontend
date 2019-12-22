@@ -27,5 +27,13 @@ export default {
         getDetail({orderId}){
             return apiHelper.get(`/admins/orders/${orderId}`)
         }
+    },
+    products:{
+        get(){
+            return apiHelper.get("/admins/products")
+        },
+        getStatus({id}){
+            return apiHelper.get(`/admins/products/${id}/stocks`)
+        }
     }
 }
