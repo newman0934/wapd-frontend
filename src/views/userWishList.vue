@@ -38,6 +38,8 @@ export default {
       this.$router.push({ name: "notFound" });
       return;
     }
+    this.fetchUserFavorite(id);
+    next();
   },
   methods: {
     async fetchUserFavorite(userId) {
