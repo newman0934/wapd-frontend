@@ -12,28 +12,31 @@
         <p v-for="size in sizeSet" :key="size" class="d-inline">{{size}},</p>
       </div>
       <div class="card-footer">
-        <button
-          v-if="product.isFavorited"
-          type="button"
-          class="btn btn-danger btn-border mr-2"
-          :disabled="isProcessing"
-          @click.stop.prevent="deleteFavorite(product.id)"
-        >-wish list</button>
-        <button
-          v-else
-          type="button"
-          class="btn btn-danger btn-border mr-2"
-          :disabled="isProcessing"
-          @click.stop.prevent="addFavorite(product.id)"
-        >+wish list</button>
+        <div class="d-inline" v-if="isAuthenticated">
+          <button
+            v-if="product.isFavorited"
+            type="button"
+            class="btn btn-danger btn-border mr-2"
+            :disabled="isProcessing"
+            @click.stop.prevent="deleteFavorite(product.id)"
+          >-wish list</button>
+          <button
+            v-else
+            type="button"
+            class="btn btn-danger btn-border mr-2"
+            :disabled="isProcessing"
+            @click.stop.prevent="addFavorite(product.id)"
+          >+wish list</button>
+        </div>
+
         <button class="btn btn-success btn-border mr-2">購物車</button>
       </div>
     </div>
   </div>
 </template>
 <script>
-/* eslint-disable */
 import productsAPI from "./../apis/products";
+import { Toast } from "./../utils/helpers";
 export default {
   props: {
     initialProduct: {
@@ -50,9 +53,13 @@ export default {
     };
   },
   created() {
-    this.fetchImages();
     this.colorSet = this.fetchColorSet();
     this.sizeSet = this.fetchSizeSet();
+  },
+  computed: {
+    isAuthenticated() {
+      return this.$store.state.isAuthenticated;
+    }
   },
   methods: {
     fetchColorSet() {

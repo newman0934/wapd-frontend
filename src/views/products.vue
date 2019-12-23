@@ -20,7 +20,6 @@
   </div>
 </template>
 <script>
-/* eslint-disable */
 import leftCategoryNav from "./../components/leftCategoryNav";
 import productCard from "./../components/productCard";
 import productsPagination from "./../components/productsPagination";
