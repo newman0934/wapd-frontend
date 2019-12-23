@@ -68,7 +68,7 @@ export default {
       } catch (error) {
         Toast.fire({
           type: "error",
-          title: "Cannot fetch user orders, please try later."
+          title: "無法取得訂單資料，請稍後再試"
         });
       }
     }

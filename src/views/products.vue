@@ -62,7 +62,7 @@ export default {
         if (statusText !== "OK") {
           throw new Error(statusText);
         }
-        this.products = data.productResult.rows;
+        this.products = data.products;
         this.categories = data.categories;
         this.categoryId = data.categoryId;
         this.currentPage = data.page;
@@ -70,7 +70,7 @@ export default {
       } catch (error) {
         Toast.fire({
           type: "error",
-          title: "Cannot fetch proudcts data, please try later."
+          title: "無法取得商品資訊，請稍後再試"
         });
       }
     }
