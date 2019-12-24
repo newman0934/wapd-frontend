@@ -35,8 +35,7 @@
   </div>
 </template>
 <script>
-import productsAPI from "./../apis/products";
-import { Toast } from "./../utils/helpers";
+import { mapState } from "vuex";
 export default {
   props: {
     initialProduct: {
@@ -57,6 +56,7 @@ export default {
     this.sizeSet = this.fetchSizeSet();
   },
   computed: {
+    ...mapState(["currentUser"]),
     isAuthenticated() {
       return this.$store.state.isAuthenticated;
     }
@@ -72,54 +72,26 @@ export default {
     },
     async addFavorite(productId) {
       try {
-        this.isProcessing = true;
-        const { data, statusText } = await productsAPI.addFavorite({
-          productId
-        });
-        if (statusText !== "OK" || data.status !== "success") {
-          throw new Error(statusText);
-        }
-        Toast.fire({
-          type: "success",
-          title: "商品成功加入Wish List"
-        });
+        const userId = this.currentUser.id.toString();
+        this.$store.dispatch("addFavorite", productId, userId);
         this.product = {
           ...this.product,
           isFavorited: true
         };
-        this.isProcessing = false;
       } catch (error) {
-        this.isProcessing = false;
-        Toast.fire({
-          type: "error",
-          title: "無法將商品加入Wish List，請稍後再試"
-        });
+        return false;
       }
     },
     async deleteFavorite(productId) {
       try {
-        this.isProcessing = true;
-        const { data, statusText } = await productsAPI.deleteFavorite({
-          productId
-        });
-        if (statusText !== "OK" || data.status !== "success") {
-          throw new Error(statusText);
-        }
-        Toast.fire({
-          type: "success",
-          title: "商品成功從Wish List移除"
-        });
+        const userId = this.currentUser.id.toString();
+        this.$store.dispatch("deleteFavorite", productId, userId);
         this.product = {
           ...this.product,
           isFavorited: false
         };
-        this.isProcessing = false;
       } catch (error) {
-        this.isProcessing = false;
-        Toast.fire({
-          type: "error",
-          title: "無法將商品從Wish List移除，請稍後再試"
-        });
+        return false;
       }
     }
   }
