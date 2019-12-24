@@ -5,11 +5,15 @@ export default {
         get(){
             return apiHelper.get("/admins/categories")
         },
-        create({name}){
-            return apiHelper.post("/admins/categories", {name})
+        create({category}){
+            return apiHelper.post("/admins/categories", {category})
         },
-        getProductStatus({id}){
-            return apiHelper.get(`/admins/products/${id}/stocks`)
+
+        update({ categoryId, category}){
+            return apiHelper.put(`/admins/categories/${categoryId}`,{category})
+        },
+        delete({categoryId}){
+            return apiHelper.delete(`/admins/categories/${categoryId}`)
         }
     },
     users:{
@@ -37,6 +41,6 @@ export default {
         },
         getProductDetail({id}){
             return apiHelper.get(`/admins/products/${id}`)
-        }
+        },
     }
 }

@@ -7,7 +7,12 @@
         <form class="my-4">
           <div class="form-row">
             <div class="col-auto">
-              <input v-model="newCategoryName" type="text" class="form-control" placeholder="新增類別..." />
+              <input
+                v-model="newCategoryName"
+                type="text"
+                class="form-control"
+                placeholder="新增類別..."
+              />
             </div>
             <div class="col-auto">
               <button type="button" class="btn btn-primary" @click.stop.prevent="createCategory">新增</button>
@@ -29,8 +34,27 @@
             <tr v-for="category in categories" :key="category.id">
               <td scope="row">{{category.id}}</td>
               <td scope="row">{{category.category}}</td>
-              <td scope="row"><button class="btn btn-dark">Edit</button></td>
-              <td scope="row"><button class="btn btn-danger">delete</button></td>
+              <td scope="row">
+                <button
+                  v-if="!category.isEditing"
+                  class="btn btn-dark"
+                  @click.stop.prevent="toggleIsEditing(category.id)"
+                >Edit</button>
+              </td>
+              <td scope="row">
+                <button
+                  v-if="category.isEditing"
+                  class="btn btn-dark"
+                  @click.stop.prevent="editCategory({categoryId: category.id, category:category.category})"
+                >儲存</button>
+              </td>
+              <td scope="row">
+                <button
+                  type="button"
+                  class="btn btn-outline-danger"
+                  @click.stop.prevent="deleteCategory(category.id)"
+                >刪除</button>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -42,62 +66,114 @@
 <script>
 /* eslint-disable */
 import adminNav from "./../components/adminNav";
-import adminAPI from "./../apis/admin"
-import { Toast} from "./../utils/helpers"
+import adminAPI from "./../apis/admin";
+import { Toast } from "./../utils/helpers";
 
 export default {
   components: {
     adminNav
   },
-  data(){
+  data() {
     return {
-      categories:[],
-      newCategoryName:""
-    }
+      categories: [],
+      newCategoryName: ""
+    };
   },
-  created(){
-    this.fetchCategories()
+  created() {
+    this.fetchCategories();
   },
   methods: {
-    async fetchCategories(){
-      try{
-        const { data, statusText} = await adminAPI.categories.get()
+    async fetchCategories() {
+      try {
+        const { data, statusText } = await adminAPI.categories.get();
 
-        if(statusText !== "OK"){
-          throw new Error(statusText)
+        if (statusText !== "OK") {
+          throw new Error(statusText);
         }
         this.categories = data.categories.map(category => ({
-          ...category
-        }))
-
-      }catch(error){
+          ...category,
+          isEditing: false
+        }));
+      } catch (error) {
         Toast.fire({
-          type:"error",
-          title:"無法取得餐廳類別"
-        })
+          type: "error",
+          title: "無法取得類別"
+        });
       }
     },
-    async createCategory(){
-      try{
-        const {data, statusText} = await adminAPI.categories.create({
+    async createCategory() {
+      try {
+        const { data, statusText } = await adminAPI.categories.create({
           category: this.newCategoryName
-        })
-        console.log(data)
+        });
+        console.log(data);
 
         if (statusText !== "OK" || data.status !== "success") {
           throw new Error(statusText);
         }
 
         this.categories.push({
-          ...data.category
-        })
+          ...data.category,
+          isEditing: false
+        });
 
-       this.newCategoryName = ""
-       this.fetchCategories()
-
-      }catch(error){
-        console.log(error)
+        this.newCategoryName = "";
+        this.fetchCategories();
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "無法新增類別"
+        });
       }
+    },
+    async editCategory({ categoryId, category }) {
+      try {
+        const { data, statusText } = await adminAPI.categories.update({
+          categoryId,
+          category
+        });
+
+        if (statusText !== "OK" && data.status !== "success") {
+          throw new Error(statusText);
+        }
+
+        this.toggleIsEditing(categoryId);
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "無法修改類別"
+        });
+      }
+    },
+    async deleteCategory(categoryId) {
+      try {
+        const { data, statusText } = await adminAPI.categories.delete({
+          categoryId
+        });
+
+        if (statusText !== "OK" && data.status !== "success") {
+          throw new Error(statusText);
+        }
+        this.categories = this.categories.filter(
+          category => category.id !== categoryId
+        );
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "無法刪除類別"
+        });
+      }
+    },
+    toggleIsEditing(categoryId) {
+      this.categories = this.categories.map(category => {
+        if (category.id !== categoryId) return category;
+
+        return {
+          ...category,
+          nameCached: category.name,
+          isEditing: !category.isEditing
+        };
+      });
     }
   }
 };
