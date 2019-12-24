@@ -7,27 +7,27 @@
         <tbody>
           <tr>
             <td class="font-weight-bold">訂單編號</td>
-            <td>12345678</td>
-            <td class="font-weight-bold">收件人</td>
-            <td>Caesar</td>
+            <td>{{order.sn}}</td>
+            <td class="font-weight-bold">收件人姓名</td>
+            <td>{{order.receiverName}}</td>
             <td class="font-weight-bold">收件人電話</td>
-            <td>0911111111</td>
+            <td>{{order.receiverPhone}}</td>
           </tr>
           <tr>
-            <td class="font-weight-bold">Email</td>
-            <td>text@gmail.com</td>
             <td class="font-weight-bold">付款方式</td>
-            <td>信用卡</td>
+            <td>{{order.paymentMethod}}</td>
             <td class="font-weight-bold">付款狀態</td>
-            <td>已支付</td>
+            <td>{{order.paymentStatus}}</td>
+            <td class="font-weight-bold">配送狀態</td>
+            <td>{{order.shippingStatus}}</td>
           </tr>
           <tr>
             <td class="font-weight-bold">配送方式</td>
-            <td>便利商店</td>
+            <td>{{order.shippingMethod}}</td>
             <td class="font-weight-bold">配送地址</td>
-            <td>全家中山店</td>
+            <td>{{order.receiverAddress}}</td>
             <td class="font-weight-bold">優惠券</td>
-            <td>開發者優惠</td>
+            <td>{{coupon.coupon_code}}</td>
           </tr>
         </tbody>
       </table>
@@ -36,72 +36,127 @@
     <div class="container">
       <h3 class="text-left">訂購商品</h3>
       <div class="table-responsive-md">
-      <table class="table table-striped">
-        <thead class="thead-dark">
-          <tr>
-            <th>商品編號</th>
-            <th>品名</th>
-            <th>顏色</th>
-            <th>尺寸</th>
-            <th>價格</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>西裝外套</td>
-            <td>黑</td>
-            <td>M</td>
-            <td>1000</td>
-          </tr>
-          <tr>
-            <td>55</td>
-            <td>西裝褲子</td>
-            <td>黑</td>
-            <td>M</td>
-            <td>1000</td>
-          </tr>
-          <tr>
-            <td>66</td>
-            <td>西裝襯衫</td>
-            <td>白</td>
-            <td>M</td>
-            <td>1000</td>
-          </tr>
-        </tbody>
-      </table>
+        <table class="table table-striped">
+          <thead class="thead-dark">
+            <tr>
+              <th>商品編號</th>
+              <th>品名</th>
+              <th>顏色</th>
+              <th>尺寸</th>
+              <th>價格</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="product in productItems" :key="product.ProductId">
+              <td>{{product.ProductId}}</td>
+              <td>{{product.ProductName}}</td>
+              <td>{{product.color}}</td>
+              <td>{{product.size}}</td>
+              <td>{{product.SellPrice}}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       <div class="container text-right">
         <h3 class="my-2">
           原價：
-          <span>3000</span>
+          <span>{{originPrice}}</span>
         </h3>
         <h3 class="my-2">
           折扣：-
-          <span>2000</span>
+          <span>{{coupon.discount_amount}}</span>
         </h3>
         <h3 class="my-2">
           金額：
-          <span>1000</span>
+          <span>{{order.totalPrice}}</span>
         </h3>
       </div>
       <div class="container text-left">
         <h3>備註</h3>
-        <div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laboriosam, nam voluptates fugiat ut doloribus voluptatem aspernatur cumque sed maxime libero dicta odio hic. Sequi nihil, laudantium est culpa quo libero, facere rem at perferendis error vel possimus perspiciatis? Ipsa dolorum rem tenetur non illo deleniti, nihil error id provident dolores aperiam aspernatur recusandae, quaerat enim perferendis numquam eligendi nostrum inventore beatae officia, mollitia iusto eaque! Voluptate et recusandae magni commodi laborum quae beatae illum eligendi a autem architecto ex deserunt quasi, corrupti, praesentium mollitia soluta repudiandae eveniet totam, suscipit aut! Quos quam suscipit quae necessitatibus vel distinctio molestias quaerat cum.</div>
+        <div>{{order.comment}}</div>
       </div>
     </div>
     <div class="container">
-      <a href="#" class="btn btn-outline-success mx-3 my-5">回上一頁</a>
+      <button @click="goToBack" class="btn btn-outline-success mx-3 my-5">回上一頁</button>
       <a href="#" class="btn btn-outline-success mx-3 my-5">編輯訂單</a>
     </div>
   </div>
 </template>
 <script>
+/* eslint-disable */
 import adminNav from "./../components/adminNav";
+import adminAPI from "./../apis/admin";
+import { Toast } from "./../utils/helpers";
 export default {
   components: {
     adminNav
+  },
+  data() {
+    return {
+      order: {
+        id: 0,
+        sn: "",
+        totalPrice: 0,
+        receiverName: "",
+        receiverAddress: "",
+        receiverPhone: "",
+        shippingStatus: "",
+        shippingMethod: "",
+        paymentStatus: "",
+        paymentMethod: "",
+        comment:""
+      },
+      coupon: [],
+      productItems: [],
+      originPrice:0
+    };
+  },
+  created() {
+    const { order_id } = this.$route.params;
+    this.fetchAdminOrder(order_id);
+  },
+  methods: {
+    async fetchAdminOrder(orderId) {
+      try {
+        const { data, statusText } = await adminAPI.orders.getDetail({
+          orderId
+        });
+        if (statusText !== "OK") {
+          throw new Error(statusText);
+        }
+        let sum = 0
+        let priceArray = data.order.orderItems.map(item => item.SellPrice)
+        for(let i = 0; i < priceArray.length; i++){
+          sum += priceArray[i]
+        }
+        this.order = {
+          id: data.order.id,
+          sn: data.order.sn,
+          totalPrice: data.order.total_price,
+          receiverName: data.order.receiver_name,
+          receiverAddress: data.order.address,
+          receiverPhone: data.order.phone,
+          shippingStatus: data.order.shipping_status,
+          shippingMethod: data.order.shipping_method,
+          paymentStatus: data.order.payment_status,
+          paymentMethod: data.order.payment_method,
+          comment:data.order.comment
+        };
+        this.coupon = data.order.coupon;
+        this.productItems = data.order.orderItems;
+        this.originPrice = sum
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "無法取得訂單詳細資訊"
+        });
+        console.log(error);
+      }
+    },
+    goToBack(){
+      this.$router.go(-1)
+    }
   }
 };
 </script>

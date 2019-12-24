@@ -18,62 +18,68 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td scope="col">1</td>
-              <td scope="col">red</td>
-              <td scope="col">S</td>
-              <td scope="col">10</td>
-              <td scope="col">
-                <a href="#" class="btn btn-outline-dark">編輯</a>
-              </td>
-            </tr>
-            <tr>
-              <td scope="col">2</td>
-              <td scope="col">red</td>
-              <td scope="col">M</td>
-              <td scope="col">21</td>
-              <td scope="col">
-                <a href="#" class="btn btn-outline-dark">編輯</a>
-              </td>
-            </tr>
-            <tr>
-              <td scope="col">3</td>
-              <td scope="col">red</td>
-              <td scope="col">L</td>
-              <td scope="col">8</td>
-              <td scope="col">
-                <a href="#" class="btn btn-outline-dark">編輯</a>
-              </td>
-            </tr>
-            <tr>
-              <td scope="col">4</td>
-              <td scope="col">blue</td>
-              <td scope="col">S</td>
-              <td scope="col">22</td>
-              <td scope="col">
-                <a href="#" class="btn btn-outline-dark">編輯</a>
-              </td>
-            </tr>
-            <tr>
-              <td scope="col">5</td>
-              <td scope="col">black</td>
-              <td scope="col">M</td>
-              <td scope="col">22</td>
+            <tr v-for="status in productStatus" :key="status.id">
+              <td scope="col">{{status.id}}</td>
+              <td scope="col">{{status.color}}</td>
+              <td scope="col">{{status.size}}</td>
+              <td scope="col">{{status.stock}}</td>
               <td scope="col">
                 <a href="#" class="btn btn-outline-dark">編輯</a>
               </td>
             </tr>
           </tbody>
         </table>
+          <div class="container">
+      <button @click="goToBack" class="btn btn-outline-success mx-3 my-5">回上一頁</button>
+    </div>  
       </div>
     </div>
   </div>
 </template>
 <script>
+/* eslint-disable */
 import adminNav from "./../components/adminNav";
+import adminAPI from "./../apis/admin";
+import { Toast } from "./../utils/helpers";
 export default {
   components: {
     adminNav
+  },
+  data() {
+    return {
+      productStatus: []
+    };
+  },
+  created() {
+    const { id } = this.$route.params;
+    this.fetchProductStatus(id);
+  },
+  beforeRouteUpdate(to, from, next) {
+    const { id } = to.params;
+    this.fetchProductStatus(id);
+    next();
+  },
+  methods: {
+    async fetchProductStatus(id) {
+      try {
+        const { data, statusText } = await adminAPI.products.getStatus({
+          id
+        });
+        console.log(data);
+        if (statusText !== "OK") {
+          throw new Error(statusText);
+        }
+        this.productStatus = data.productStatus;
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "無法取得商品狀態"
+        });
+      }
+    },
+    goToBack(){
+      this.$router.go(-1)
+    }
   }
 };
 </script>

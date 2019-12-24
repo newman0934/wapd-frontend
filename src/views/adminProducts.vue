@@ -24,52 +24,23 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td scope="col">1</td>
-              <td scope="col">西裝褲</td>
-              <td scope="col">1</td>
-              <td scope="col">100</td>
-              <td scope="col">200</td>
+            <tr v-for="product in products" :key="product.id">
+              <td scope="col">{{product.id}}</td>
               <td scope="col">
-                <img src="https://lorempixel.com/500/500" style="max-width:100px" />
+                <router-link :to="{name:'adminProduct',params:{id:product.id}}">{{product.name}}</router-link>
               </td>
-              <td scope="col">上架</td>
+              <td scope="col">{{product.category}}</td>
+              <td scope="col">{{product.cost}}</td>
+              <td scope="col">{{product.sell_price}}</td>
               <td scope="col">
-                <a href="#" class="btn btn-outline-secondary">查詢</a>
+                <img :src="product.images[0].url" style="max-width:100px" />
               </td>
+              <td scope="col">{{product.status}}</td>
               <td scope="col">
-                <a href="#" class="btn btn-outline-secondary">編輯</a>
-              </td>
-            </tr>
-            <tr>
-              <td scope="col">2</td>
-              <td scope="col">t-shirt</td>
-              <td scope="col">2</td>
-              <td scope="col">100</td>
-              <td scope="col">200</td>
-              <td scope="col">
-                <img src="https://lorempixel.com/500/500" style="max-width:100px" />
-              </td>
-              <td scope="col">下架</td>
-              <td scope="col">
-                <a href="#" class="btn btn-outline-secondary">查詢</a>
-              </td>
-              <td scope="col">
-                <a href="#" class="btn btn-outline-secondary">編輯</a>
-              </td>
-            </tr>
-            <tr>
-              <td scope="col">3</td>
-              <td scope="col">牛仔褲</td>
-              <td scope="col">3</td>
-              <td scope="col">500</td>
-              <td scope="col">600</td>
-              <td scope="col">
-                <img src="https://lorempixel.com/500/500" style="max-width:100px" />
-              </td>
-              <td scope="col">上架</td>
-              <td scope="col">
-                <a href="#" class="btn btn-outline-secondary">查詢</a>
+                <router-link
+                  class="btn btn-outline-secondary"
+                  :to="{name:'adminProductStatus', params:{ id: product.id}}"
+                >查詢</router-link>
               </td>
               <td scope="col">
                 <a href="#" class="btn btn-outline-secondary">編輯</a>
@@ -82,11 +53,45 @@
   </div>
 </template>
 <script>
+/* eslint-disable */
 import adminNav from "./../components/adminNav";
-
+import adminAPI from "./../apis/admin";
+import { Toast } from "./../utils/helpers";
+import { mapState } from "vuex";
 export default {
   components: {
     adminNav
+  },
+  data() {
+    return {
+      products: []
+    };
+  },
+  computed: {
+    ...mapState(["currentUser"])
+  },
+  created() {
+    this.fetchAdminProducts();
+  },
+
+  methods: {
+    async fetchAdminProducts() {
+      try {
+        const { data, statusText } = await adminAPI.products.get();
+        console.log(data);
+        if (statusText !== "OK") {
+          throw new Error(statusText);
+        }
+
+        this.products = data.products;
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "無法取得商品資料"
+        });
+        console.log(error);
+      }
+    }
   }
 };
 </script>
