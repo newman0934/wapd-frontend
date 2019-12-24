@@ -12,7 +12,7 @@
         <div class="row">
           <div class="col-md-6 border-right">
             <form class="w-100" @submit.prevent.stop="handleSubmitSignIn">
-              <h4>Sign In</h4>
+              <h4>登入</h4>
               <div class="form-label-group mb-2">
                 <input
                   id="email"
@@ -20,7 +20,7 @@
                   name="email"
                   type="email"
                   class="form-control"
-                  placeholder="Email"
+                  placeholder="請輸入Email"
                   required
                 />
               </div>
@@ -31,7 +31,7 @@
                   name="password"
                   type="password"
                   class="form-control"
-                  placeholder="Password"
+                  placeholder="請輸入密碼"
                   required
                 />
               </div>
@@ -39,22 +39,23 @@
                 class="btn btn-lg btn-outline-secondary btn-block btn-sm mb-3"
                 type="submit"
                 :disabled="isProcessing"
-              >Sign In</button>
+              >登入</button>
             </form>
             <div class="text-center mb-3">
-              <p>忘記密碼</p>
+              <a href="#">忘記密碼</a>
             </div>
           </div>
           <div class="col-md-6">
-            <form class="w-100">
-              <h4>Register</h4>
+            <form class="w-100" @submit.prevent.stop="handleSubmitSignUp">
+              <h4>註冊</h4>
               <div class="form-label-group mb-2">
                 <input
                   id="register-email"
                   name="register-email"
+                  v-model="registerEmail"
                   type="email"
                   class="form-control"
-                  placeholder="Email"
+                  placeholder="請輸入Email"
                   required
                 />
               </div>
@@ -62,9 +63,10 @@
                 <input
                   id="register-password"
                   name="register-password"
+                  v-model="registerPassword"
                   type="password"
                   class="form-control"
-                  placeholder="Password"
+                  placeholder="請輸入密碼"
                   required
                 />
               </div>
@@ -72,16 +74,18 @@
                 <input
                   id="register-password-check"
                   name="register-password-check"
+                  v-model="registerPasswordCheck"
                   type="password"
                   class="form-control"
-                  placeholder="Re-enter ths password"
+                  placeholder="請再次輸入密碼驗證"
                   required
                 />
               </div>
               <button
                 class="btn btn-lg btn-outline-secondary btn-block btn-sm mb-3"
                 type="submit"
-              >Sign Up</button>
+                :disabled="isProcessing"
+              >註冊</button>
             </form>
           </div>
         </div>
@@ -98,6 +102,9 @@ export default {
     return {
       email: "",
       password: "",
+      registerEmail: "",
+      registerPassword: "",
+      registerPasswordCheck: "",
       isProcessing: false
     };
   },
@@ -123,6 +130,7 @@ export default {
         localStorage.setItem("token", data.token);
         //let data into Vuex
         this.$store.commit("setCurrentUser", data.user);
+        this.$store.dispatch("fetchUserFavorite", data.user.id);
 
         // 成功登入後轉址到上一頁
         this.$router.go(-1);
@@ -133,6 +141,50 @@ export default {
           type: "warning",
           title: "請確認您輸入的帳號密碼錯誤"
         });
+      }
+    },
+    async handleSubmitSignUp(e) {
+      try {
+        //testing form validation
+        if (
+          !this.registerEmail ||
+          !this.registerPassword ||
+          !this.registerPasswordCheck
+        ) {
+          Toast.fire({
+            type: "warning",
+            title: "請確認，註冊欄位皆需填寫"
+          });
+          return;
+        }
+        if (this.registerPassword !== this.registerPasswordCheck) {
+          Toast.fire({
+            type: "warning",
+            title: "兩次密碼不同"
+          });
+          return;
+        }
+        //signup and signin process
+        this.isProcessing = true;
+        const { data, statusText } = await authorizationAPI.signUp({
+          email: this.registerEmail,
+          password: this.registerPassword,
+          passwordCheck: this.registerPasswordCheck
+        });
+        if (statusText !== "OK" || data.status !== "success") {
+          throw new Error(data.message);
+        }
+        // Toast.fire({
+        //   type: "success",
+        //   title: data.message
+        // });
+        localStorage.setItem("token", data.token);
+        //let data into Vuex
+        this.$store.commit("setCurrentUser", data.user);
+        this.$router.go(-1);
+      } catch (error) {
+        this.isProcessing = false;
+        console.log(error);
       }
     }
   }

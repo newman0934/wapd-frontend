@@ -6,10 +6,7 @@
   </div>
 </template>
 <script>
-/* eslint-disable */
-import usersAPI from "./../apis/users";
 import { mapState } from "vuex";
-import { Toast } from "./../utils/helpers";
 import productCard from "./../components/productCard";
 export default {
   components: {
@@ -17,12 +14,14 @@ export default {
   },
   data() {
     return {
-      products: [],
       isLoading: false
     };
   },
   computed: {
-    ...mapState(["currentUser"])
+    ...mapState(["currentUser"]),
+    products() {
+      return this.$store.state.wishList;
+    }
   },
   created() {
     const { id } = this.$route.params;
@@ -38,19 +37,12 @@ export default {
       this.$router.push({ name: "notFound" });
       return;
     }
+    this.fetchUserFavorite(id);
+    next();
   },
   methods: {
-    async fetchUserFavorite(userId) {
-      try {
-        const { data, statusText } = await usersAPI.getUserFavorite({ userId });
-        if (statusText !== "OK") {
-          throw new Error(statusText);
-        }
-        this.products = data.products;
-        console.log(data, statusText);
-      } catch (error) {
-        console.log(error);
-      }
+    fetchUserFavorite(userId) {
+      this.$store.dispatch("fetchUserFavorite", userId);
     }
   }
 };
