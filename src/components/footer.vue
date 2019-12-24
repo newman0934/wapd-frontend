@@ -73,7 +73,7 @@
 footer {
   background-color: #958c8b;
   color: #3b1c15;
-  font-size: 20px;
+  font-size: 16px;
 }
 
 footer a {
