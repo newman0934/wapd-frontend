@@ -33,15 +33,26 @@
           <tbody>
             <tr v-for="category in categories" :key="category.id">
               <td scope="row">{{category.id}}</td>
-              <td scope="row">{{category.category}}</td>
+              <td class="position-relative">
+                <div v-show="!category.isEditing" class="category-name">{{ category.category }}</div>
+                <input
+                  v-show="category.isEditing"
+                  v-model="category.category"
+                  type="text"
+                  class="form-control"
+                />
+                <span
+                  v-show="category.isEditing"
+                  class="cancel"
+                  @click="handleCancel(category.id)"
+                >✕</span>
+              </td>
               <td scope="row">
                 <button
                   v-if="!category.isEditing"
                   class="btn btn-dark"
                   @click.stop.prevent="toggleIsEditing(category.id)"
                 >Edit</button>
-              </td>
-              <td scope="row">
                 <button
                   v-if="category.isEditing"
                   class="btn btn-dark"
@@ -170,10 +181,23 @@ export default {
 
         return {
           ...category,
-          nameCached: category.name,
+          nameCached: category.category,
           isEditing: !category.isEditing
         };
       });
+    },
+    handleCancel(categoryId){
+      this.categories = this.categories.map(category => {
+        if(category.id !== categoryId){
+          return category
+        }
+
+        return {
+          ...category,
+          category: category.nameCached
+        }
+      })
+      this.toggleIsEditing(categoryId)
     }
   }
 };
