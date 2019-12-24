@@ -130,6 +130,7 @@ export default {
         localStorage.setItem("token", data.token);
         //let data into Vuex
         this.$store.commit("setCurrentUser", data.user);
+        this.$store.dispatch("fetchUserFavorite", data.user.id);
 
         // 成功登入後轉址到上一頁
         this.$router.go(-1);

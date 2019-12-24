@@ -61,7 +61,15 @@ export default {
         if (statusText !== "OK") {
           throw new Error(statusText);
         }
-        this.products = data.products;
+        let wishlist = this.$store.state.wishList;
+        if (this.$store.state.isAuthenticated && wishlist.length !== 0) {
+          this.products = data.products.map(product => ({
+            ...product,
+            isFavorited: wishlist.map(d => d.id).includes(product.id)
+          }));
+        } else {
+          this.products = data.products;
+        }
         this.categories = data.categories;
         this.categoryId = data.categoryId;
         this.currentPage = data.page;
