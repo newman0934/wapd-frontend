@@ -91,7 +91,6 @@ export default {
             sizeSet: [...sizeUnique],
             colorSet: [...colorUnique]
           };
-          console.log(this.product);
         }
         this.productImgs = data.product.images;
       } catch (error) {
