@@ -42,7 +42,7 @@
               >登入</button>
             </form>
             <div class="text-center mb-3">
-              <a href="#">忘記密碼</a>
+              <router-link :to="{name:'userForgetPassword'}">忘記密碼</router-link>
             </div>
           </div>
           <div class="col-md-6">

@@ -13,7 +13,6 @@
           class="form-control"
           placeholder="請輸入註冊的Email"
           required
-          autofocus
         />
         <button class="btn btn-lg btn-outline-secondary btn-sm mt-3" type="submit">送出</button>
       </form>

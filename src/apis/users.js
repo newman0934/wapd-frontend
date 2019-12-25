@@ -24,5 +24,8 @@ export default {
   },
   getResetPassword({ tokenId, token }) {
     return apiHelper.get(`/users/password_reset/${tokenId}/${token}`)
+  },
+  postResetPassword({ formData }) {
+    return apiHelper.post(`/users/password_reset`, formData)
   }
 }
