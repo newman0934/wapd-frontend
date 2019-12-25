@@ -15,5 +15,8 @@ export default {
   },
   getUserCart({ userId }) {
     return apiHelper.get(`/users/${userId}/cart`)
+  },
+  postPasswordChange({ formData }) {
+    return apiHelper.post(`/users/password_change`, formData)
   }
 }
