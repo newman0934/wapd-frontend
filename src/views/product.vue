@@ -17,11 +17,9 @@
   </div>
 </template>
 <script>
-/* eslint-disable */
 import productBreadcrumb from "./../components/productBreadcrumb";
 import productCarousel from "./../components/productCarousel";
 import productDetail from "./../components/productDetail";
-import productGallery from "./../components/productGallery";
 import productsAPI from "./../apis/products";
 import { Toast } from "./../utils/helpers";
 
@@ -29,8 +27,7 @@ export default {
   components: {
     productBreadcrumb,
     productCarousel,
-    productDetail,
-    productGallery
+    productDetail
   },
   data() {
     return {
@@ -67,23 +64,38 @@ export default {
         //get size and color set
         const colorUnique = new Set(data.product.color);
         const sizeUnique = new Set(data.product.size);
-
+        let wishlist = this.$store.state.wishList;
         //match API to data()
         this.path = {
           categoryName: data.product.category,
           name: data.product.name
         };
-        this.product = {
-          id: data.product.id,
-          name: data.product.name,
-          sellPrice: data.product.sell_price,
-          originPricd: data.product.origin_price,
-          description: data.product.description,
-          sizeSet: [...sizeUnique],
-          colorSet: [...colorUnique]
-        };
+        if (this.$store.state.isAuthenticated && wishlist.length > 0) {
+          this.product = {
+            id: data.product.id,
+            name: data.product.name,
+            sellPrice: data.product.sell_price,
+            originPricd: data.product.origin_price,
+            description: data.product.description,
+            sizeSet: [...sizeUnique],
+            colorSet: [...colorUnique],
+            isFavorited: wishlist.map(d => d.id).includes(data.product.id)
+          };
+        } else {
+          this.product = {
+            id: data.product.id,
+            name: data.product.name,
+            sellPrice: data.product.sell_price,
+            originPricd: data.product.origin_price,
+            description: data.product.description,
+            sizeSet: [...sizeUnique],
+            colorSet: [...colorUnique]
+          };
+          console.log(this.product);
+        }
         this.productImgs = data.product.images;
       } catch (error) {
+        console.log(error);
         Toast.fire({
           type: "error",
           title: "無法取得商品資訊，請稍後再試"

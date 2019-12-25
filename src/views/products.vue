@@ -62,7 +62,7 @@ export default {
           throw new Error(statusText);
         }
         let wishlist = this.$store.state.wishList;
-        if (this.$store.state.isAuthenticated && wishlist.length !== 0) {
+        if (this.$store.state.isAuthenticated && wishlist.length > 0) {
           this.products = data.products.map(product => ({
             ...product,
             isFavorited: wishlist.map(d => d.id).includes(product.id)

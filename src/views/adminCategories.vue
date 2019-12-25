@@ -80,10 +80,12 @@ import adminNav from "./../components/adminNav";
 import adminAPI from "./../apis/admin";
 import { Toast } from "./../utils/helpers";
 
+
 export default {
   components: {
     adminNav
   },
+
   data() {
     return {
       categories: [],
@@ -124,6 +126,7 @@ export default {
         }
 
         this.categories.push({
+
           ...data.category,
           isEditing: false
         });
