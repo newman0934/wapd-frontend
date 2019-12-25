@@ -15,6 +15,7 @@
               <th scope="col">尺寸</th>
               <th scope="col">存貨</th>
               <th scope="col">編輯</th>
+              <th scope="col">刪除</th>
             </tr>
           </thead>
           <tbody>
@@ -25,6 +26,9 @@
               <td scope="col">{{status.stock}}</td>
               <td scope="col">
                 <a href="#" class="btn btn-outline-dark">編輯</a>
+              </td>
+              <td scope="col">
+                <button class="btn btn-outline-dark" @click.stop.prevent="deleteProductStatus(status.id)">刪除</button>
               </td>
             </tr>
           </tbody>
@@ -65,11 +69,13 @@ export default {
         const { data, statusText } = await adminAPI.products.getStatus({
           id
         });
-        console.log(data);
+
         if (statusText !== "OK") {
           throw new Error(statusText);
         }
         this.productStatus = data.productStatus;
+
+                console.log(this.productStatus);
       } catch (error) {
         Toast.fire({
           type: "error",
@@ -79,6 +85,25 @@ export default {
     },
     goToBack(){
       this.$router.go(-1)
+    },
+    async deleteProductStatus(productId){
+      try{
+        // const { data, statusText} = await adminAPI.products.deleteStatus({
+        //   productId
+        // })
+
+        // if (statusText !== "OK" && data.status !== "success") {
+        //   throw new Error(statusText);
+        // }
+        this.productStatus = this.productStatus.filter(
+          product => product.ProductId !== productId);
+
+      }catch(error){
+        Toast.fire({
+          type:"error",
+          title:"刪除商品資訊失敗"
+        })
+      }
     }
   }
 };

@@ -42,6 +42,9 @@ export default {
         postStatus({productId, color, size}){
             return apiHelper.post(`/admins/products/${productId}/stocks`, {color, size})
         },
+        deleteStatus({productId}){
+            return apiHelper.delete(`/admins/products/${productId}/stocks`)
+        },
         getProductDetail({id}){
             return apiHelper.get(`/admins/products/${id}`)
         },
