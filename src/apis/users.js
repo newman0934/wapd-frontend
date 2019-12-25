@@ -18,5 +18,8 @@ export default {
   },
   postPasswordChange({ formData }) {
     return apiHelper.post(`/users/password_change`, formData)
+  },
+  postPasswordForget({ formData }) {
+    return apiHelper.post(`/users/password_forget`, formData)
   }
 }

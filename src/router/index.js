@@ -68,7 +68,7 @@ const routes = [
     component: Product
   },
   {
-    path: "/users/:id/passowrd_forget",
+    path: "/users/password_forget",
     name: "userForgetPassword",
     component: userForgetPassword
   },
