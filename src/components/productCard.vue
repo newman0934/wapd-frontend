@@ -35,7 +35,6 @@
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
 export default {
   props: {
     initialProduct: {
@@ -56,7 +55,6 @@ export default {
     this.sizeSet = this.fetchSizeSet();
   },
   computed: {
-    ...mapState(["currentUser"]),
     isAuthenticated() {
       return this.$store.state.isAuthenticated;
     }
@@ -72,8 +70,7 @@ export default {
     },
     async addFavorite(productId) {
       try {
-        const userId = this.currentUser.id.toString();
-        this.$store.dispatch("addFavorite", productId, userId);
+        await this.$store.dispatch("addFavorite", productId);
         this.product = {
           ...this.product,
           isFavorited: true
@@ -84,8 +81,7 @@ export default {
     },
     async deleteFavorite(productId) {
       try {
-        const userId = this.currentUser.id.toString();
-        this.$store.dispatch("deleteFavorite", productId, userId);
+        await this.$store.dispatch("deleteFavorite", productId);
         this.product = {
           ...this.product,
           isFavorited: false

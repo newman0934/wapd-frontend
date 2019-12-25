@@ -1,4 +1,3 @@
-/* eslint-disable */
 import Vue from 'vue'
 import Vuex from 'vuex'
 import usersAPI from './../apis/users'
@@ -79,20 +78,21 @@ export default new Vuex.Store({
         });
       }
     },
-    async addFavorite(context, productId, userId) {
+    async addFavorite(context, productId) {
       try {
         // this.isProcessing = true;
+        console.log(this.state.currentUser)
         const { data, statusText } = await productsAPI.addFavorite({
           productId
         });
         if (statusText !== "OK" || data.status !== "success") {
           throw new Error(statusText);
         }
+        await context.dispatch('fetchUserFavorite', this.state.currentUser.id)
         Toast.fire({
           type: "success",
           title: "商品成功加入Wish List"
         });
-        context.dispatch('fetchUserFavorite', userId)
         // this.isProcessing = false;
       } catch (error) {
         // this.isProcessing = false;
@@ -102,7 +102,7 @@ export default new Vuex.Store({
         });
       }
     },
-    async deleteFavorite(context, productId, userId) {
+    async deleteFavorite(context, productId) {
       try {
         // this.isProcessing = true;
         const { data, statusText } = await productsAPI.deleteFavorite({
@@ -111,11 +111,11 @@ export default new Vuex.Store({
         if (statusText !== "OK" || data.status !== "success") {
           throw new Error(statusText);
         }
+        await context.dispatch('fetchUserFavorite', this.state.currentUser.id)
         Toast.fire({
           type: "success",
           title: "商品成功從Wish List移除"
         });
-        context.dispatch('fetchUserFavorite', userId)
         // this.isProcessing = false;
       } catch (error) {
         // this.isProcessing = false;
