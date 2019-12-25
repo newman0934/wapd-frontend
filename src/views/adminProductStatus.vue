@@ -4,7 +4,7 @@
     <div class="container">
       <h3 class="text-left my-5">商品9</h3>
       <div class="text-left">
-        <a href="#" class="btn btn-outline-primary mb-5 p-2">新增種類</a>
+        <router-link class="btn btn-outline-secondary" :to="{name:'adminProductStatusCreate'}">新增種類</router-link>
       </div>
       <div class="table-responsive-md mb-5">
         <table class="table table-striped">

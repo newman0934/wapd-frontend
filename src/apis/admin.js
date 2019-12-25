@@ -39,6 +39,9 @@ export default {
         getStatus({id}){
             return apiHelper.get(`/admins/products/${id}/stocks`)
         },
+        postStatus({productId, color, size}){
+            return apiHelper.post(`/admins/products/${productId}/stocks`, {color, size})
+        },
         getProductDetail({id}){
             return apiHelper.get(`/admins/products/${id}`)
         },

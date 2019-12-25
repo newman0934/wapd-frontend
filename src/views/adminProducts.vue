@@ -5,7 +5,7 @@
       <div class="text-left">
         <h1>商品列表</h1>
         <h1>
-          <a class="btn btn-outline-secondary" href="#">新增商品</a>
+          <router-link class="btn btn-outline-secondary" :to="{name:'adminProductCreate'}">新增商品</router-link>
         </h1>
       </div>
       <div class="table-responsive-md">
