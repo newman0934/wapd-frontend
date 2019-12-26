@@ -1,7 +1,7 @@
 <template>
   <div>
     <admin-nav></admin-nav>
-    <h3>Bernard的訂單</h3>
+    <h3>{{user.name}}的訂單</h3>
     <div class="table-responsive-md">
       <table class="table table-striped container mb-3">
         <thead class="thead-dark">
@@ -10,52 +10,76 @@
             <th>總計</th>
             <th>付款狀態</th>
             <th>運送狀態</th>
-            <th>訂單狀態</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1321564</td>
-            <td>5000</td>
-            <td>已付款</td>
-            <td>已出貨</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>562485</td>
-            <td>300</td>
-            <td>未付款</td>
-            <td>已出貨</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>7851</td>
-            <td>5000</td>
-            <td>已付款</td>
-            <td>客戶已收到貨</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>548</td>
-            <td>265648</td>
-            <td>已付款</td>
-            <td>已出貨</td>
-            <td></td>
+          <tr v-for="order in orders" :key="order.id">
+            <td>{{order.sn}}</td>
+            <td>{{order.total_price}}</td>
+            <td>{{order.payment_status}}</td>
+            <td>{{order.shipping_status}}</td>
           </tr>
         </tbody>
       </table>
     </div>
 
     <div class="mb-5">
-      <a href="#" class="btn btn-outline-primary">回上一頁</a>
+     <button @click="goToBack()" class="btn btn-dark">回上一頁</button> 
     </div>
   </div>
 </template>
 <script>
+/* eslint-disable */
 import adminNav from "./../components/adminNav";
+import adminAPI from "./../apis/admin";
+import { Toast } from "./../utils/helpers";
+import { mapState } from "vuex";
 export default {
   components: {
     adminNav
+  },
+  data() {
+    return {
+      user:{
+        name:""
+      },
+      orders: []
+    };
+  },
+  created() {
+    const { id } = this.$route.params;
+    this.fetchUserOrders(id);
+  },
+  beforeRouteUpdate(to, from, next) {
+    const { id } = to.params;
+    this.fetchUserOrders(id);
+    next();
+  },
+  methods: {
+    async fetchUserOrders(id) {
+      try {
+        const { data, statusText } = await adminAPI.users.getOrder({
+          id
+        });
+
+        console.log(data);
+        if (statusText !== "OK") {
+          throw new Error(statusText);
+        }
+        this.user = {
+          name:data.users.name
+        }
+        this.orders = data.users.orders;
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "無法取得會員訂單"
+        });
+      }
+    },
+    goToBack(){
+      this.$router.go(-1);
+    }
   }
 };
 </script>

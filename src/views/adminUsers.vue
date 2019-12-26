@@ -19,60 +19,14 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td scope="col">1</td>
-              <td scope="col">root</td>
-              <td scope="col">09125454847</td>
-              <td scope="col">root@gmail.com</td>
-              <td scope="col">國父紀念館</td>
-              <td scope="col">管理員</td>
-              <td scope="col">
-                <a class="btn btn-outline-success" href="#">歷史訂單</a>
-              </td>
-            </tr>
-            <tr>
-              <td scope="col">2</td>
-              <td scope="col">admin</td>
-              <td scope="col">09125454847</td>
-              <td scope="col">admin@gmail.com</td>
-              <td scope="col">中正紀念堂</td>
-              <td scope="col">管理員</td>
-              <td scope="col">
-                <a class="btn btn-outline-success" href="#">歷史訂單</a>
-              </td>
-            </tr>
-            <tr>
-              <td scope="col">3</td>
-              <td scope="col">Caesar</td>
-              <td scope="col">09125454847</td>
-              <td scope="col">user1@gmail.com</td>
-              <td scope="col">總統府</td>
-              <td scope="col">會員</td>
-              <td scope="col">
-                <a class="btn btn-outline-success" href="#">歷史訂單</a>
-              </td>
-            </tr>
-            <tr>
-              <td scope="col">4</td>
-              <td scope="col">Vivian</td>
-              <td scope="col">09125454847</td>
-              <td scope="col">user2@gmail.com</td>
-              <td scope="col">101</td>
-              <td scope="col">會員</td>
-              <td scope="col">
-                <a class="btn btn-outline-success" href="#">歷史訂單</a>
-              </td>
-            </tr>
-            <tr>
-              <td scope="col">5</td>
-              <td scope="col">Eason</td>
-              <td scope="col">09125454847</td>
-              <td scope="col">user3@gmail.com</td>
-              <td scope="col">天臺</td>
-              <td scope="col">會員</td>
-              <td scope="col">
-                <a class="btn btn-outline-success" href="#">歷史訂單</a>
-              </td>
+            <tr v-for="user in users" :key="user.id">
+              <td scope="row">{{user.id}}</td>
+              <td scope="row">{{user.name}}</td>
+              <td scope="row">{{user.phone}}</td>
+              <td scope="row">{{user.email}}</td>
+              <td scope="row">{{user.address}}</td>
+              <td scope="row">{{user.role}}</td>
+              <td scope="row"><router-link :to="{name:'adminUserOrders', params:{ id:user.id }}">歷史訂單</router-link></td>
             </tr>
           </tbody>
         </table>
@@ -81,11 +35,40 @@
   </div>
 </template>
 <script>
+/* eslint-disable */
 import adminNav from "./../components/adminNav";
+import adminAPI from "./../apis/admin"
+import { Toast} from "./../utils/helpers"
 
 export default {
   components: {
     adminNav
+  },
+  data() {
+    return {
+      users: []
+    }
+  },
+  created(){
+    this.fetchUsers()
+  },
+  methods:{
+    async fetchUsers(){
+      try{
+        const {data, statusText} = await adminAPI.users.get()
+
+        if(statusText !== "OK"){
+          throw new Error(statusText)
+        }
+
+        this.users = data.users
+      }catch(error){
+        Toast.fire({
+          type:"error",
+          title:"無法取得會員資料"
+        })
+      }
+    }
   }
 };
 </script>

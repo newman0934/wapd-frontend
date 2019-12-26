@@ -17,11 +17,9 @@
   </div>
 </template>
 <script>
-/* eslint-disable */
 import productBreadcrumb from "./../components/productBreadcrumb";
 import productCarousel from "./../components/productCarousel";
 import productDetail from "./../components/productDetail";
-import productGallery from "./../components/productGallery";
 import productsAPI from "./../apis/products";
 import { Toast } from "./../utils/helpers";
 
@@ -29,8 +27,7 @@ export default {
   components: {
     productBreadcrumb,
     productCarousel,
-    productDetail,
-    productGallery
+    productDetail
   },
   data() {
     return {
@@ -65,42 +62,45 @@ export default {
           throw new Error(statusText);
         }
         //get size and color set
-        const colorItems = data.productResult.ProductStatuses.map(
-          item => item.Color
-        );
-        const colorSet = colorItems.map(item => item.color);
-        const colorUnique = new Set(colorSet);
-        const sizeItems = data.productResult.ProductStatuses.map(
-          item => item.Size
-        );
-        const sizeSet = sizeItems.map(item => item.size);
-        const sizeUnique = new Set(sizeSet);
-
+        const colorUnique = new Set(data.product.color);
+        const sizeUnique = new Set(data.product.size);
+        let wishlist = this.$store.state.wishList;
         //match API to data()
         this.path = {
-          categoryName: data.productResult.Category.category,
-          name: data.productResult.name
+          categoryName: data.product.category,
+          name: data.product.name
         };
-        this.product = {
-          id: data.productResult.id,
-          name: data.productResult.name,
-          sellPrice: data.productResult.sell_price,
-          originPricd: data.productResult.origin_price,
-          description: data.productResult.description,
-          sizeSet: [...sizeUnique],
-          colorSet: [...colorUnique]
-        };
-        this.productImgs = data.productResult.Images;
+        if (this.$store.state.isAuthenticated && wishlist.length > 0) {
+          this.product = {
+            id: data.product.id,
+            name: data.product.name,
+            sellPrice: data.product.sell_price,
+            originPricd: data.product.origin_price,
+            description: data.product.description,
+            sizeSet: [...sizeUnique],
+            colorSet: [...colorUnique],
+            isFavorited: wishlist.map(d => d.id).includes(data.product.id)
+          };
+        } else {
+          this.product = {
+            id: data.product.id,
+            name: data.product.name,
+            sellPrice: data.product.sell_price,
+            originPricd: data.product.origin_price,
+            description: data.product.description,
+            sizeSet: [...sizeUnique],
+            colorSet: [...colorUnique]
+          };
+        }
+        this.productImgs = data.product.images;
       } catch (error) {
+        console.log(error);
         Toast.fire({
           type: "error",
-          title: "Cannot fetch product information, please try later."
+          title: "無法取得商品資訊，請稍後再試"
         });
       }
     }
   }
 };
 </script>
-// const sizeSet = sizeItems.filter(function({ id }) {
-      //   return !this.has(id) && this.add(id);
-      // }, new Set());

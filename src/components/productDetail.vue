@@ -49,6 +49,23 @@
       <button type="submit" class="btn btn-outline-secondary btn-block">Add to cart</button>
     </form>
 
+    <div class="mt-3" v-if="isAuthenticated">
+      <button
+        v-if="product.isFavorited"
+        type="button"
+        class="btn btn-danger btn-border btn-block mr-2"
+        :disabled="isProcessing"
+        @click.stop.prevent="deleteFavorite(product.id)"
+      >-wish list</button>
+      <button
+        v-else
+        type="button"
+        class="btn btn-danger btn-border btn-block mr-2"
+        :disabled="isProcessing"
+        @click.stop.prevent="addFavorite(product.id)"
+      >+wish list</button>
+    </div>
+
     <!--product info-->
     <div class="accordion mt-3" id="accordionExample">
       <div class="card">
@@ -105,7 +122,7 @@
   </div>
 </template>
 <script>
-/* eslint-disable */
+import { mapState } from "vuex";
 export default {
   props: {
     initialProduct: {
@@ -116,10 +133,16 @@ export default {
   data() {
     return {
       product: this.initialProduct,
-      quantity: 0
+      quantity: 0,
+      isProcessing: false
     };
   },
-  created() {},
+  computed: {
+    ...mapState(["currentUser"]),
+    isAuthenticated() {
+      return this.$store.state.isAuthenticated;
+    }
+  },
   watch: {
     initialProduct(product) {
       this.product = {
@@ -128,6 +151,29 @@ export default {
       };
     }
   },
-  methods: {}
+  methods: {
+    async addFavorite(productId) {
+      try {
+        await this.$store.dispatch("addFavorite", productId);
+        this.product = {
+          ...this.product,
+          isFavorited: true
+        };
+      } catch (error) {
+        return false;
+      }
+    },
+    async deleteFavorite(productId) {
+      try {
+        await this.$store.dispatch("deleteFavorite", productId);
+        this.product = {
+          ...this.product,
+          isFavorited: false
+        };
+      } catch (error) {
+        return false;
+      }
+    }
+  }
 };
 </script>

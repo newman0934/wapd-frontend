@@ -20,7 +20,6 @@
   </div>
 </template>
 <script>
-/* eslint-disable */
 import leftCategoryNav from "./../components/leftCategoryNav";
 import productCard from "./../components/productCard";
 import productsPagination from "./../components/productsPagination";
@@ -62,7 +61,15 @@ export default {
         if (statusText !== "OK") {
           throw new Error(statusText);
         }
-        this.products = data.productResult.rows;
+        let wishlist = this.$store.state.wishList;
+        if (this.$store.state.isAuthenticated && wishlist.length > 0) {
+          this.products = data.products.map(product => ({
+            ...product,
+            isFavorited: wishlist.map(d => d.id).includes(product.id)
+          }));
+        } else {
+          this.products = data.products;
+        }
         this.categories = data.categories;
         this.categoryId = data.categoryId;
         this.currentPage = data.page;
@@ -70,7 +77,7 @@ export default {
       } catch (error) {
         Toast.fire({
           type: "error",
-          title: "Cannot fetch proudcts data, please try later."
+          title: "無法取得商品資訊，請稍後再試"
         });
       }
     }

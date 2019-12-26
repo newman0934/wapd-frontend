@@ -1,7 +1,9 @@
-/* eslint-disable */
 import Vue from 'vue'
 import Vuex from 'vuex'
 import usersAPI from './../apis/users'
+import productsAPI from './../apis/products'
+import { Toast } from "./../utils/helpers";
+
 
 Vue.use(Vuex)
 
@@ -15,7 +17,10 @@ export default new Vuex.Store({
       address: '',
       role: false
     },
+    wishList: {},
+    cart: {},
     isAuthenticated: false,
+    isProcessing: false,
     token: ''
   },
   mutations: {
@@ -32,6 +37,12 @@ export default new Vuex.Store({
       state.isAuthenticated = false
       state.token = ''
       localStorage.removeItem('token')
+    },
+    WISHLIST(state, payload) {
+      state.wishList = payload
+    },
+    CART(state, payload) {
+      state.cart = payload
     }
   },
   actions: {
@@ -55,7 +66,86 @@ export default new Vuex.Store({
         commit('revokeAuthentication')
         return false
       }
+    },
+    async fetchUserFavorite(context, userId) {
+      try {
+        const { data, statusText } = await usersAPI.getUserFavorite({ userId })
+        if (statusText !== "OK") {
+          throw new Error(statusText);
+        }
+        context.commit('WISHLIST', data.products);
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "無法取得商品資訊，請稍後再試"
+        });
+      }
+    },
+    async addFavorite(context, productId) {
+      try {
+        // this.isProcessing = true;
+        console.log(this.state.currentUser)
+        const { data, statusText } = await productsAPI.addFavorite({
+          productId
+        });
+        if (statusText !== "OK" || data.status !== "success") {
+          throw new Error(statusText);
+        }
+        await context.dispatch('fetchUserFavorite', this.state.currentUser.id)
+        Toast.fire({
+          type: "success",
+          title: "商品成功加入Wish List"
+        });
+        // this.isProcessing = false;
+      } catch (error) {
+        // this.isProcessing = false;
+        Toast.fire({
+          type: "error",
+          title: "無法將商品加入Wish List，請稍後再試"
+        });
+      }
+    },
+    async deleteFavorite(context, productId) {
+      try {
+        // this.isProcessing = true;
+        const { data, statusText } = await productsAPI.deleteFavorite({
+          productId
+        });
+        if (statusText !== "OK" || data.status !== "success") {
+          throw new Error(statusText);
+        }
+        await context.dispatch('fetchUserFavorite', this.state.currentUser.id)
+        Toast.fire({
+          type: "success",
+          title: "商品成功從Wish List移除"
+        });
+        // this.isProcessing = false;
+      } catch (error) {
+        // this.isProcessing = false;
+        Toast.fire({
+          type: "error",
+          title: "無法將商品從Wish List移除，請稍後再試"
+        });
+      }
+    },
+    async fetchUserCart(context, userId) {
+      try {
+        const { data, statusText } = await usersAPI.getUserCart({ userId });
+        if (statusText !== "OK") {
+          throw new Error(statusText);
+        }
+        context.commit('CART', data.userCart.cartItem);
+        // this.items = data.userCart.cartItem;
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "暫時無法取得使用者購物車資料，請稍後再試"
+        });
+      }
     }
+  },
+  getters: {
+    wishList: state => state.wishList,
   },
   modules: {
   }

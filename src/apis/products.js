@@ -7,5 +7,11 @@ export default {
   },
   getProduct({ productId }) {
     return apiHelper.get(`/products/${productId}`)
+  },
+  addFavorite({ productId }) {
+    return apiHelper.post(`/products/${productId}/wishlist`, null)
+  },
+  deleteFavorite({ productId }) {
+    return apiHelper.delete(`/products/${productId}/wishlist`)
   }
 }

@@ -29,7 +29,7 @@
                       aria-label="Search"
                     />
                     <button class="btn btn-outline-success" type="submit">
-                      <font-awesome-icon icon="search" size="2x" />
+                      <font-awesome-icon icon="search" size="1x" />
                     </button>
                   </form>
                 </li>
@@ -56,19 +56,38 @@
                     <a class="dropdown-item" href="#">AI Development</a>
                   </div>
                 </li>
+                <template v-if="!isAuthenticated || !currentUser.role === 'admin'">
                 <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
-                  <a class="nav-link" href="#">Login / LogUp</a>
+                  <router-link class="nav-link" :to="{name:'signIn'}">Login / LogUp</router-link>
                 </li>
+                </template>
                 <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
-                  <a class="nav-link" href="#">
+                  <router-link class="nav-link" :to="{name: 'cart', params:{id: currentUser.id}}">
                     <font-awesome-icon icon="shopping-cart" size="2x" />
-                  </a>
+                  </router-link>
+                </li>
+                <template v-if="isAuthenticated || currentUser.role === 'admin'">
+                  <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
+                    <a href="#" class="nav-link my-2 my-sm-0" @click="logout">登出</a>
+                  </li>
+                <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
+                  <router-link class="nav-link" :to="{name: 'orders', params:{id: currentUser.id}}">
+                    <font-awesome-icon icon="user" size="2x" />
+                  </router-link>
                 </li>
                 <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
-                  <a class="nav-link" href="#">
-                    <font-awesome-icon icon="user" size="2x" />
-                  </a>
+                  <router-link class="nav-link" :to="{name: 'userWishList', params:{id: currentUser.id}}">
+                    <font-awesome-icon icon="heart" size="2x" />
+                  </router-link>
                 </li>
+                </template>
+                <template v-if="currentUser.role === 'admin'">
+                <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
+                  <router-link class="nav-link" :to="{name: 'adminOrders'}">
+                    <font-awesome-icon icon="user-cog" size="2x" />
+                  </router-link>
+                </li>
+                </template>
               </ul>
             </div>
           </nav>
@@ -77,18 +96,31 @@
     </div>
   </div>
 </template>
+<script>
+import {mapState} from "vuex"
+export default {
+  computed:{
+    ...mapState(["currentUser", "isAuthenticated"])
+  },
+  methods: {
+    logout(){
+      this.$store.commit("revokeAuthentication")
+      this.$router.push("/index")
+    }
+  }
+}
+</script>
 <style>
 .container {
   max-width: 90%;
 }
 .navigation-wrap {
-  background-color: #958c8b;
-  font-size: 20px;
+  font-size: 16px;
 }
 .navigation-wrap a,
 .navigation-wrap .navbar-toggler-icon,
 .bar {
-  color: #ffffff;
+  color: rgb(125, 125, 125);
 }
 .navigation-wrap a:hover,
 .navigation-wrap .bar:hover {
@@ -97,14 +129,14 @@
 }
 
 .search .btn-outline-success {
-  color: white;
-  border-color: white;
+  color: rgb(125, 125, 125);
+  border-color: rgb(125, 125, 125);
   transition: all 0.5s;
 }
 
 .search .btn-outline-success:hover {
-  color: #3b1c15;
+  color: white;
   border-color: #3b1c15;
-  background-color: #958c8b;
+  background-color: #3b1c15;
 }
 </style>

@@ -7,10 +7,15 @@
         <form class="my-4">
           <div class="form-row">
             <div class="col-auto">
-              <input type="text" class="form-control" placeholder="新增類別..." />
+              <input
+                v-model="newCategoryName"
+                type="text"
+                class="form-control"
+                placeholder="新增類別..."
+              />
             </div>
             <div class="col-auto">
-              <button type="button" class="btn btn-primary">新增</button>
+              <button type="button" class="btn btn-primary" @click.stop.prevent="createCategory">新增</button>
             </div>
           </div>
         </form>
@@ -26,45 +31,41 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="col">1</th>
-              <th scope="col">西裝</th>
-              <th scope="col">
-                <a class="btn btn-outline-primary" href="#">編輯</a>
-              </th>
-              <th scope="col">
-                <a class="btn btn-outline-danger" href="#">刪除</a>
-              </th>
-            </tr>
-            <tr>
-              <th scope="col">2</th>
-              <th scope="col">上衣</th>
-              <th scope="col">
-                <a class="btn btn-outline-primary" href="#">編輯</a>
-              </th>
-              <th scope="col">
-                <a class="btn btn-outline-danger" href="#">刪除</a>
-              </th>
-            </tr>
-            <tr>
-              <th scope="col">3</th>
-              <th scope="col">褲子</th>
-              <th scope="col">
-                <a class="btn btn-outline-primary" href="#">編輯</a>
-              </th>
-              <th scope="col">
-                <a class="btn btn-outline-danger" href="#">刪除</a>
-              </th>
-            </tr>
-            <tr>
-              <th scope="col">4</th>
-              <th scope="col">鞋子</th>
-              <th scope="col">
-                <a class="btn btn-outline-primary" href="#">編輯</a>
-              </th>
-              <th scope="col">
-                <a class="btn btn-outline-danger" href="#">刪除</a>
-              </th>
+            <tr v-for="category in categories" :key="category.id">
+              <td scope="row">{{category.id}}</td>
+              <td class="position-relative">
+                <div v-show="!category.isEditing" class="category-name">{{ category.category }}</div>
+                <input
+                  v-show="category.isEditing"
+                  v-model="category.category"
+                  type="text"
+                  class="form-control"
+                />
+                <span
+                  v-show="category.isEditing"
+                  class="cancel"
+                  @click="handleCancel(category.id)"
+                >✕</span>
+              </td>
+              <td scope="row">
+                <button
+                  v-if="!category.isEditing"
+                  class="btn btn-dark"
+                  @click.stop.prevent="toggleIsEditing(category.id)"
+                >Edit</button>
+                <button
+                  v-if="category.isEditing"
+                  class="btn btn-dark"
+                  @click.stop.prevent="editCategory({categoryId: category.id, category:category.category})"
+                >儲存</button>
+              </td>
+              <td scope="row">
+                <button
+                  type="button"
+                  class="btn btn-outline-danger"
+                  @click.stop.prevent="deleteCategory(category.id)"
+                >刪除</button>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -74,11 +75,133 @@
 </template>
 
 <script>
+/* eslint-disable */
 import adminNav from "./../components/adminNav";
+import adminAPI from "./../apis/admin";
+import { Toast } from "./../utils/helpers";
+
 
 export default {
   components: {
     adminNav
+  },
+
+  data() {
+    return {
+      categories: [],
+      newCategoryName: ""
+    };
+  },
+  created() {
+    this.fetchCategories();
+  },
+  methods: {
+    async fetchCategories() {
+      try {
+        const { data, statusText } = await adminAPI.categories.get();
+
+        if (statusText !== "OK") {
+          throw new Error(statusText);
+        }
+        this.categories = data.categories.map(category => ({
+          ...category,
+          isEditing: false
+        }));
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "無法取得類別"
+        });
+      }
+    },
+    async createCategory() {
+      try {
+        const { data, statusText } = await adminAPI.categories.create({
+          category: this.newCategoryName
+        });
+        console.log(data);
+
+        if (statusText !== "OK" || data.status !== "success") {
+          throw new Error(statusText);
+        }
+
+        this.categories.push({
+
+          ...data.category,
+          isEditing: false
+        });
+
+        this.newCategoryName = "";
+        this.fetchCategories();
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "無法新增類別"
+        });
+      }
+    },
+    async editCategory({ categoryId, category }) {
+      try {
+        const { data, statusText } = await adminAPI.categories.update({
+          categoryId,
+          category
+        });
+
+        if (statusText !== "OK" && data.status !== "success") {
+          throw new Error(statusText);
+        }
+
+        this.toggleIsEditing(categoryId);
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "無法修改類別"
+        });
+      }
+    },
+    async deleteCategory(categoryId) {
+      try {
+        const { data, statusText } = await adminAPI.categories.delete({
+          categoryId
+        });
+
+        if (statusText !== "OK" && data.status !== "success") {
+          throw new Error(statusText);
+        }
+        this.categories = this.categories.filter(
+          category => category.id !== categoryId
+        );
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "無法刪除類別"
+        });
+      }
+    },
+    toggleIsEditing(categoryId) {
+      this.categories = this.categories.map(category => {
+        if (category.id !== categoryId) return category;
+
+        return {
+          ...category,
+          nameCached: category.category,
+          isEditing: !category.isEditing
+        };
+      });
+    },
+    handleCancel(categoryId){
+      this.categories = this.categories.map(category => {
+        if(category.id !== categoryId){
+          return category
+        }
+
+        return {
+          ...category,
+          category: category.nameCached
+        }
+      })
+      this.toggleIsEditing(categoryId)
+    }
   }
 };
 </script>

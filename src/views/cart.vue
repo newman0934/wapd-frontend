@@ -7,42 +7,164 @@
           <th scope="col"></th>
           <th scope="col">商品名稱</th>
           <th scope="col">價格</th>
-          <th scope="col">數量</th>
+          <th scope="col">
+            數量
+            <small class="text-muted">(雙擊修改數量)</small>
+          </th>
           <th scope="col">小計</th>
+          <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr v-for="item in items" :key="item.id">
           <th scope="row">
-            <img
-              src="https://picsum.photos/id/1004/5616/3744"
-              class="img-fluid"
-              alt="Responsive image"
-              width="150px"
-            />
+            <img :src="item.images[0].url" class="img-fluid" alt="Responsive image" width="150px" />
           </th>
-          <td>I'm Product</td>
-          <td>NTD I'm Price</td>
-          <td>
-            <input
-              type="number"
-              name="quentity"
-              value="0"
-              data-decimals="0"
-              min="0"
-              max="30"
-              step="1"
-            />
+          <td class="align-middle">
+            {{item.name}}
+            <p>Color:{{item.color}}, Size:{{item.size}}</p>
           </td>
-          <td>NTD amount</td>
-          <button type="submit" class="btn btn-outline-danger">Ｘ</button>
+          <td class="align-middle">NTD {{item.sell_price}}</td>
+          <td class="align-middle" @dblclick="editQty(item)">
+            <div v-if="item.id === cacheItem.id">
+              <form @submit.prevent.stop="putCartItem(item)">
+                <div>
+                  <input
+                    id="quantity"
+                    type="number"
+                    name="quantity"
+                    value="1"
+                    v-model="cacheQty"
+                    data-decimals="0"
+                    min="1"
+                    max="10"
+                    step="1"
+                  />
+                </div>
+                <button class="btn" type="submit">done</button>
+              </form>
+              <a @click.stop.prevent="cancelEdit()">cancel</a>
+            </div>
+            <div v-else>{{item.quantity}}</div>
+          </td>
+          <td class="align-middle">NTD {{item.sell_price*item.quantity}}</td>
+          <td class="align-middle">
+            <button
+              type="button"
+              class="btn btn-outline-danger"
+              @click.stop.prevent="deleteCartItem(item.id)"
+            >Ｘ</button>
+          </td>
         </tr>
         <th scope="row"></th>
         <td colspan="3">小計</td>
-        <td>NTD I'm total</td>
+        <td>NTD {{total}}</td>
       </tbody>
     </table>
 
     <button type="submit" class="btn btn-outline-secondary btn-block">CheckOut</button>
   </div>
 </template>
+<script>
+import usersAPI from "./../apis/users";
+import { mapState } from "vuex";
+import { Toast } from "./../utils/helpers";
+export default {
+  data() {
+    return {
+      items: [],
+      total: 0,
+      cacheItem: {},
+      cacheQty: 0
+    };
+  },
+  async created() {
+    const { id } = this.$route.params;
+    if (id.toString() !== this.currentUser.id.toString()) {
+      this.$router.push({ name: "notFound" });
+      return;
+    }
+    await this.$store.dispatch("fetchUserCart", id);
+    this.items = this.cartItems;
+    this.total = this.totalPrice;
+  },
+  computed: {
+    ...mapState(["currentUser"]),
+    cartItems() {
+      return this.$store.state.cart;
+    },
+    totalPrice() {
+      return this.items.reduce((t, p) => t + p.sell_price * p.quantity, 0);
+    },
+    formData() {
+      const { cacheQty } = this;
+      return {
+        quantity: cacheQty
+      };
+    }
+  },
+  methods: {
+    async deleteCartItem(itemId) {
+      try {
+        const { data, statusText } = await usersAPI.deleteCartItem({ itemId });
+        if (statusText !== "OK" || data.status !== "success") {
+          throw new Error(statusText);
+        }
+        //update vuex
+        await this.$store.dispatch("fetchUserCart", this.currentUser.id);
+        //render view
+        this.items = this.items.filter(item => item.id !== itemId);
+        Toast.fire({
+          type: "success",
+          title: "商品成功從購物車移除"
+        });
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "暫時無法移除該項商品，請稍後再試"
+        });
+      }
+    },
+    editQty(item) {
+      this.cacheItem = item;
+      this.cacheQty = item.quantity;
+    },
+    cancelEdit() {
+      this.cacheItem = {};
+      this.cacheQty = 0;
+    },
+    async putCartItem(item) {
+      const userId = this.currentUser.id;
+      let itemId = item.id;
+      let formData = this.formData;
+      try {
+        const { data, statusText } = await usersAPI.putCartItem({
+          userId,
+          itemId,
+          formData
+        });
+        if (statusText !== "OK" || data.status !== "success") {
+          throw new Error(statusText);
+        }
+        Toast.fire({
+          type: "success",
+          title: "商品更新成功"
+        });
+        //update vuex
+        await this.$store.dispatch("fetchUserCart", userId);
+        this.items = this.cartItems;
+        this.total = this.totalPrice;
+        //render view
+        item.quantity = this.cacheQty;
+        this.cacheItem = {};
+        this.cacheQty = 0;
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "暫時無法更新購物車，請稍後再試"
+        });
+      }
+    }
+  }
+};
+</script>
