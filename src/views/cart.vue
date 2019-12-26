@@ -7,7 +7,10 @@
           <th scope="col"></th>
           <th scope="col">商品名稱</th>
           <th scope="col">價格</th>
-          <th scope="col">數量</th>
+          <th scope="col">
+            數量
+            <small class="text-muted">(雙擊修改數量)</small>
+          </th>
           <th scope="col">小計</th>
           <th scope="col"></th>
         </tr>
@@ -22,17 +25,27 @@
             <p>Color:{{item.color}}, Size:{{item.size}}</p>
           </td>
           <td class="align-middle">NTD {{item.sell_price}}</td>
-          <td class="align-middle">
-            <input
-              type="number"
-              name="quentity"
-              value="1"
-              v-model="item.quantity"
-              data-decimals="0"
-              min="1"
-              max="10"
-              step="1"
-            />
+          <td class="align-middle" @dblclick="editQty(item)">
+            <div v-if="item.id === cacheItem.id">
+              <form @submit.prevent.stop="putCartItem(item)">
+                <div>
+                  <input
+                    id="quantity"
+                    type="number"
+                    name="quantity"
+                    value="1"
+                    v-model="cacheQty"
+                    data-decimals="0"
+                    min="1"
+                    max="10"
+                    step="1"
+                  />
+                </div>
+                <button class="btn" type="submit">done</button>
+              </form>
+              <a @click.stop.prevent="cancelEdit()">cancel</a>
+            </div>
+            <div v-else>{{item.quantity}}</div>
           </td>
           <td class="align-middle">NTD {{item.sell_price*item.quantity}}</td>
           <td class="align-middle">
@@ -60,7 +73,9 @@ export default {
   data() {
     return {
       items: [],
-      total: 0
+      total: 0,
+      cacheItem: {},
+      cacheQty: 0
     };
   },
   async created() {
@@ -80,6 +95,12 @@ export default {
     },
     totalPrice() {
       return this.items.reduce((t, p) => t + p.sell_price * p.quantity, 0);
+    },
+    formData() {
+      const { cacheQty } = this;
+      return {
+        quantity: cacheQty
+      };
     }
   },
   methods: {
@@ -91,7 +112,7 @@ export default {
         }
         //update vuex
         await this.$store.dispatch("fetchUserCart", this.currentUser.id);
-        //render browser
+        //render view
         this.items = this.items.filter(item => item.id !== itemId);
         Toast.fire({
           type: "success",
@@ -101,6 +122,46 @@ export default {
         Toast.fire({
           type: "error",
           title: "暫時無法移除該項商品，請稍後再試"
+        });
+      }
+    },
+    editQty(item) {
+      this.cacheItem = item;
+      this.cacheQty = item.quantity;
+    },
+    cancelEdit() {
+      this.cacheItem = {};
+      this.cacheQty = 0;
+    },
+    async putCartItem(item) {
+      const userId = this.currentUser.id;
+      let itemId = item.id;
+      let formData = this.formData;
+      try {
+        const { data, statusText } = await usersAPI.putCartItem({
+          userId,
+          itemId,
+          formData
+        });
+        if (statusText !== "OK" || data.status !== "success") {
+          throw new Error(statusText);
+        }
+        Toast.fire({
+          type: "success",
+          title: "商品更新成功"
+        });
+        //update vuex
+        await this.$store.dispatch("fetchUserCart", userId);
+        this.items = this.cartItems;
+        this.total = this.totalPrice;
+        //render view
+        item.quantity = this.cacheQty;
+        this.cacheItem = {};
+        this.cacheQty = 0;
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "暫時無法更新購物車，請稍後再試"
         });
       }
     }
