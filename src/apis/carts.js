@@ -12,5 +12,8 @@ export default {
   },
   postCart({ formData }) {
     return apiHelper.post(`/products/cart`, formData)
+  },
+  notLoginPostCart({ formData }) {
+    return apiHelper.post(`/products/notLoginCart`, formData)
   }
 }

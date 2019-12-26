@@ -198,18 +198,34 @@ export default {
       }
       const formData = this.formData;
       try {
-        const { data, statusText } = await cartsAPI.postCart({ formData });
-        if (statusText !== "OK" || data.status !== "success") {
-          throw new Error(statusText);
+        if (this.isAuthenticated) {
+          const { data, statusText } = await cartsAPI.postCart({ formData });
+          if (statusText !== "OK" || data.status !== "success") {
+            throw new Error(statusText);
+          }
+          //update vuex
+          await this.$store.dispatch("fetchUserCart", this.currentUser.id);
+          Toast.fire({
+            type: "success",
+            title: "商品已加入購物車"
+          });
+        } else {
+          const { data, statusText } = await cartsAPI.notLoginPostCart({
+            formData
+          });
+          if (statusText !== "OK" || data.status !== "success") {
+            throw new Error(statusText);
+          }
+          Toast.fire({
+            type: "success",
+            title: "商品已加入購物車，請登入查看購物車"
+          });
         }
-        //update vuex
-        await this.$store.dispatch("fetchUserCart", this.currentUser.id);
-        Toast.fire({
-          type: "success",
-          title: "商品已加入購物車"
-        });
       } catch (error) {
-        console.log(error);
+        Toast.fire({
+          type: "error",
+          title: "商品暫時無法加入購物車，請稍後再試"
+        });
       }
     }
   }

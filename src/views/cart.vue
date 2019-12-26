@@ -39,7 +39,7 @@
                     v-model="cacheQty"
                     data-decimals="0"
                     min="1"
-                    max="10"
+                    max="20"
                     step="1"
                   />
                 </div>
