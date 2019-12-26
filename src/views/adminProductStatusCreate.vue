@@ -61,8 +61,6 @@ export default {
           color:this.newColor,
           size:this.newSize
         })
-        console.log(statusText)
-        console.log(data)
         if (statusText !== "OK" && data.status !== "success") {
           throw new Error(statusText);
         }
@@ -70,9 +68,8 @@ export default {
       }catch(error){
         Toast.fire({
           type:"error",
-          title:"新增商品類別失敗"
+          title:"新增商品顏色與尺寸失敗"
         })
-        console.log(error)
       }
     }
   }

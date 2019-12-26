@@ -39,11 +39,17 @@ export default {
         getStatus({id}){
             return apiHelper.get(`/admins/products/${id}/stocks`)
         },
+        getStatusDatail({id, stock_id}){
+            return apiHelper.get(`/admins/products/${id}/stocks/${stock_id}`)
+        },
         postStatus({productId, color, size}){
             return apiHelper.post(`/admins/products/${productId}/stocks`, {color, size})
         },
-        deleteStatus({productId}){
-            return apiHelper.delete(`/admins/products/${productId}/stocks`)
+        putStatus({id, stock_id ,color, size, stock}){
+            return apiHelper.put(`/admins/products/${id}/stocks/${stock_id}`, {color, size, stock})
+        },
+        deleteStatus({id, stock_id}){
+            return apiHelper.delete(`/admins/products/${id}/stocks/${stock_id}`)
         },
         getProductDetail({id}){
             return apiHelper.get(`/admins/products/${id}`)

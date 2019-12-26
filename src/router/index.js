@@ -180,7 +180,7 @@ const routes = [
     beforeEnter: authorizeIsAdmin
   },
   {
-    path: "/admin/products/:id/status/edit",
+    path: "/admin/products/:id/status/:stock_id/edit",
     name: "adminProductStatusEdit",
     component: adminProductStatusEdit,
     beforeEnter: authorizeIsAdmin

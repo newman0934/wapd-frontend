@@ -25,17 +25,23 @@
               <td scope="col">{{status.size}}</td>
               <td scope="col">{{status.stock}}</td>
               <td scope="col">
-                <a href="#" class="btn btn-outline-dark">編輯</a>
+                <router-link
+                  :to="{name:'adminProductStatusEdit', params:{id:status.ProductId,stock_id:status.id}}"
+                  class="btn btn-outline-dark"
+                >編輯</router-link>
               </td>
               <td scope="col">
-                <button class="btn btn-outline-dark" @click.stop.prevent="deleteProductStatus(status.id)">刪除</button>
+                <button
+                  class="btn btn-outline-dark"
+                  @click.stop.prevent="deleteProductStatus(status.ProductId, status.id)"
+                >刪除</button>
               </td>
             </tr>
           </tbody>
         </table>
-          <div class="container">
-      <button @click="goToBack" class="btn btn-outline-success mx-3 my-5">回上一頁</button>
-    </div>  
+        <div class="container">
+          <button @click="goToBack" class="btn btn-outline-success mx-3 my-5">回上一頁</button>
+        </div>
       </div>
     </div>
   </div>
@@ -74,8 +80,6 @@ export default {
           throw new Error(statusText);
         }
         this.productStatus = data.productStatus;
-
-                console.log(this.productStatus);
       } catch (error) {
         Toast.fire({
           type: "error",
@@ -83,26 +87,27 @@ export default {
         });
       }
     },
-    goToBack(){
-      this.$router.go(-1)
+    goToBack() {
+      this.$router.go(-1);
     },
-    async deleteProductStatus(productId){
-      try{
-        // const { data, statusText} = await adminAPI.products.deleteStatus({
-        //   productId
-        // })
+    async deleteProductStatus(id, stock_id) {
+      try {
+        const { data, statusText } = await adminAPI.products.deleteStatus({
+          id,
+          stock_id
+        });
 
-        // if (statusText !== "OK" && data.status !== "success") {
-        //   throw new Error(statusText);
-        // }
+        if (statusText !== "OK" && data.status !== "success") {
+          throw new Error(statusText);
+        }
         this.productStatus = this.productStatus.filter(
-          product => product.ProductId !== productId);
-
-      }catch(error){
+          product => product.id !== stock_id
+        );
+      } catch (error) {
         Toast.fire({
-          type:"error",
-          title:"刪除商品資訊失敗"
-        })
+          type: "error",
+          title: "刪除商品資訊失敗"
+        });
       }
     }
   }
