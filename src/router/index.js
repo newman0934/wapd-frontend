@@ -20,6 +20,7 @@ import adminOrderEdit from "../views/adminOrderEdit"
 import userEdit from "../views/userEdit"
 import userForgetPassword from "../views/userForgetPassword"
 import userChangePassword from "../views/userChangePassword"
+import userResetPassword from "../views/userResetPassword"
 import userWishList from "../views/userWishList"
 import cart from "../views/cart"
 import checkout from "../views/checkout"
@@ -68,9 +69,14 @@ const routes = [
     component: Product
   },
   {
-    path: "/users/:id/passowrd_forget",
+    path: "/users/password_forget",
     name: "userForgetPassword",
     component: userForgetPassword
+  },
+  {
+    path: "/users/password_reset/:token_id/:token",
+    name: "userResetPassword",
+    component: userResetPassword
   },
   {
     path: "/users/:id/cart",
@@ -218,7 +224,7 @@ router.beforeEach(async (to, from, next) => {
     isAuthenticated = await store.dispatch('fetchCurrentUser')
   }
   // 對於不需要驗證 token 的頁面
-  const pathsWithoutAuthentication = ['signIn', 'index', 'products', 'product', 'userForgetPassword']
+  const pathsWithoutAuthentication = ['signIn', 'index', 'products', 'product', 'userForgetPassword', 'userResetPassword']
   if (pathsWithoutAuthentication.includes(to.name)) {
     next()
     return
