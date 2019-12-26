@@ -13,35 +13,33 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="product in products" :key="product.id">
+        <tr v-for="item in items" :key="item.id">
           <th scope="row">
-            <img
-              :src="product.images[0].url"
-              class="img-fluid"
-              alt="Responsive image"
-              width="150px"
-            />
+            <img :src="item.images[0].url" class="img-fluid" alt="Responsive image" width="150px" />
           </th>
-          <td class="align-middle">{{product.name}}</td>
-          <td class="align-middle">NTD {{product.sell_price}}</td>
+          <td class="align-middle">
+            {{item.name}}
+            <p>Color:{{item.color}}, Size:{{item.size}}</p>
+          </td>
+          <td class="align-middle">NTD {{item.sell_price}}</td>
           <td class="align-middle">
             <input
               type="number"
               name="quentity"
               value="1"
-              v-model="product.quantity"
+              v-model="item.quantity"
               data-decimals="0"
               min="1"
               max="10"
               step="1"
             />
           </td>
-          <td class="align-middle">NTD {{product.sell_price*product.quantity}}</td>
+          <td class="align-middle">NTD {{item.sell_price*item.quantity}}</td>
           <td class="align-middle">
             <button
               type="button"
               class="btn btn-outline-danger"
-              @click.stop.prevent="deleteProduct(product.id)"
+              @click.stop.prevent="deleteCartItem(item.id)"
             >Ｘ</button>
           </td>
         </tr>
@@ -55,21 +53,20 @@
   </div>
 </template>
 <script>
-/* eslint-disable */
 import usersAPI from "./../apis/users";
 import { mapState } from "vuex";
 import { Toast } from "./../utils/helpers";
 export default {
   data() {
     return {
-      products: [],
+      items: [],
       totalPrice: 0
     };
   },
   computed: {
     ...mapState(["currentUser"]),
     total() {
-      return this.products.reduce((t, p) => t + p.sell_price * p.quantity, 0);
+      return this.items.reduce((t, p) => t + p.sell_price * p.quantity, 0);
     }
   },
   created() {
@@ -84,7 +81,10 @@ export default {
     async fetchUserCart(userId) {
       try {
         const { data, statusText } = await usersAPI.getUserCart({ userId });
-        this.products = data.userCart.cartItem;
+        if (statusText !== "OK") {
+          throw new Error(statusText);
+        }
+        this.items = data.userCart.cartItem;
       } catch (error) {
         Toast.fire({
           type: "error",
@@ -92,11 +92,17 @@ export default {
         });
       }
     },
-    async deleteProduct(productId) {
+    async deleteCartItem(itemId) {
       try {
-        this.products = this.products.filter(
-          product => product.id !== productId
-        );
+        const { data, statusText } = await usersAPI.deleteCartItem({ itemId });
+        if (statusText !== "OK" || data.status !== "success") {
+          throw new Error(statusText);
+        }
+        this.items = this.items.filter(item => item.id !== itemId);
+        Toast.fire({
+          type: "success",
+          title: "商品成功從購物車移除"
+        });
       } catch (error) {
         Toast.fire({
           type: "error",
