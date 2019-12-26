@@ -18,10 +18,12 @@
       <tbody>
         <tr v-for="item in items" :key="item.id">
           <th scope="row">
-            <img :src="item.images[0].url" class="img-fluid" alt="Responsive image" width="150px" />
+            <router-link :to="{name:'product', params:{id:item.ProductId}}">
+              <img :src="item.images[0].url" class="img-fluid" alt="Responsive image" width="150px" />
+            </router-link>
           </th>
           <td class="align-middle">
-            {{item.name}}
+            <router-link :to="{name:'product', params:{id:item.ProductId}}">{{item.name}}</router-link>
             <p>Color:{{item.color}}, Size:{{item.size}}</p>
           </td>
           <td class="align-middle">NTD {{item.sell_price}}</td>
@@ -66,7 +68,7 @@
   </div>
 </template>
 <script>
-import usersAPI from "./../apis/users";
+import cartsAPI from "./../apis/carts";
 import { mapState } from "vuex";
 import { Toast } from "./../utils/helpers";
 export default {
@@ -106,7 +108,7 @@ export default {
   methods: {
     async deleteCartItem(itemId) {
       try {
-        const { data, statusText } = await usersAPI.deleteCartItem({ itemId });
+        const { data, statusText } = await cartsAPI.deleteCartItem({ itemId });
         if (statusText !== "OK" || data.status !== "success") {
           throw new Error(statusText);
         }
@@ -138,7 +140,7 @@ export default {
       let itemId = item.id;
       let formData = this.formData;
       try {
-        const { data, statusText } = await usersAPI.putCartItem({
+        const { data, statusText } = await cartsAPI.putCartItem({
           userId,
           itemId,
           formData

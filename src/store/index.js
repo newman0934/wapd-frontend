@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import usersAPI from './../apis/users'
 import productsAPI from './../apis/products'
+import cartsAPI from './../apis/carts'
 import { Toast } from "./../utils/helpers";
 
 
@@ -130,7 +131,7 @@ export default new Vuex.Store({
     },
     async fetchUserCart(context, userId) {
       try {
-        const { data, statusText } = await usersAPI.getUserCart({ userId });
+        const { data, statusText } = await cartsAPI.getUserCart({ userId });
         if (statusText !== "OK") {
           throw new Error(statusText);
         }

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form>
+    <form @submit.stop.prevent="addToCartSubmit">
       <div class="row">
         <h1 class="product-name">{{product.name}}</h1>
       </div>
@@ -14,9 +14,9 @@
         <div class="input-group-prepend">
           <button class="btn btn-outline-secondary" type="button">Size</button>
         </div>
-        <select class="custom-select" name="size" id="size">
+        <select class="custom-select" name="size" id="size" v-model="size">
           <option selected>Choose...</option>
-          <option v-for="size in product.sizeSet" :key="size">{{size}}</option>
+          <option v-for="size in product.sizeSet" :key="size" :value="size">{{size}}</option>
         </select>
       </div>
 
@@ -24,9 +24,9 @@
         <div class="input-group-prepend">
           <button class="btn btn-outline-secondary" type="button">Color</button>
         </div>
-        <select class="custom-select" name="color" id="color">
+        <select class="custom-select" name="color" id="color" v-model="color">
           <option selected>Choose...</option>
-          <option v-for="color in product.colorSet" :key="color">{{color}}</option>
+          <option v-for="color in product.colorSet" :key="color" :value="color">{{color}}</option>
         </select>
       </div>
 
@@ -43,6 +43,7 @@
           min="0"
           max="10"
           step="1"
+          required
         />
       </div>
 
@@ -122,7 +123,9 @@
   </div>
 </template>
 <script>
+import cartsAPI from "./../apis/carts";
 import { mapState } from "vuex";
+import { Toast } from "./../utils/helpers";
 export default {
   props: {
     initialProduct: {
@@ -134,6 +137,8 @@ export default {
     return {
       product: this.initialProduct,
       quantity: 0,
+      size: "",
+      color: "",
       isProcessing: false
     };
   },
@@ -141,6 +146,15 @@ export default {
     ...mapState(["currentUser"]),
     isAuthenticated() {
       return this.$store.state.isAuthenticated;
+    },
+    formData() {
+      const { size, color, quantity } = this;
+      return {
+        productId: this.product.id,
+        size,
+        color,
+        quantity
+      };
     }
   },
   watch: {
@@ -172,6 +186,30 @@ export default {
         };
       } catch (error) {
         return false;
+      }
+    },
+    async addToCartSubmit() {
+      if (!this.color || !this.size || !this.quantity) {
+        Toast.fire({
+          type: "warning",
+          title: "請確認顏色、尺寸、數量皆需填寫！"
+        });
+        return;
+      }
+      const formData = this.formData;
+      try {
+        const { data, statusText } = await cartsAPI.postCart({ formData });
+        if (statusText !== "OK" || data.status !== "success") {
+          throw new Error(statusText);
+        }
+        //update vuex
+        await this.$store.dispatch("fetchUserCart", this.currentUser.id);
+        Toast.fire({
+          type: "success",
+          title: "商品已加入購物車"
+        });
+      } catch (error) {
+        console.log(error);
       }
     }
   }
