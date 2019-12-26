@@ -1,5 +1,11 @@
 import { apiHelper } from './../utils/helpers'
 
+// const config = {
+//   headers: {
+//     'Content-Type': 'application/x-www-form-urlencoded'
+//   }
+// }
+
 export default {
   getCurrentUser() {
     return apiHelper.get(`/get_current_user`)
@@ -15,6 +21,12 @@ export default {
   },
   getUserCart({ userId }) {
     return apiHelper.get(`/users/${userId}/cart`)
+  },
+  deleteCartItem({ itemId }) {
+    return apiHelper.delete(`users/cart/${itemId}`)
+  },
+  putCartItem({ userId, itemId, formData }) {
+    return apiHelper.put(`/users/${userId}/cart/${itemId}`, formData)
   },
   postPasswordChange({ formData }) {
     return apiHelper.post(`/users/password_change`, formData)
