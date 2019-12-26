@@ -17,8 +17,8 @@ export default new Vuex.Store({
       address: '',
       role: false
     },
-    wishList: {
-    },
+    wishList: {},
+    cart: {},
     isAuthenticated: false,
     isProcessing: false,
     token: ''
@@ -40,6 +40,9 @@ export default new Vuex.Store({
     },
     WISHLIST(state, payload) {
       state.wishList = payload
+    },
+    CART(state, payload) {
+      state.cart = payload
     }
   },
   actions: {
@@ -122,6 +125,21 @@ export default new Vuex.Store({
         Toast.fire({
           type: "error",
           title: "無法將商品從Wish List移除，請稍後再試"
+        });
+      }
+    },
+    async fetchUserCart(context, userId) {
+      try {
+        const { data, statusText } = await usersAPI.getUserCart({ userId });
+        if (statusText !== "OK") {
+          throw new Error(statusText);
+        }
+        context.commit('CART', data.userCart.cartItem);
+        // this.items = data.userCart.cartItem;
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "暫時無法取得使用者購物車資料，請稍後再試"
         });
       }
     }

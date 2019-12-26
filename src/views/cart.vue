@@ -60,44 +60,38 @@ export default {
   data() {
     return {
       items: [],
-      totalPrice: 0
+      total: 0
     };
   },
-  computed: {
-    ...mapState(["currentUser"]),
-    total() {
-      return this.items.reduce((t, p) => t + p.sell_price * p.quantity, 0);
-    }
-  },
-  created() {
+  async created() {
     const { id } = this.$route.params;
     if (id.toString() !== this.currentUser.id.toString()) {
       this.$router.push({ name: "notFound" });
       return;
     }
-    this.fetchUserCart(id);
+    await this.$store.dispatch("fetchUserCart", id);
+    this.items = this.cartItems;
+    this.total = this.totalPrice;
+  },
+  computed: {
+    ...mapState(["currentUser"]),
+    cartItems() {
+      return this.$store.state.cart;
+    },
+    totalPrice() {
+      return this.items.reduce((t, p) => t + p.sell_price * p.quantity, 0);
+    }
   },
   methods: {
-    async fetchUserCart(userId) {
-      try {
-        const { data, statusText } = await usersAPI.getUserCart({ userId });
-        if (statusText !== "OK") {
-          throw new Error(statusText);
-        }
-        this.items = data.userCart.cartItem;
-      } catch (error) {
-        Toast.fire({
-          type: "error",
-          title: "暫時無法取得使用者購物車資料，請稍後再試"
-        });
-      }
-    },
     async deleteCartItem(itemId) {
       try {
         const { data, statusText } = await usersAPI.deleteCartItem({ itemId });
         if (statusText !== "OK" || data.status !== "success") {
           throw new Error(statusText);
         }
+        //update vuex
+        await this.$store.dispatch("fetchUserCart", this.currentUser.id);
+        //render browser
         this.items = this.items.filter(item => item.id !== itemId);
         Toast.fire({
           type: "success",
