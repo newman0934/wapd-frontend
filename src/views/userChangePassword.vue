@@ -80,6 +80,13 @@ export default {
         });
         return;
       }
+      if (this.usedPassword == this.newPassword) {
+        Toast.fire({
+          type: "warning",
+          title: "新密碼與舊密碼不可相同"
+        });
+        return;
+      }
       if (this.newPassword !== this.passwordCheck) {
         Toast.fire({
           type: "warning",

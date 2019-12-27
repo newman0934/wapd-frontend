@@ -136,7 +136,6 @@ export default {
         this.$store.dispatch("updateProcessing", false);
       } catch (error) {
         this.$store.dispatch("updateProcessing", false);
-        console.log(error);
         Toast.fire({
           type: "error",
           title: "無法更新使用者資料，請稍後再試"
