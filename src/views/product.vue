@@ -49,6 +49,11 @@ export default {
     const { id: productId } = this.$route.params;
     this.fetchProduct(productId);
   },
+  beforeRouteUpdate(to, from, next) {
+    const { id } = to.params;
+    this.fetchProduct(id);
+    next();
+  },
   methods: {
     async fetchProduct(productId) {
       try {
