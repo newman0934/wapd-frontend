@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import VuexPersist from 'vuex-persist'
 import usersAPI from './../apis/users'
 import productsAPI from './../apis/products'
 import cartsAPI from './../apis/carts'
@@ -8,7 +9,13 @@ import { Toast } from "./../utils/helpers";
 
 Vue.use(Vuex)
 
+const vuexPersist = new VuexPersist({
+  key: 'my-app',
+  storage: window.localStorage
+})
+
 export default new Vuex.Store({
+  plugins: [vuexPersist.plugin],
   state: {
     currentUser: {
       id: -1,
