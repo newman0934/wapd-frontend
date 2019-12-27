@@ -10,9 +10,6 @@
       <div class="col-md-4">
         <productDetail :initial-product="product" />
       </div>
-      <!-- <div class="col-md-12">
-        <productGallery />
-      </div>-->
     </div>
   </div>
 </template>
