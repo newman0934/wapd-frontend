@@ -39,7 +39,10 @@
           />
         </div>
 
-        <button class="btn btn-lg btn-outline-secondary btn-block btn-sm mb-3" type="submit">更新密碼</button>
+        <button
+          class="btn btn-lg btn-outline-secondary btn-block btn-sm mb-3"
+          type="submit"
+        >{{isProcessing ? "資料更新中..." : "更新密碼"}}</button>
       </form>
     </div>
   </div>
@@ -56,6 +59,9 @@ export default {
     };
   },
   computed: {
+    isProcessing() {
+      return this.$store.state.isProcessing;
+    },
     formData() {
       const { usedPassword, newPassword, passwordCheck } = this;
       return {
@@ -83,6 +89,7 @@ export default {
       }
       const formData = this.formData;
       try {
+        this.$store.dispatch("updateProcessing", true);
         const { data, statusText } = await usersAPI.postPasswordChange({
           formData
         });
@@ -94,10 +101,12 @@ export default {
           title: "密碼更新成功，請用新密碼登入"
         });
         this.$router.push({ name: "signIn" });
+        this.$store.dispatch("updateProcessing", false);
       } catch (error) {
+        this.$store.dispatch("updateProcessing", false);
         Toast.fire({
           type: "error",
-          title: "密碼更新失敗，請確認舊密碼是否輸入正確"
+          title: "密碼更新失敗，請確認密碼是否輸入正確"
         });
       }
     }

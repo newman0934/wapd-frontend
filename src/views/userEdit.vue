@@ -63,7 +63,7 @@
           class="btn btn-lg btn-outline-secondary btn-block btn-sm mb-3"
           type="submit"
           :disabled="isProcessing"
-        >{{isProcessing ? "資料更新中..." : "Submit"}}</button>
+        >{{isProcessing ? "資料更新中..." : "更新使用者資料"}}</button>
       </form>
     </div>
   </div>
