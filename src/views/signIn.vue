@@ -14,15 +14,18 @@
             <form class="w-100" @submit.prevent.stop="handleSubmitSignIn">
               <h4>登入</h4>
               <div class="form-label-group mb-2">
-                <input
-                  id="email"
-                  v-model="email"
-                  name="email"
-                  type="email"
-                  class="form-control"
-                  placeholder="請輸入Email"
-                  required
-                />
+                <ValidationProvider rules="required" v-slot="{ errors }">
+                  <input
+                    id="email"
+                    v-model="email"
+                    name="email"
+                    type="email"
+                    class="form-control"
+                    placeholder="請輸入Email"
+                    required
+                  />
+                  <span class="d-flex">{{ errors[0] }}</span>
+                </ValidationProvider>
               </div>
               <div class="form-label-group mb-3">
                 <input
@@ -94,10 +97,13 @@
   </div>
 </template>
 <script>
-/* eslint-disable */
+import { ValidationProvider } from "vee-validate";
 import authorizationAPI from "./../apis/authorization";
 import { Toast } from "./../utils/helpers";
 export default {
+  components: {
+    ValidationProvider
+  },
   data() {
     return {
       email: "",
@@ -109,7 +115,7 @@ export default {
     };
   },
   methods: {
-    async handleSubmitSignIn(e) {
+    async handleSubmitSignIn() {
       try {
         if (!this.email || !this.password) {
           Toast.fire({
@@ -143,7 +149,7 @@ export default {
         });
       }
     },
-    async handleSubmitSignUp(e) {
+    async handleSubmitSignUp() {
       try {
         //testing form validation
         if (
