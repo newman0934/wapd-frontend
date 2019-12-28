@@ -84,7 +84,7 @@ const routes = [
     component: cart
   },
   {
-    path: "/users/:id/checkout",
+    path: "/orders/:id/checkout",
     name: "checkout",
     component: checkout
   },

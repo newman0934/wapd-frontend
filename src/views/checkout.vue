@@ -39,7 +39,7 @@
           </label>
         </div>
       </div>
-
+      <!-- 
       <h5 class="text-left mt-3">使用折扣碼</h5>
       <hr />
       <form class="form-inline ml-3">
@@ -48,7 +48,8 @@
           <input type="text" class="form-control" id="coupon" placeholder="Enter coupon code" />
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
+      </form>-->
+
       <h5 class="text-left mt-3">結帳商品</h5>
       <table class="table table-striped">
         <thead>

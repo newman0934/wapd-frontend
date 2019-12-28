@@ -64,7 +64,19 @@
       </tbody>
     </table>
 
-    <button type="submit" class="btn btn-outline-secondary btn-block">CheckOut</button>
+    <form class="form-inline ml-3">
+      <div class="form-group mx-sm-3">
+        <label for="input-coupon" class="sr-only">輸入優惠序號</label>
+        <input type="text" class="form-control" id="coupon" placeholder="Enter coupon code" />
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    <button
+      type="submit"
+      class="btn btn-outline-secondary btn-block mt-3"
+      @click.stop.prevent="postOrder"
+    >結帳</button>
   </div>
 </template>
 <script>
@@ -77,7 +89,8 @@ export default {
       items: [],
       total: 0,
       cacheItem: {},
-      cacheQty: 0
+      cacheQty: 0,
+      couponCode: ""
     };
   },
   async created() {
@@ -98,14 +111,17 @@ export default {
     totalPrice() {
       return this.items.reduce((t, p) => t + p.sell_price * p.quantity, 0);
     },
-    formData() {
+    cartData() {
       const { cacheQty } = this;
-      return {
-        quantity: cacheQty
-      };
+      return { quantity: cacheQty };
+    },
+    orderData() {
+      const { couponCode } = this;
+      return { couponCode };
     }
   },
   methods: {
+    //刪除購物車商品及編輯購物車數量
     async deleteCartItem(itemId) {
       try {
         const { data, statusText } = await cartsAPI.deleteCartItem({ itemId });
@@ -138,12 +154,12 @@ export default {
     async putCartItem(item) {
       const userId = this.currentUser.id;
       let itemId = item.id;
-      let formData = this.formData;
+      let cartData = this.cartData;
       try {
         const { data, statusText } = await cartsAPI.putCartItem({
           userId,
           itemId,
-          formData
+          cartData
         });
         if (statusText !== "OK" || data.status !== "success") {
           throw new Error(statusText);
@@ -165,6 +181,22 @@ export default {
           type: "error",
           title: "暫時無法更新購物車，請稍後再試"
         });
+      }
+    },
+    //成立訂單
+    async postOrder() {
+      let orderData = this.orderData;
+      try {
+        const { data, statusText } = await cartsAPI.postOrder({ orderData });
+        if (statusText !== "OK" || data.status !== "success") {
+          throw new Error(statusText);
+        }
+        const orderId = data.OrderId;
+        //update vuex
+        await this.$store.dispatch("fetchUserCart", this.currentUser.id);
+        this.$router.push(`/orders/${orderId}/checkout`);
+      } catch (error) {
+        console.log(error);
       }
     }
   }
