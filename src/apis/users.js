@@ -24,5 +24,8 @@ export default {
   },
   postResetPassword({ formData }) {
     return apiHelper.post(`/users/password_reset`, formData)
+  },
+  putUser({ formData }) {
+    return apiHelper.put(`/users/edit`, formData)
   }
 }

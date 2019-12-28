@@ -29,6 +29,7 @@ export default new Vuex.Store({
     cart: {},
     isAuthenticated: false,
     isProcessing: false,
+    isLoading: false,
     token: ''
   },
   mutations: {
@@ -51,9 +52,21 @@ export default new Vuex.Store({
     },
     CART(state, payload) {
       state.cart = payload
+    },
+    PROCESSING(state, status) {
+      state.isProcessing = status
+    },
+    LOADING(state, status) {
+      state.isLoading = status
     }
   },
   actions: {
+    updateProcessing(context, status) {
+      context.commit('PROCESSING', status)
+    },
+    updateLoading(context, status) {
+      context.commit("LOADING", status)
+    },
     async fetchCurrentUser({ commit }) {
       try {
         const { data, statusText } = await usersAPI.getCurrentUser()
