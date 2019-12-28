@@ -3,7 +3,7 @@ import Swal from 'sweetalert2'
 
 const baseURL = 'http://localhost:3000/api'
 
-export const axiosInstance = axios.create({ baseURL })
+export const axiosInstance = axios.create({ baseURL, withCredentials: true })
 
 axiosInstance.interceptors.request.use(
   config => {

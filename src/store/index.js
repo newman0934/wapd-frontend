@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import VuexPersist from 'vuex-persist'
 import usersAPI from './../apis/users'
 import productsAPI from './../apis/products'
 import cartsAPI from './../apis/carts'
@@ -8,7 +9,13 @@ import { Toast } from "./../utils/helpers";
 
 Vue.use(Vuex)
 
+const vuexPersist = new VuexPersist({
+  key: 'my-app',
+  storage: window.localStorage
+})
+
 export default new Vuex.Store({
+  plugins: [vuexPersist.plugin],
   state: {
     currentUser: {
       id: -1,
@@ -22,6 +29,7 @@ export default new Vuex.Store({
     cart: {},
     isAuthenticated: false,
     isProcessing: false,
+    isLoading: false,
     token: ''
   },
   mutations: {
@@ -44,9 +52,21 @@ export default new Vuex.Store({
     },
     CART(state, payload) {
       state.cart = payload
+    },
+    PROCESSING(state, status) {
+      state.isProcessing = status
+    },
+    LOADING(state, status) {
+      state.isLoading = status
     }
   },
   actions: {
+    updateProcessing(context, status) {
+      context.commit('PROCESSING', status)
+    },
+    updateLoading(context, status) {
+      context.commit("LOADING", status)
+    },
     async fetchCurrentUser({ commit }) {
       try {
         const { data, statusText } = await usersAPI.getCurrentUser()
