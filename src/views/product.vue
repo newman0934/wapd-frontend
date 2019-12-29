@@ -96,7 +96,6 @@ export default {
         }
         this.productImgs = data.product.images;
       } catch (error) {
-        console.log(error);
         Toast.fire({
           type: "error",
           title: "無法取得商品資訊，請稍後再試"

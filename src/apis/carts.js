@@ -15,5 +15,11 @@ export default {
   },
   notLoginPostCart({ formData }) {
     return apiHelper.post(`/products/notLoginCart`, formData)
+  },
+  postOrder({ formData }) {
+    return apiHelper.post(`/users/orders`, formData)
+  },
+  getCheckout({ orderId }) {
+    return apiHelper.get(`/orders/${orderId}/checkout`)
   }
 }
