@@ -18,5 +18,8 @@ export default {
   },
   postOrder({ formData }) {
     return apiHelper.post(`/users/orders`, formData)
+  },
+  getCheckout({ orderId }) {
+    return apiHelper.get(`/orders/${orderId}/checkout`)
   }
 }
