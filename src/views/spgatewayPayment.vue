@@ -17,30 +17,34 @@
 </template>
 
 <script>
-import cartsAPI from '../apis/carts'
+import cartsAPI from "../apis/carts";
 export default {
-  name: 'spgatewayPayment',
+  name: "spgatewayPayment",
   data() {
     return {
       tradeInfo: {},
       total: 0,
       orderId: 0,
-      email: ''
-    }
+      email: ""
+    };
   },
   methods: {
     async fetchPayment(orderId) {
-      const { data } = await cartsAPI.getPayment(orderId)
-      this.tradeInfo = data.tradeInfo
-      this.total = data.total
-      this.orderId = data.orderId
-      this.email = data.email
-      console.log(data)
+      try {
+        const { data, statusText } = await cartsAPI.getPayment(orderId);
+        console.log(data, statusText);
+        this.tradeInfo = data.tradeInfo;
+        this.total = data.total;
+        this.orderId = data.orderId;
+        this.email = data.email;
+      } catch (error) {
+        console.log(error);
+      }
     }
   },
   created() {
-    const { id } = this.$route.params
-    this.fetchPayment(id)
+    const { id } = this.$route.params;
+    this.fetchPayment(id);
   }
-}
+};
 </script>

@@ -3,15 +3,9 @@
     <form @submit.prevent.stop="handleSubmit">
       <h5 class="text-left">結帳提醒</h5>
       <hr />
-      <p class="text-left w-80 ml-3">
-        ＊請確認訂購的商品及顏色尺寸是否正確，訂單完成後若要修改請聯絡客服
-      </p>
-      <p class="text-left w-80 ml-3">
-        ＊訂單一旦取消後，若要再次購買，只能重新訂購，並以訂購當下官網顯示的商品價格及活動為主
-      </p>
-      <p class="text-left w-80 ml-3">
-        ＊若訂單顯示出貨中，表示已進入出貨流程，恕無法取消訂單
-      </p>
+      <p class="text-left w-80 ml-3">＊請確認訂購的商品及顏色尺寸是否正確，訂單完成後若要修改請聯絡客服</p>
+      <p class="text-left w-80 ml-3">＊訂單一旦取消後，若要再次購買，只能重新訂購，並以訂購當下官網顯示的商品價格及活動為主</p>
+      <p class="text-left w-80 ml-3">＊若訂單顯示出貨中，表示已進入出貨流程，恕無法取消訂單</p>
 
       <h5 class="text-left">選擇物流</h5>
       <hr />
@@ -90,7 +84,7 @@
               {{ order.productName }}
               <p>
                 Color:{{ order.orderItem.color }}, Size:{{
-                  order.orderItem.size
+                order.orderItem.size
                 }}
               </p>
             </td>
@@ -267,16 +261,14 @@
           </table>
         </div>
       </div>
-      <button type="submit" class="btn btn-outline-secondary btn-block">
-        確認訂單
-      </button>
+      <button type="submit" class="btn btn-outline-secondary btn-block">確認訂單</button>
     </form>
   </div>
 </template>
 <script>
-import cartsAPI from './../apis/carts'
-import { Toast } from './../utils/helpers'
-import { mapState } from 'vuex'
+import cartsAPI from "./../apis/carts";
+import { Toast } from "./../utils/helpers";
+import { mapState } from "vuex";
 
 export default {
   data() {
@@ -287,33 +279,43 @@ export default {
       shippingTotal: 0,
       total: 0,
       user: {
-        name: '',
-        phone: '',
-        email: '',
-        address: '',
+        name: "",
+        phone: "",
+        email: "",
+        address: "",
         checked: false
       },
       receiver: {
-        name: '',
-        phone: '',
-        email: '',
-        address: '',
+        name: "",
+        phone: "",
+        email: "",
+        address: "",
         checked: false
       }
-    }
+    };
   },
   created() {
-    const { id } = this.$route.params
-    this.fetchCheckout(id)
+    const { id } = this.$route.params;
+    this.fetchCheckout(id);
   },
   computed: {
-    ...mapState(['currentUser'])
+    ...mapState(["currentUser"]),
+    formData() {
+      return {
+        receiverName: this.receiver.name,
+        receiverPhone: this.receiver.phone,
+        receiverAddress: this.receiver.address,
+        receiverEmail: this.receiver.email,
+        total: this.total,
+        orderId: this.$route.params.id
+      };
+    }
   },
   watch: {
     user: {
       handler: function() {
         if (this.receiver.checked == true) {
-          this.includeReceiverData(!this.receiver.checked)
+          this.includeReceiverData(!this.receiver.checked);
         }
       },
       deep: true
@@ -322,60 +324,66 @@ export default {
   methods: {
     async fetchCheckout(orderId) {
       try {
-        const { data, statusText } = await cartsAPI.getCheckout({ orderId })
-        if (statusText !== 'OK') {
-          throw new Error(statusText)
+        const { data, statusText } = await cartsAPI.getCheckout({ orderId });
+        if (statusText !== "OK") {
+          throw new Error(statusText);
         }
-        this.orders = data.orderItems
-        this.orderSubTotal = data.orderSubTotal
-        this.couponDiscount = data.couponDiscount
-        this.shippingTotal = data.shippingTotal
-        this.total = data.total
+        this.orders = data.orderItems;
+        this.orderSubTotal = data.orderSubTotal;
+        this.couponDiscount = data.couponDiscount;
+        this.shippingTotal = data.shippingTotal;
+        this.total = data.total;
       } catch (error) {
         Toast.fire({
-          type: 'error',
-          title: '無法取得訂單資訊，請稍後再試'
-        })
+          type: "error",
+          title: "無法取得訂單資訊，請稍後再試"
+        });
       }
     },
     includeUserData(checked) {
       if (checked == false) {
-        this.user.name = this.currentUser.name
-        this.user.phone = this.currentUser.phone
-        this.user.email = this.currentUser.email
-        this.user.address = this.currentUser.address
+        this.user.name = this.currentUser.name;
+        this.user.phone = this.currentUser.phone;
+        this.user.email = this.currentUser.email;
+        this.user.address = this.currentUser.address;
       } else {
-        this.user.name = ''
-        this.user.phone = ''
-        this.user.email = ''
-        this.user.address = ''
+        this.user.name = "";
+        this.user.phone = "";
+        this.user.email = "";
+        this.user.address = "";
       }
     },
     includeReceiverData(checked) {
       if (checked == false) {
-        this.receiver.name = this.user.name
-        this.receiver.phone = this.user.phone
-        this.receiver.email = this.user.email
-        this.receiver.address = this.user.address
+        this.receiver.name = this.user.name;
+        this.receiver.phone = this.user.phone;
+        this.receiver.email = this.user.email;
+        this.receiver.address = this.user.address;
       } else {
-        this.receiver.name = ''
-        this.receiver.phone = ''
-        this.receiver.email = ''
-        this.receiver.address = ''
+        this.receiver.name = "";
+        this.receiver.phone = "";
+        this.receiver.email = "";
+        this.receiver.address = "";
       }
     },
-    async handleSubmit(e) {
-      const form = e.target
-      const formData = new FormData(form)
-      const orderId = this.$route.params.id
-      formData.append('orderId', orderId)
-      formData.append('total', this.total)
-      const { data } = await cartsAPI.postCheckout({ formData })
-      console.log(data)
-      if (data.status === 'success') {
-        this.$router.push(`/orders/${orderId}/payment`)
+    async handleSubmit() {
+      // const form = e.target;
+      // const formData = new FormData(form);
+      const formData = this.formData;
+      console.log(formData);
+      const orderId = this.$route.params.id;
+      // formData.append("orderId", orderId);
+      // formData.append("total", this.total);
+      try {
+        const { data } = await cartsAPI.postCheckout({ formData });
+        if (data.status === "success") {
+          this.$router.push(`/orders/${orderId}/payment`);
+        }
+        console.log(data);
+      } catch (error) {
+        console.log(error);
       }
     }
   }
-}
+};
 </script>
