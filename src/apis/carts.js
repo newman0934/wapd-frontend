@@ -21,5 +21,11 @@ export default {
   },
   getCheckout({ orderId }) {
     return apiHelper.get(`/orders/${orderId}/checkout`)
+  },
+  postCheckout({ formData }) {
+    return apiHelper.post(`/orders/checkout`, formData)
+  },
+  getPayment(orderId) {
+    return apiHelper.get(`/orders/${orderId}/payment`)
   }
 }

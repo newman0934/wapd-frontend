@@ -1,11 +1,17 @@
 <template>
   <div class="container py-5">
-    <form>
+    <form @submit.prevent.stop="handleSubmit">
       <h5 class="text-left">結帳提醒</h5>
       <hr />
-      <p class="text-left w-80 ml-3">＊請確認訂購的商品及顏色尺寸是否正確，訂單完成後若要修改請聯絡客服</p>
-      <p class="text-left w-80 ml-3">＊訂單一旦取消後，若要再次購買，只能重新訂購，並以訂購當下官網顯示的商品價格及活動為主</p>
-      <p class="text-left w-80 ml-3">＊若訂單顯示出貨中，表示已進入出貨流程，恕無法取消訂單</p>
+      <p class="text-left w-80 ml-3">
+        ＊請確認訂購的商品及顏色尺寸是否正確，訂單完成後若要修改請聯絡客服
+      </p>
+      <p class="text-left w-80 ml-3">
+        ＊訂單一旦取消後，若要再次購買，只能重新訂購，並以訂購當下官網顯示的商品價格及活動為主
+      </p>
+      <p class="text-left w-80 ml-3">
+        ＊若訂單顯示出貨中，表示已進入出貨流程，恕無法取消訂單
+      </p>
 
       <h5 class="text-left">選擇物流</h5>
       <hr />
@@ -81,33 +87,37 @@
               />
             </th>
             <td class="align-middle">
-              {{order.productName}}
-              <p>Color:{{order.orderItem.color}}, Size:{{order.orderItem.size}}</p>
+              {{ order.productName }}
+              <p>
+                Color:{{ order.orderItem.color }}, Size:{{
+                  order.orderItem.size
+                }}
+              </p>
             </td>
-            <td class="align-middle">NTD {{order.orderItem.sell_price}}</td>
-            <td class="align-middle">{{order.orderItem.quantity}}</td>
-            <td class="align-middle">NTD {{order.subtotal}}</td>
+            <td class="align-middle">NTD {{ order.orderItem.sell_price }}</td>
+            <td class="align-middle">{{ order.orderItem.quantity }}</td>
+            <td class="align-middle">NTD {{ order.subtotal }}</td>
           </tr>
 
           <tr class="table-light" style="border-top:3px gray solid;">
             <th></th>
             <td colspan="3">小計</td>
-            <td>NTD {{orderSubTotal}}</td>
+            <td>NTD {{ orderSubTotal }}</td>
           </tr>
           <tr class="table-light">
             <th></th>
             <td colspan="3">運費</td>
-            <td>NTD {{shippingTotal}}</td>
+            <td>NTD {{ shippingTotal }}</td>
           </tr>
           <tr class="table-light">
             <th></th>
             <td colspan="3">折扣</td>
-            <td>NTD -{{couponDiscount}}</td>
+            <td>NTD -{{ couponDiscount }}</td>
           </tr>
           <tr class="table-info">
             <th></th>
             <td colspan="3">總計</td>
-            <td>NTD {{total}}</td>
+            <td>NTD {{ total }}</td>
           </tr>
         </tbody>
       </table>
@@ -257,14 +267,16 @@
           </table>
         </div>
       </div>
-      <button type="submit" class="btn btn-outline-secondary btn-block">確認訂單</button>
+      <button type="submit" class="btn btn-outline-secondary btn-block">
+        確認訂單
+      </button>
     </form>
   </div>
 </template>
 <script>
-import cartsAPI from "./../apis/carts";
-import { Toast } from "./../utils/helpers";
-import { mapState } from "vuex";
+import cartsAPI from './../apis/carts'
+import { Toast } from './../utils/helpers'
+import { mapState } from 'vuex'
 
 export default {
   data() {
@@ -275,33 +287,33 @@ export default {
       shippingTotal: 0,
       total: 0,
       user: {
-        name: "",
-        phone: "",
-        email: "",
-        address: "",
+        name: '',
+        phone: '',
+        email: '',
+        address: '',
         checked: false
       },
       receiver: {
-        name: "",
-        phone: "",
-        email: "",
-        address: "",
+        name: '',
+        phone: '',
+        email: '',
+        address: '',
         checked: false
       }
-    };
+    }
   },
   created() {
-    const { id } = this.$route.params;
-    this.fetchCheckout(id);
+    const { id } = this.$route.params
+    this.fetchCheckout(id)
   },
   computed: {
-    ...mapState(["currentUser"])
+    ...mapState(['currentUser'])
   },
   watch: {
     user: {
       handler: function() {
         if (this.receiver.checked == true) {
-          this.includeReceiverData(!this.receiver.checked);
+          this.includeReceiverData(!this.receiver.checked)
         }
       },
       deep: true
@@ -310,48 +322,60 @@ export default {
   methods: {
     async fetchCheckout(orderId) {
       try {
-        const { data, statusText } = await cartsAPI.getCheckout({ orderId });
-        if (statusText !== "OK") {
-          throw new Error(statusText);
+        const { data, statusText } = await cartsAPI.getCheckout({ orderId })
+        if (statusText !== 'OK') {
+          throw new Error(statusText)
         }
-        this.orders = data.orderItems;
-        this.orderSubTotal = data.orderSubTotal;
-        this.couponDiscount = data.couponDiscount;
-        this.shippingTotal = data.shippingTotal;
-        this.total = data.total;
+        this.orders = data.orderItems
+        this.orderSubTotal = data.orderSubTotal
+        this.couponDiscount = data.couponDiscount
+        this.shippingTotal = data.shippingTotal
+        this.total = data.total
       } catch (error) {
         Toast.fire({
-          type: "error",
-          title: "無法取得訂單資訊，請稍後再試"
-        });
+          type: 'error',
+          title: '無法取得訂單資訊，請稍後再試'
+        })
       }
     },
     includeUserData(checked) {
       if (checked == false) {
-        this.user.name = this.currentUser.name;
-        this.user.phone = this.currentUser.phone;
-        this.user.email = this.currentUser.email;
-        this.user.address = this.currentUser.address;
+        this.user.name = this.currentUser.name
+        this.user.phone = this.currentUser.phone
+        this.user.email = this.currentUser.email
+        this.user.address = this.currentUser.address
       } else {
-        this.user.name = "";
-        this.user.phone = "";
-        this.user.email = "";
-        this.user.address = "";
+        this.user.name = ''
+        this.user.phone = ''
+        this.user.email = ''
+        this.user.address = ''
       }
     },
     includeReceiverData(checked) {
       if (checked == false) {
-        this.receiver.name = this.user.name;
-        this.receiver.phone = this.user.phone;
-        this.receiver.email = this.user.email;
-        this.receiver.address = this.user.address;
+        this.receiver.name = this.user.name
+        this.receiver.phone = this.user.phone
+        this.receiver.email = this.user.email
+        this.receiver.address = this.user.address
       } else {
-        this.receiver.name = "";
-        this.receiver.phone = "";
-        this.receiver.email = "";
-        this.receiver.address = "";
+        this.receiver.name = ''
+        this.receiver.phone = ''
+        this.receiver.email = ''
+        this.receiver.address = ''
+      }
+    },
+    async handleSubmit(e) {
+      const form = e.target
+      const formData = new FormData(form)
+      const orderId = this.$route.params.id
+      formData.append('orderId', orderId)
+      formData.append('total', this.total)
+      const { data } = await cartsAPI.postCheckout({ formData })
+      console.log(data)
+      if (data.status === 'success') {
+        this.$router.push(`/orders/${orderId}/payment`)
       }
     }
   }
-};
+}
 </script>
