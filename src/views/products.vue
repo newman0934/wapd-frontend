@@ -19,7 +19,7 @@
   </div>
 </template>
 <script>
-import spinner from "./../components/spinner";
+// import spinner from "./../components/spinner";
 import leftCategoryNav from "./../components/leftCategoryNav";
 import productCard from "./../components/productCard";
 import productsPagination from "./../components/productsPagination";
