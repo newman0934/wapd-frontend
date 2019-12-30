@@ -7,6 +7,8 @@ import { faFacebook, faLine, faInstagram } from "@fortawesome/free-brands-svg-ic
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import store from './store'
 
+
+
 library.add(faUser, faSearch, faBars, faShoppingCart, faFacebook, faLine, faInstagram, faHeart, faUserCog);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
