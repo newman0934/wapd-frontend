@@ -8,7 +8,9 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import store from './store'
 import "./vee-validate.js"
 
+
 library.add(faUser, faSearch, faBars, faShoppingCart, faFacebook, faLine, faInstagram, faHeart, faUserCog, faUserLock, faKey, faSadTear);
+
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
