@@ -13,7 +13,19 @@ export default {
   getUserFavorite({ userId }) {
     return apiHelper.get(`/users/${userId}/wishlist`)
   },
-  getUserCart({ userId }) {
-    return apiHelper.get(`/users/${userId}/cart`)
+  postPasswordChange({ formData }) {
+    return apiHelper.post(`/users/password_change`, formData)
+  },
+  postPasswordForget({ formData }) {
+    return apiHelper.post(`/users/password_forget`, formData)
+  },
+  getResetPassword({ tokenId, token }) {
+    return apiHelper.get(`/users/password_reset/${tokenId}/${token}`)
+  },
+  postResetPassword({ formData }) {
+    return apiHelper.post(`/users/password_reset`, formData)
+  },
+  putUser({ formData }) {
+    return apiHelper.put(`/users/edit`, formData)
   }
 }

@@ -10,9 +10,6 @@
       <div class="col-md-4">
         <productDetail :initial-product="product" />
       </div>
-      <!-- <div class="col-md-12">
-        <productGallery />
-      </div>-->
     </div>
   </div>
 </template>
@@ -51,6 +48,11 @@ export default {
   created() {
     const { id: productId } = this.$route.params;
     this.fetchProduct(productId);
+  },
+  beforeRouteUpdate(to, from, next) {
+    const { id } = to.params;
+    this.fetchProduct(id);
+    next();
   },
   methods: {
     async fetchProduct(productId) {
@@ -91,11 +93,9 @@ export default {
             sizeSet: [...sizeUnique],
             colorSet: [...colorUnique]
           };
-          console.log(this.product);
         }
         this.productImgs = data.product.images;
       } catch (error) {
-        console.log(error);
         Toast.fire({
           type: "error",
           title: "無法取得商品資訊，請稍後再試"

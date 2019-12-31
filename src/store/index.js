@@ -1,13 +1,21 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import VuexPersist from 'vuex-persist'
 import usersAPI from './../apis/users'
 import productsAPI from './../apis/products'
+import cartsAPI from './../apis/carts'
 import { Toast } from "./../utils/helpers";
 
 
 Vue.use(Vuex)
 
+const vuexPersist = new VuexPersist({
+  key: 'my-app',
+  storage: window.localStorage
+})
+
 export default new Vuex.Store({
+  plugins: [vuexPersist.plugin],
   state: {
     currentUser: {
       id: -1,
@@ -17,10 +25,11 @@ export default new Vuex.Store({
       address: '',
       role: false
     },
-    wishList: {
-    },
+    wishList: {},
+    cart: {},
     isAuthenticated: false,
     isProcessing: false,
+    isLoading: false,
     token: ''
   },
   mutations: {
@@ -40,9 +49,24 @@ export default new Vuex.Store({
     },
     WISHLIST(state, payload) {
       state.wishList = payload
+    },
+    CART(state, payload) {
+      state.cart = payload
+    },
+    PROCESSING(state, status) {
+      state.isProcessing = status
+    },
+    LOADING(state, status) {
+      state.isLoading = status
     }
   },
   actions: {
+    updateProcessing(context, status) {
+      context.commit('PROCESSING', status)
+    },
+    updateLoading(context, status) {
+      context.commit("LOADING", status)
+    },
     async fetchCurrentUser({ commit }) {
       try {
         const { data, statusText } = await usersAPI.getCurrentUser()
@@ -122,6 +146,21 @@ export default new Vuex.Store({
         Toast.fire({
           type: "error",
           title: "無法將商品從Wish List移除，請稍後再試"
+        });
+      }
+    },
+    async fetchUserCart(context, userId) {
+      try {
+        const { data, statusText } = await cartsAPI.getUserCart({ userId });
+        if (statusText !== "OK") {
+          throw new Error(statusText);
+        }
+        context.commit('CART', data.userCart.cartItem);
+        // this.items = data.userCart.cartItem;
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "暫時無法取得使用者購物車資料，請稍後再試"
         });
       }
     }

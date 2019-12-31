@@ -12,7 +12,7 @@
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import navigation from "./components/navigation";
-import indexFooter from "./components/footer"
+import indexFooter from "./components/footer";
 
 export default {
   name: "App",
