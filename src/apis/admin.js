@@ -36,6 +36,9 @@ export default {
         get(){
             return apiHelper.get("/admins/products")
         },
+        post({formData}){
+            return apiHelper.post("/admins/products",formData)
+        },
         getStatus({id}){
             return apiHelper.get(`/admins/products/${id}/stocks`)
         },
