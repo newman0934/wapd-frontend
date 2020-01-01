@@ -4,90 +4,79 @@
     <form class="container mb-5">
       <div class="form-row">
         <div class="form-group col-md-6">
-          <label for="productName">名稱</label>
-          <input type="text" class="form-control" id="productName" placeholder="商品名稱" />
+          <label for="name">名稱</label>
+          <input type="text" class="form-control" id="name" name="name" v-model="product.name" placeholder="商品名稱" />
         </div>
-        <div class="form-group col-md-6">
-          <label for="productCategory">分類</label>
-          <select name="productCategory" id="productCategory" class="form-control">
-            <option>衣服</option>
-            <option>鞋子</option>
-            <option>褲子</option>
+        <div class="form-group col-md-4">
+          <label for="categoryId">分類</label>
+          <select name="categoryId" id="categoryId" class="form-control" v-model="product.categoryId">
+            <option value disabled>請選擇</option>
+            <option v-for="category in categories" :key="category.id" :value="category.id">{{category.category}}</option>
+          </select>
+        </div>
+        <div class="form-group col-md-2">
+          <label for="status">目前狀態</label>
+          <select name="status" id="status" class="form-control" v-model="product.status">
+            <option value="on">上架</option>
+            <option value="off">下架</option>
           </select>
         </div>
       </div>
       <div class="form-row">
         <div class="form-group col-md-4">
-          <label for="productCost">成本</label>
+          <label for="cost">成本</label>
           <input
             type="text"
-            name="productCost"
-            id="productCost"
+            name="cost"
+            id="cost"
             class="form-control"
             placeholder="商品成本"
+            v-model="product.cost"
           />
         </div>
         <div class="form-group col-md-4">
-          <label for="productPrice">價格</label>
+          <label for="originPrice">原價</label>
           <input
             type="text"
-            name="productPrice"
-            id="productPrice"
+            name="originPrice"
+            id="originPrice"
             class="form-control"
-            placeholder="商品價格"
+            placeholder="商品原價"
+            v-model="product.originPrice"
           />
         </div>
         <div class="form-group col-md-4">
-          <label for="productStatus">目前狀態</label>
-          <select name="productStatus" id="productStatus" class="form-control">
-            <option>上架</option>
-            <option>下架</option>
-          </select>
+          <label for="originPrice">售價</label>
+          <input
+            type="text"
+            name="sellPrice"
+            id="sellPrice"
+            class="form-control"
+            placeholder="商品售價"
+            v-model="product.sellPrice"
+          />
         </div>
         <div class="form-group col-md-12">
-          <label for="productDescription">產品描述</label>
+          <label for="description">產品描述</label>
           <textarea
-            name="productDescription"
-            id="productDescription"
+            name="description"
+            id="description"
             class="form-control"
             cols="120"
             rows="3"
             placeholder="請輸入商品的簡介"
+            v-model="product.description"
           ></textarea>
         </div>
         <div class="form-group col-md-12">
-          <label for="productDescription">商品圖片</label>
-          <input type="file" class="form-control" name="productDescription" id="productDescription" />
+          <label for="images">商品圖片</label>
+          <input type="file" class="form-control" name="images" id="images" />
         </div>
       </div>
       <div class="container adminProductImg">
         <div class="row">
-          <div class="prodcutImg col-md-3 mb-3">
-            <img src="https://lorempixel.com/500/500" alt />
-            <div class="mask">X</div>
-          </div>
-          <div class="prodcutImg col-md-3 mb-3">
-            <img src="https://lorempixel.com/500/500" alt />
-            <div class="mask">X</div>
-          </div>
-          <div class="prodcutImg col-md-3 mb-3">
-            <img src="https://lorempixel.com/500/500" alt />
-            <div class="mask">X</div>
-          </div>
-          <div class="prodcutImg col-md-3 mb-3">
-            <img src="https://lorempixel.com/500/500" alt />
-            <div class="mask">X</div>
-          </div>
-          <div class="prodcutImg col-md-3 mb-3">
-            <img src="https://lorempixel.com/500/500" alt />
-            <div class="mask">X</div>
-          </div>
-          <div class="prodcutImg col-md-3 mb-3">
-            <img src="https://lorempixel.com/500/500" alt />
-            <div class="mask">X</div>
-          </div>
-          <div class="prodcutImg col-md-3 mb-3">
-            <img src="https://lorempixel.com/500/500" alt />
+          <div class="prodcutImg col-md-3 mb-3" v-for="image in images" :key="image.id">
+            <img :src="image.url" alt />
             <div class="mask">X</div>
           </div>
         </div>
@@ -99,17 +88,79 @@
 </template>
 <script>
 import adminNav from "./../components/adminNav";
-// import adminAPI from "./../apis/admin"
-// import { Toast } from "./../utils/helpers"
+import adminAPI from "./../apis/admin"
+import { Toast } from "./../utils/helpers"
 export default {
   components: {
     adminNav
   },
   data(){
     return {
-
+      product: {
+        name: "",
+        categoryId: "",
+        cost: 0,
+        originPrice: 0,
+        sellPrice: 0,
+        status: "",
+        description: ""
+      },
+      images: [],
+      categories:[]
     }
   },
+  created(){
+    const { id } = this.$route.params;
+    this.fetchAdminProduct(id)
+    this.fetchAdminCategories()
+  },
+  methods:{
+    async fetchAdminProduct(id){
+      try{
+     const { data, statusText} = await adminAPI.products.getProductDetail({
+       id
+     })
+     console.log(data)
+      if(statusText !== "OK" && data.status !== "success"){
+        throw new Error(status)
+      }
+        this.product = {
+          name: data.product.name,
+          categoryId: data.product.CategoryId,
+          cost: data.product.cost,
+          originPrice: data.product.origin_price,
+          sellPrice: data.product.sell_price,
+          status: data.product.status,
+          description: data.product.description
+        };
+        this.images = data.product.images
+
+      }catch(error){
+        Toast.fire({
+          type:"error",
+          title:"無法取得商品資訊"
+        })
+      }
+ 
+    },
+    async fetchAdminCategories(){
+      try {
+        const { data, statusText} = await adminAPI.categories.get()
+        console.log(data)
+        if(statusText !== "OK"){
+          throw new Error(statusText)
+        }
+
+        this.categories = data.categories
+
+      }catch(error){
+        Toast.fire({
+          type:"error",
+          title:"無法取得類別資料"
+        })
+      }
+    }
+  }
 
 };
 </script>
