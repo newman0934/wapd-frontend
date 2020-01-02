@@ -57,6 +57,7 @@ export default {
   //     this.$router.push({ name: "notFound" });
   //     return;
   //   }
+  //   next()
   // },
   methods: {
     async fetchUserOrders(userId) {

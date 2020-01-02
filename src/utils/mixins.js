@@ -7,3 +7,11 @@ export const timeFilter = {
     }
   }
 }
+
+export const currencyFilter = {
+  filters: {
+    currency(num) {
+      return 'NTD ' + num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    }
+  }
+}
