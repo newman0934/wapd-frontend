@@ -14,14 +14,14 @@
         <tr v-for="order in orders" :key="order.id">
           <th scope="row" class="align-middle">
             <router-link :to="{name:'order', params:{ order_id:order.id }}">#{{order.sn}}</router-link>
-            <p>@order date</p>
+            <p>@{{order.createdAt}}</p>
           </th>
           <td class="align-middle">
             <p>NTD {{order.total_price}}</p>
             <p>商品總數量：{{order.OrderItems.length}}</p>
           </td>
           <td class="align-middle">{{order.payment_status}}</td>
-          <td class="align-middle">{{order.shipping_status}}</td>
+          <td class="align-middle">{{order.shipping_status || "尚未出貨"}}</td>
           <td></td>
         </tr>
       </tbody>
