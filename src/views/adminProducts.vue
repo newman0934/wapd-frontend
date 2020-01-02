@@ -43,7 +43,7 @@
                 >查詢</router-link>
               </td>
               <td scope="col">
-                <a href="#" class="btn btn-outline-secondary">編輯</a>
+                <router-link :to="{name:'adminProductEdit', params:{id:product.id}}" class="btn btn-outline-secondary">編輯</router-link>
               </td>
             </tr>
           </tbody>
