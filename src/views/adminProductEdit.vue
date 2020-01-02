@@ -1,17 +1,33 @@
 <template>
   <div>
     <admin-nav></admin-nav>
-    <form class="container mb-5">
+    <form class="container mb-5" @submit.stop.prevent="handleSubmit($route.params.id)">
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="name">名稱</label>
-          <input type="text" class="form-control" id="name" name="name" v-model="product.name" placeholder="商品名稱" />
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            name="name"
+            v-model="product.name"
+            placeholder="商品名稱"
+          />
         </div>
         <div class="form-group col-md-4">
           <label for="categoryId">分類</label>
-          <select name="categoryId" id="categoryId" class="form-control" v-model="product.categoryId">
+          <select
+            name="categoryId"
+            id="categoryId"
+            class="form-control"
+            v-model="product.categoryId"
+          >
             <option value disabled>請選擇</option>
-            <option v-for="category in categories" :key="category.id" :value="category.id">{{category.category}}</option>
+            <option
+              v-for="category in categories"
+              :key="category.id"
+              :value="category.id"
+            >{{category.category}}</option>
           </select>
         </div>
         <div class="form-group col-md-2">
@@ -70,7 +86,7 @@
         </div>
         <div class="form-group col-md-12">
           <label for="images">商品圖片</label>
-          <input type="file" class="form-control" name="images" id="images" />
+          <input type="file" class="form-control" name="images" id="images" multiple="multiple" />
         </div>
       </div>
       <div class="container adminProductImg">
@@ -88,13 +104,13 @@
 </template>
 <script>
 import adminNav from "./../components/adminNav";
-import adminAPI from "./../apis/admin"
-import { Toast } from "./../utils/helpers"
+import adminAPI from "./../apis/admin";
+import { Toast } from "./../utils/helpers";
 export default {
   components: {
     adminNav
   },
-  data(){
+  data() {
     return {
       product: {
         name: "",
@@ -106,24 +122,23 @@ export default {
         description: ""
       },
       images: [],
-      categories:[]
-    }
+      categories: []
+    };
   },
-  created(){
+  created() {
     const { id } = this.$route.params;
-    this.fetchAdminProduct(id)
-    this.fetchAdminCategories()
+    this.fetchAdminProduct(id);
+    this.fetchAdminCategories();
   },
-  methods:{
-    async fetchAdminProduct(id){
-      try{
-     const { data, statusText} = await adminAPI.products.getProductDetail({
-       id
-     })
-     console.log(data)
-      if(statusText !== "OK" && data.status !== "success"){
-        throw new Error(status)
-      }
+  methods: {
+    async fetchAdminProduct(id) {
+      try {
+        const { data, statusText } = await adminAPI.products.getProductDetail({
+          id
+        });
+        if (statusText !== "OK" && data.status !== "success") {
+          throw new Error(status);
+        }
         this.product = {
           name: data.product.name,
           categoryId: data.product.CategoryId,
@@ -133,35 +148,64 @@ export default {
           status: data.product.status,
           description: data.product.description
         };
-        this.images = data.product.images
-
-      }catch(error){
+        this.images = data.product.images;
+      } catch (error) {
         Toast.fire({
-          type:"error",
-          title:"無法取得商品資訊"
-        })
+          type: "error",
+          title: "無法取得商品資訊"
+        });
       }
- 
     },
-    async fetchAdminCategories(){
+    async fetchAdminCategories() {
       try {
-        const { data, statusText} = await adminAPI.categories.get()
-        console.log(data)
-        if(statusText !== "OK"){
-          throw new Error(statusText)
+        const { data, statusText } = await adminAPI.categories.get();
+        if (statusText !== "OK") {
+          throw new Error(statusText);
         }
 
-        this.categories = data.categories
-
-      }catch(error){
+        this.categories = data.categories;
+      } catch (error) {
         Toast.fire({
-          type:"error",
-          title:"無法取得類別資料"
-        })
+          type: "error",
+          title: "無法取得類別資料"
+        });
+      }
+    },
+    async handleSubmit(productId) {
+      try {
+        if (
+          !this.product.name ||
+          !this.product.cost ||
+          !this.product.sellPrice ||
+          !this.product.originPrice ||
+          !this.product.description
+        ) {
+          Toast.fire({
+            type: "warning",
+            title: "請確認輸入的內容"
+          });
+          return;
+        }
+        let e = window.event;
+        const form = e.target;
+        const formData = new FormData(form);
+        const { data, statusText } = await adminAPI.products.put({
+          productId,
+          formData
+        });
+
+        if (statusText !== "OK" || data.status !== "success") {
+          throw new Error(statusText);
+        }
+        this.$router.go(-1);
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "修改商品資料失敗"
+        });
       }
     }
   }
-
 };
 </script>
 <style scoped>
@@ -175,18 +219,18 @@ img {
 .prodcutImg .mask {
   display: flex;
   position: absolute;
-    justify-content: center;
+  justify-content: center;
   align-items: center;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  opacity:0;
+  opacity: 0;
   transition: all 0.5s;
 }
 .prodcutImg .mask:hover {
   color: red;
-  opacity:1;
+  opacity: 1;
   font-size: 200px;
   cursor: pointer;
 }
