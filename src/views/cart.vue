@@ -155,12 +155,12 @@ export default {
     async putCartItem(item) {
       const userId = this.currentUser.id;
       let itemId = item.id;
-      let cartData = this.cartData;
+      let { quantity } = this.cartData;
       try {
         const { data, statusText } = await cartsAPI.putCartItem({
           userId,
           itemId,
-          cartData
+          quantity
         });
         if (statusText !== "OK" || data.status !== "success") {
           throw new Error(statusText);

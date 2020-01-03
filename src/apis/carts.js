@@ -7,8 +7,9 @@ export default {
   deleteCartItem({ itemId }) {
     return apiHelper.delete(`users/cart/${itemId}`)
   },
-  putCartItem({ userId, itemId, formData }) {
-    return apiHelper.put(`/users/${userId}/cart/${itemId}`, formData)
+  putCartItem({ userId, itemId, quantity }) {
+    return apiHelper.put(`/users/${userId}/cart/${itemId}`,
+      { quantity })
   },
   postCart({ formData }) {
     return apiHelper.post(`/products/cart`, formData)
