@@ -151,6 +151,7 @@ export default {
       this.cacheItem = {};
       this.cacheQty = 0;
     },
+    //修改購物車商品數量
     async putCartItem(item) {
       const userId = this.currentUser.id;
       let itemId = item.id;

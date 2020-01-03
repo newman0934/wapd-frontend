@@ -21,6 +21,7 @@ export default new Vuex.Store({
       id: -1,
       name: '',
       email: '',
+      birthday: '',
       phone: '',
       address: '',
       role: false
@@ -78,6 +79,7 @@ export default new Vuex.Store({
           id: data.id,
           name: data.name,
           email: data.email,
+          birthday: data.birthday,
           phone: data.phone,
           address: data.address,
           role: data.role

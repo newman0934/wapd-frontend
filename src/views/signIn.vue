@@ -131,6 +131,11 @@ export default {
       registerPasswordCheck: ""
     };
   },
+  computed: {
+    isProcessing() {
+      return this.$store.state.isProcessing;
+    }
+  },
   methods: {
     async handleSubmitSignIn() {
       try {
