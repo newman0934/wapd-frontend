@@ -42,6 +42,12 @@ export default new Vuex.Store({
       state.token = localStorage.getItem('token')
       state.isAuthenticated = true
     },
+    updateCurrentUser(state, currentUser) {
+      state.currentUser = {
+        ...state.currentUser,
+        ...currentUser
+      }
+    },
     revokeAuthentication(state) {
       state.currentUser = {}
       state.isAuthenticated = false
@@ -67,6 +73,9 @@ export default new Vuex.Store({
     },
     updateLoading(context, status) {
       context.commit("LOADING", status)
+    },
+    updateCurrentUser(context, currentUser) {
+      context.commit("updateCurrentUser", currentUser)
     },
     async fetchCurrentUser({ commit }) {
       try {

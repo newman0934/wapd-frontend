@@ -86,8 +86,8 @@ export default {
   computed: {
     ...mapState(["currentUser", "isProcessing"]),
     formData() {
-      let { name, email, birthday, phone, address } = this;
-      return { name, email, birthday, phone, address };
+      let { id, name, email, birthday, phone, address } = this;
+      return { id, name, email, birthday, phone, address };
     }
   },
   watch: {
@@ -131,6 +131,7 @@ export default {
           type: "success",
           title: "使用者資料更新成功"
         });
+        await this.$store.dispatch("updateCurrentUser", formData);
         this.$router.push({ name: "userEdit" });
         this.$store.dispatch("updateProcessing", false);
       } catch (error) {
