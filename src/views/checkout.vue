@@ -372,8 +372,6 @@ export default {
       const formData = this.formData;
       console.log(formData);
       const orderId = this.$route.params.id;
-      // formData.append("orderId", orderId);
-      // formData.append("total", this.total);
       try {
         const { data } = await cartsAPI.postCheckout({ formData });
         if (data.status === "success") {

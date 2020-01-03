@@ -96,7 +96,7 @@
 import usersAPI from "./../apis/users";
 import { mapState } from "vuex";
 import { currencyFilter } from "../utils/mixins";
-// import { Toast } from "./../utils/helpers";
+import { Toast } from "./../utils/helpers";
 export default {
   mixins: [currencyFilter],
   data() {
@@ -168,7 +168,10 @@ export default {
         this.coupon = data.orders.Coupon;
         this.productItems = data.orders.items;
       } catch (error) {
-        console.log(error);
+        Toast.fire({
+          type: "error",
+          title: "暫時無法取得訂單資料，請稍後再試"
+        });
       }
     }
   }
