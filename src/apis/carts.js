@@ -27,5 +27,9 @@ export default {
   },
   getPayment(orderId) {
     return apiHelper.get(`/orders/${orderId}/payment`)
+  },
+  getPaymentComplete({ userId, Status, orderId }) {
+    const searchParams = new URLSearchParams({ Status, orderId })
+    return apiHelper.get(`/users/${userId}/paymentcomplete?${searchParams.toString()}`)
   }
 }
