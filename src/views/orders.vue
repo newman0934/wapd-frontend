@@ -14,14 +14,14 @@
         <tr v-for="order in orders" :key="order.id">
           <th scope="row" class="align-middle">
             <router-link :to="{name:'order', params:{ order_id:order.id }}">#{{order.sn}}</router-link>
-            <p>@order date</p>
+            <p>@{{order.createdAt | timeFormate}}</p>
           </th>
           <td class="align-middle">
             <p>NTD {{order.total_price}}</p>
             <p>商品總數量：{{order.OrderItems.length}}</p>
           </td>
           <td class="align-middle">{{order.payment_status}}</td>
-          <td class="align-middle">{{order.shipping_status}}</td>
+          <td class="align-middle">{{order.shipping_status || "尚未出貨"}}</td>
           <td></td>
         </tr>
       </tbody>
@@ -29,11 +29,12 @@
   </div>
 </template>
 <script>
-/* eslint-disable */
 import usersAPI from "./../apis/users";
 import { mapState } from "vuex";
+import { timeFilter } from "./../utils/mixins";
 import { Toast } from "./../utils/helpers";
 export default {
+  mixins: [timeFilter],
   data() {
     return {
       orders: []
@@ -50,13 +51,14 @@ export default {
     }
     this.fetchUserOrders(id);
   },
-  beforeRouteUpdate(to, from, next) {
-    const { id } = to.params;
-    if (id.toString() !== this.currentUser.id.toString()) {
-      this.$router.push({ name: "notFound" });
-      return;
-    }
-  },
+  // beforeRouteUpdate(to, from, next) {
+  //   const { id } = to.params;
+  //   if (id.toString() !== this.currentUser.id.toString()) {
+  //     this.$router.push({ name: "notFound" });
+  //     return;
+  //   }
+  //   next()
+  // },
   methods: {
     async fetchUserOrders(userId) {
       try {

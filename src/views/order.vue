@@ -27,30 +27,32 @@
                 {{product.name}}
                 <p>尺寸:{{product.OrderItem.size}}, 顏色：{{product.OrderItem.color}}</p>
               </td>
-              <td class="align-middle">NTD {{product.sell_price}}</td>
+              <td class="align-middle">{{product.sell_price | currency}}</td>
               <td class="align-middle">{{product.OrderItem.quantity}}</td>
-              <td class="align-middle">NTD {{product.OrderItem.sell_price}}</td>
+              <td
+                class="align-middle"
+              >{{product.OrderItem.sell_price * product.OrderItem.quantity | currency}}</td>
             </tr>
 
             <tr class="table-light" style="border-top:3px gray solid;">
               <th></th>
               <td colspan="3">小計</td>
-              <td>NTD I'm total</td>
+              <td>{{subtotal | currency}}</td>
             </tr>
             <tr class="table-light">
               <th></th>
               <td colspan="3">運費</td>
               <td>NTD amount</td>
             </tr>
-            <tr class="table-light">
+            <tr v-if="coupon" class="table-light">
               <th></th>
               <td colspan="3">折扣 (折扣碼{{coupon.coupon_code}})</td>
-              <td>NTD -{{coupon.discount_amount}}</td>
+              <td>-{{coupon.discount_amount | currency}}</td>
             </tr>
             <tr class="table-info">
               <th></th>
               <td colspan="3">總計</td>
-              <td>NTD {{order.totalPrice}}</td>
+              <td>{{order.totalPrice | currency}}</td>
             </tr>
           </tbody>
         </table>
@@ -91,11 +93,12 @@
   </div>
 </template>
 <script>
-/* eslint-disable */
 import usersAPI from "./../apis/users";
 import { mapState } from "vuex";
+import { currencyFilter } from "../utils/mixins";
 import { Toast } from "./../utils/helpers";
 export default {
+  mixins: [currencyFilter],
   data() {
     return {
       order: {
@@ -115,7 +118,13 @@ export default {
     };
   },
   computed: {
-    ...mapState(["currentUser"])
+    ...mapState(["currentUser"]),
+    subtotal() {
+      return this.productItems.reduce(
+        (t, p) => t + p.OrderItem.sell_price * p.OrderItem.quantity,
+        0
+      );
+    }
   },
   created() {
     const { id, order_id } = this.$route.params;
@@ -144,6 +153,7 @@ export default {
         if (statusText !== "OK") {
           throw new Error(statusText);
         }
+        console.log(data);
         this.order = {
           id: data.orders.id,
           sn: data.orders.sn,
@@ -157,11 +167,10 @@ export default {
         };
         this.coupon = data.orders.Coupon;
         this.productItems = data.orders.items;
-        // console.log(data.orders.Coupon.coupon_code);
       } catch (error) {
         Toast.fire({
           type: "error",
-          title: "暫時無法取得使用者訂單資料，請稍後再試"
+          title: "暫時無法取得訂單資料，請稍後再試"
         });
       }
     }

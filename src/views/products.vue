@@ -2,7 +2,6 @@
   <div class="container py-5">
     <div class="row">
       <div class="col-md-2">
-        <!--leftCategoryNav-->
         <leftCategoryNav :categories="categories" />
       </div>
       <div class="col-md-10">
@@ -20,6 +19,7 @@
   </div>
 </template>
 <script>
+// import spinner from "./../components/spinner";
 import leftCategoryNav from "./../components/leftCategoryNav";
 import productCard from "./../components/productCard";
 import productsPagination from "./../components/productsPagination";
@@ -38,9 +38,13 @@ export default {
       categories: [],
       categoryId: "",
       currentPage: 1,
-      totalPage: 0,
-      isLoading: true
+      totalPage: 0
     };
+  },
+  computed: {
+    isLoading() {
+      return this.$store.state.isLoading;
+    }
   },
   created() {
     const { page, categoryId } = this.$route.query;
@@ -74,7 +78,9 @@ export default {
         this.categoryId = data.categoryId;
         this.currentPage = data.page;
         this.totalPage = data.totalPage.length;
+        this.$store.dispatch("updateLoading", false);
       } catch (error) {
+        this.$store.dispatch("updateLoading", false);
         Toast.fire({
           type: "error",
           title: "無法取得商品資訊，請稍後再試"
