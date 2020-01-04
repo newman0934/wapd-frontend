@@ -39,8 +39,9 @@ export default {
     post({ formData }) {
       return apiHelper.post('/admins/products', formData)
     },
-    put({ productId, formData }) {
-      return apiHelper.put(`/admins/products/${productId}`, formData)
+    put({ id, formData }) {
+
+      return apiHelper.put(`/admins/products/${id}`, formData)
     },
     getStatus({ id }) {
       return apiHelper.get(`/admins/products/${id}/stocks`)

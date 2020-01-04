@@ -143,6 +143,29 @@ import adminNav from "./../components/adminNav";
 export default {
   components: {
     adminNav
+  },
+  data() {
+    return {
+      order: {
+        sn: "",
+        name: "",
+        phone: "",
+        email: "",
+        paymentMethod: "",
+        paymentStatus: "",
+        shippingMethod: "",
+        address: "",
+        coupon: ""
+      },
+      products: []
+    };
+  },
+  created() {
+    this.fetchAdminOrder()
+  },
+  methods: {
+    fetchAdminOrder() {},
+    handleDelete() {}
   }
 };
 </script>

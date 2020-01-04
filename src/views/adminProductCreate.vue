@@ -32,18 +32,7 @@
         </div>
       </div>
       <div class="form-row">
-        <div class="form-group col-md-4">
-          <label for="cost">成本</label>
-          <input
-            type="text"
-            v-model="product.cost"
-            name="cost"
-            id="cost"
-            class="form-control"
-            placeholder="商品成本"
-          />
-        </div>
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-6">
           <label for="originPrice">原價</label>
           <input
             type="text"
@@ -54,7 +43,7 @@
             placeholder="商品原價"
           />
         </div>
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-6">
           <label for="sellPrice">售價</label>
           <input
             type="text"
@@ -107,7 +96,6 @@ export default {
         id: -1,
         name: "",
         categoryId: "",
-        cost: "",
         originPrice: "",
         sellPrice: "",
         description: "",
@@ -121,19 +109,6 @@ export default {
   },
   created() {
     this.fetchAdminCategories();
-  },
-  computed: {
-    formData() {
-      const { name, cost, originPrice, sellPrice, description } = this;
-
-      return {
-        name,
-        cost,
-        originPrice,
-        sellPrice,
-        description
-      };
-    }
   },
   methods: {
     // openUppyDashboard() {
@@ -189,7 +164,6 @@ export default {
       try {
         if (
           !this.product.name ||
-          !this.product.cost ||
           !this.product.sellPrice ||
           !this.product.originPrice ||
           !this.product.description
@@ -202,7 +176,9 @@ export default {
         }
         const form = e.target;
         const formData = new FormData(form);
-
+      // for (let [name, value] of formData.entries()) {
+      //   console.log(name + ': ' + value)
+      // }
         const { data, statusText } = await adminAPI.products.post({ formData });
 
         if(statusText !== "OK" || data.status !== "success"){
