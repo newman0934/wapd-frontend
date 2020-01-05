@@ -16,17 +16,21 @@
           <button
             v-if="product.isFavorited"
             type="button"
-            class="btn btn-danger btn-border mr-2"
+            class="btn text-danger mr-2"
             :disabled="isProcessing"
             @click.stop.prevent="deleteFavorite(product.id)"
-          >-wish list</button>
+          >
+            <font-awesome-icon :icon="['far', 'heart']" size="1x" />
+          </button>
           <button
             v-else
             type="button"
-            class="btn btn-danger btn-border mr-2"
+            class="btn text-danger mr-2"
             :disabled="isProcessing"
             @click.stop.prevent="addFavorite(product.id)"
-          >+wish list</button>
+          >
+            <font-awesome-icon icon="heart" size="1x" />
+          </button>
         </div>
 
         <!-- <button class="btn btn-success btn-border mr-2">購物車</button> -->
@@ -93,5 +97,8 @@ export default {
   }
 };
 </script>
-<style scoped>
+<style lang="css" scoped>
+#product-card {
+  border: none;
+}
 </style>
