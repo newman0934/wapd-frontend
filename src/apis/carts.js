@@ -11,14 +11,17 @@ export default {
     return apiHelper.put(`/users/${userId}/cart/${itemId}`,
       { quantity })
   },
+  postCoupon({ couponCode }) {
+    return apiHelper.post(`/coupon`, { couponCode })
+  },
   postCart({ formData }) {
     return apiHelper.post(`/products/cart`, formData)
   },
   notLoginPostCart({ formData }) {
     return apiHelper.post(`/products/notLoginCart`, formData)
   },
-  postOrder({ formData }) {
-    return apiHelper.post(`/users/orders`, formData)
+  postOrder({ couponCode }) {
+    return apiHelper.post(`/users/orders`, { couponCode })
   },
   getCheckout({ orderId }) {
     return apiHelper.get(`/orders/${orderId}/checkout`)
