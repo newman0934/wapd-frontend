@@ -128,6 +128,11 @@ export default {
         color,
         quantity
       };
+    },
+    currentURL() {
+      const baseURL = "https://localhost:8080/#";
+      let path = this.$route.path;
+      return baseURL + path;
     }
   },
   watch: {
