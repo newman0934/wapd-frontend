@@ -91,6 +91,20 @@
         <font-awesome-icon class="mr-1" :icon="['far', 'heart']" size="1x" />加入 Wish List
       </button>
     </div>
+
+    <div class="ml-2 mt-4 text-left">
+      <p class="d-inline">分享到：</p>
+      <social-sharing :url="currentURL" class="d-inline" inline-template>
+        <div id="sharing-icon">
+          <network class="mr-2 text-primary" network="facebook">
+            <font-awesome-icon :icon="['fab', 'facebook']" size="2x" />
+          </network>
+          <network class="text-success" network="line">
+            <font-awesome-icon :icon="['fab', 'line']" size="2x" />
+          </network>
+        </div>
+      </social-sharing>
+    </div>
   </div>
 </template>
 <script>
@@ -130,9 +144,9 @@ export default {
       };
     },
     currentURL() {
-      const baseURL = "https://localhost:8080/#";
-      let path = this.$route.path;
-      return baseURL + path;
+      //const baseURL = "https://localhost:8080/#";
+      //let path = this.$route.path;
+      return "https://www.chickimmiu.com/products/t1901132";
     }
   },
   watch: {
@@ -219,3 +233,8 @@ export default {
   }
 };
 </script>
+<style lang="css" scoped>
+#sharing-icon {
+  cursor: pointer;
+}
+</style>

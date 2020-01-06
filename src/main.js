@@ -8,10 +8,12 @@ import { faHeart as farHeart } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import store from './store'
 import "./vee-validate.js"
+import SocialSharing from 'vue-social-sharing'
 
 library.add(faUser, faSearch, faBars, faShoppingCart, faFacebook, faLine, faInstagram, faHeart, farHeart, faUserCog, faUserLock, faKey, faSadTear, faCommentDollar);
-
 Vue.component('font-awesome-icon', FontAwesomeIcon)
+
+Vue.use(SocialSharing)
 
 Vue.config.productionTip = false
 
