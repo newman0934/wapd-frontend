@@ -116,7 +116,6 @@ export default new Vuex.Store({
     async addFavorite(context, productId) {
       try {
         context.dispatch("updateProcessing", true);
-        console.log(this.state.currentUser)
         const { data, statusText } = await productsAPI.addFavorite({
           productId
         });
