@@ -7,8 +7,12 @@ export default {
   deleteCartItem({ itemId }) {
     return apiHelper.delete(`users/cart/${itemId}`)
   },
-  putCartItem({ userId, itemId, formData }) {
-    return apiHelper.put(`/users/${userId}/cart/${itemId}`, formData)
+  putCartItem({ userId, itemId, quantity }) {
+    return apiHelper.put(`/users/${userId}/cart/${itemId}`,
+      { quantity })
+  },
+  postCoupon({ couponCode }) {
+    return apiHelper.post(`/coupon`, { couponCode })
   },
   postCart({ formData }) {
     return apiHelper.post(`/products/cart`, formData)
@@ -16,8 +20,8 @@ export default {
   notLoginPostCart({ formData }) {
     return apiHelper.post(`/products/notLoginCart`, formData)
   },
-  postOrder({ formData }) {
-    return apiHelper.post(`/users/orders`, formData)
+  postOrder({ couponCode }) {
+    return apiHelper.post(`/users/orders`, { couponCode })
   },
   getCheckout({ orderId }) {
     return apiHelper.get(`/orders/${orderId}/checkout`)

@@ -1,41 +1,75 @@
 <template>
   <div class="col-md-6 col-lg-4">
     <div class="card mb-3" id="product-card">
-      <img class="card-img-top" :src="product.image[0].url" alt="card-image-cap" />
-      <div class="card-body p-1">
-        <router-link :to="{name:'product', params:{id:product.id}}">
-          <h5 class="card-title">{{product.name}}</h5>
-          <span class="price">NTD{{product.sell_price}}</span>
-        </router-link>
-        <hr />
-        <p v-for="color in colorSet" :key="color" class="d-inline">{{color}},</p>
-        <p v-for="size in sizeSet" :key="size" class="d-inline">{{size}},</p>
-      </div>
-      <div class="card-footer">
-        <div class="d-inline" v-if="isAuthenticated">
-          <button
-            v-if="product.isFavorited"
-            type="button"
-            class="btn btn-danger btn-border mr-2"
-            :disabled="isProcessing"
-            @click.stop.prevent="deleteFavorite(product.id)"
-          >-wish list</button>
-          <button
-            v-else
-            type="button"
-            class="btn btn-danger btn-border mr-2"
-            :disabled="isProcessing"
-            @click.stop.prevent="addFavorite(product.id)"
-          >+wish list</button>
+      <router-link :to="{name:'product', params:{id:product.id}}">
+        <img
+          class="card-img-top"
+          :src="cardImg"
+          alt="card-image-cap"
+          @mouseover="imgMouseover(product.image)"
+          @mouseleave="imgMouseleave(product.image)"
+        />
+        <div class="card-body p-1">
+          <p class="card-title text-left text-dark">{{product.name}}</p>
+        </div>
+      </router-link>
+      <div class="row ml-1 mt-0">
+        <div class="col">
+          <p class="price text-left">
+            <span class="text-muted font-weight-bold mr-1">
+              <del>{{product.origin_price | currency}}</del>
+            </span>
+            <strong>{{product.sell_price | currency}}</strong>
+          </p>
         </div>
 
-        <!-- <button class="btn btn-success btn-border mr-2">購物車</button> -->
+        <div v-if="isAuthenticated" class="col text-right position-relative">
+          <div class="d-inline">
+            <button
+              v-if="product.isFavorited"
+              type="button"
+              class="btn text-danger mr-2 mt-n1"
+              :disabled="isProcessing"
+              @click.stop.prevent="deleteFavorite(product.id)"
+            >
+              <font-awesome-icon icon="heart" size="1x" />
+            </button>
+            <button
+              v-else
+              type="button"
+              class="btn text-danger mr-2 mt-n1"
+              :disabled="isProcessing"
+              @click.stop.prevent="addFavorite(product.id)"
+            >
+              <font-awesome-icon :icon="['far', 'heart']" size="1x" />
+            </button>
+          </div>
+        </div>
+
+        <div v-else class="col text-right position-relative">
+          <div class="d-inline">
+            <button
+              type="button"
+              class="btn text-danger mr-2 mt-n1"
+              data-container="body"
+              data-toggle="popover"
+              data-placement="bottom"
+              data-content="立即登入/註冊"
+              @mouseover="heartToggle"
+            >
+              <font-awesome-icon class="heart-icon" :icon="['far', 'heart']" />
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { currencyFilter } from "../utils/mixins";
+import $ from "jquery";
 export default {
+  mixins: [currencyFilter],
   props: {
     initialProduct: {
       type: Object,
@@ -45,29 +79,28 @@ export default {
   data() {
     return {
       product: this.initialProduct,
-      colorSet: [],
-      sizeSet: [],
-      isProcessing: false
+      //colorSet: [],
+      //sizeSet: [],
+      cardImg: ""
     };
   },
   created() {
-    this.colorSet = this.fetchColorSet();
-    this.sizeSet = this.fetchSizeSet();
+    //this.colorSet = this.fetchColorSet();
+    //this.sizeSet = this.fetchSizeSet();
+    this.cardImg = this.product.image[0].url;
   },
   computed: {
     isAuthenticated() {
       return this.$store.state.isAuthenticated;
+    },
+    isProcessing() {
+      return this.$store.state.isProcessing;
+    },
+    isLoading() {
+      return this.$store.state.isLoading;
     }
   },
   methods: {
-    fetchColorSet() {
-      let colorUnique = new Set(this.product.color);
-      return [...colorUnique];
-    },
-    fetchSizeSet() {
-      let sizeUnique = new Set(this.product.size);
-      return [...sizeUnique];
-    },
     async addFavorite(productId) {
       try {
         await this.$store.dispatch("addFavorite", productId);
@@ -89,9 +122,38 @@ export default {
       } catch (error) {
         return false;
       }
+    },
+    heartToggle() {
+      $('[data-toggle="popover"]').popover();
+    },
+    imgMouseover(imgs) {
+      this.cardImg = imgs[1].url;
+    },
+    imgMouseleave(imgs) {
+      this.cardImg = imgs[0].url;
     }
+    //fetchColorSet() {
+    //  let colorUnique = new Set(this.product.color);
+    //  return [...colorUnique];
+    //},
+    //fetchSizeSet() {
+    //  let sizeUnique = new Set(this.product.size);
+    //  return [...sizeUnique];
+    //}
   }
 };
 </script>
-<style scoped>
+<style lang="css" scoped>
+#product-card {
+  border: none;
+}
+.card-title {
+  font-size: 1.1rem;
+}
+.mt-n1 {
+  margin-top: -1.4rem !important;
+}
+.heart-icon {
+  font-size: 1.2rem;
+}
 </style>

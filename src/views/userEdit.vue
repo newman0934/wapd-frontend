@@ -86,8 +86,8 @@ export default {
   computed: {
     ...mapState(["currentUser", "isProcessing"]),
     formData() {
-      let { name, email, birthday, phone, address } = this;
-      return { name, email, birthday, phone, address };
+      let { id, name, email, birthday, phone, address } = this;
+      return { id, name, email, birthday, phone, address };
     }
   },
   watch: {
@@ -124,7 +124,6 @@ export default {
       try {
         this.$store.dispatch("updateProcessing", true);
         const { data, statusText } = await usersAPI.putUser({ formData });
-        console.log(data, status);
         if (statusText !== "OK" || data.status !== "success") {
           throw new Error(statusText);
         }
@@ -132,7 +131,8 @@ export default {
           type: "success",
           title: "使用者資料更新成功"
         });
-        this.$router.go(1);
+        await this.$store.dispatch("updateCurrentUser", formData);
+        this.$router.push({ name: "userEdit" });
         this.$store.dispatch("updateProcessing", false);
       } catch (error) {
         this.$store.dispatch("updateProcessing", false);

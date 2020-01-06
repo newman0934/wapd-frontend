@@ -21,6 +21,7 @@ export default new Vuex.Store({
       id: -1,
       name: '',
       email: '',
+      birthday: '',
       phone: '',
       address: '',
       role: false
@@ -40,6 +41,12 @@ export default new Vuex.Store({
       }
       state.token = localStorage.getItem('token')
       state.isAuthenticated = true
+    },
+    updateCurrentUser(state, currentUser) {
+      state.currentUser = {
+        ...state.currentUser,
+        ...currentUser
+      }
     },
     revokeAuthentication(state) {
       state.currentUser = {}
@@ -67,6 +74,9 @@ export default new Vuex.Store({
     updateLoading(context, status) {
       context.commit("LOADING", status)
     },
+    updateCurrentUser(context, currentUser) {
+      context.commit("updateCurrentUser", currentUser)
+    },
     async fetchCurrentUser({ commit }) {
       try {
         const { data, statusText } = await usersAPI.getCurrentUser()
@@ -78,6 +88,7 @@ export default new Vuex.Store({
           id: data.id,
           name: data.name,
           email: data.email,
+          birthday: data.birthday,
           phone: data.phone,
           address: data.address,
           role: data.role
@@ -104,8 +115,7 @@ export default new Vuex.Store({
     },
     async addFavorite(context, productId) {
       try {
-        // this.isProcessing = true;
-        console.log(this.state.currentUser)
+        context.dispatch("updateProcessing", true);
         const { data, statusText } = await productsAPI.addFavorite({
           productId
         });
@@ -117,9 +127,9 @@ export default new Vuex.Store({
           type: "success",
           title: "商品成功加入Wish List"
         });
-        // this.isProcessing = false;
+        context.dispatch("updateProcessing", false);
       } catch (error) {
-        // this.isProcessing = false;
+        context.dispatch("updateProcessing", false);
         Toast.fire({
           type: "error",
           title: "無法將商品加入Wish List，請稍後再試"
@@ -128,7 +138,7 @@ export default new Vuex.Store({
     },
     async deleteFavorite(context, productId) {
       try {
-        // this.isProcessing = true;
+        context.dispatch("updateProcessing", true);
         const { data, statusText } = await productsAPI.deleteFavorite({
           productId
         });
@@ -140,9 +150,9 @@ export default new Vuex.Store({
           type: "success",
           title: "商品成功從Wish List移除"
         });
-        // this.isProcessing = false;
+        context.dispatch("updateProcessing", false);
       } catch (error) {
-        // this.isProcessing = false;
+        context.dispatch("updateProcessing", false);
         Toast.fire({
           type: "error",
           title: "無法將商品從Wish List移除，請稍後再試"

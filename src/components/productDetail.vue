@@ -1,11 +1,18 @@
 <template>
   <div>
     <form @submit.stop.prevent="addToCartSubmit">
-      <div class="row">
-        <h1 class="product-name">{{product.name}}</h1>
+      <div class="text-left">
+        <h2 class="product-name">{{product.name}}</h2>
       </div>
-      <div class="row mb-4">
-        <h5 class="product-price">NTD {{product.sellPrice}}</h5>
+      <div class="d-flex flex-row mb-4">
+        <div class="text-left text-muted mr-2">
+          <p class="product-price">
+            <del>{{product.sellPrice | currency}}</del>
+          </p>
+        </div>
+        <div class="text-left">
+          <h5 class="product-price">{{product.sellPrice | currency}}</h5>
+        </div>
       </div>
 
       <p>{{product.description}}</p>
@@ -50,83 +57,64 @@
       <button type="submit" class="btn btn-outline-secondary btn-block">Add to cart</button>
     </form>
 
-    <div class="mt-3" v-if="isAuthenticated">
+    <div class="mt-1" v-if="isAuthenticated">
       <button
         v-if="product.isFavorited"
         type="button"
-        class="btn btn-danger btn-border btn-block mr-2"
+        class="btn btn-sm text-danger btn-block mr-2"
         :disabled="isProcessing"
         @click.stop.prevent="deleteFavorite(product.id)"
-      >-wish list</button>
+      >
+        <font-awesome-icon class="mr-1" icon="heart" size="1x" />已加入 Wish List
+      </button>
       <button
         v-else
         type="button"
-        class="btn btn-danger btn-border btn-block mr-2"
+        class="btn btn-sm text-danger btn-block mr-2"
         :disabled="isProcessing"
         @click.stop.prevent="addFavorite(product.id)"
-      >+wish list</button>
+      >
+        <font-awesome-icon class="mr-1" :icon="['far', 'heart']" size="1x" />加入 Wish List
+      </button>
     </div>
 
-    <!--product info-->
-    <div class="accordion mt-3" id="accordionExample">
-      <div class="card">
-        <div class="card-header" id="headingTwo">
-          <h2 class="mb-0">
-            <button
-              class="btn btn-link collapsed"
-              type="button"
-              data-toggle="collapse"
-              data-target="#collapseTwo"
-              aria-expanded="false"
-              aria-controls="collapseTwo"
-            >尺寸建議</button>
-          </h2>
+    <div v-else class="mt-1">
+      <button
+        type="button"
+        class="btn btn-sm text-danger btn-block mr-2"
+        data-container="body"
+        data-toggle="popover"
+        data-placement="bottom"
+        data-content="立即登入/註冊"
+        @mouseover="heartToggle"
+      >
+        <font-awesome-icon class="mr-1" :icon="['far', 'heart']" size="1x" />加入 Wish List
+      </button>
+    </div>
+
+    <div class="ml-2 mt-4 text-left">
+      <p class="d-inline">分享到：</p>
+      <social-sharing :url="currentURL" class="d-inline" inline-template>
+        <div id="sharing-icon">
+          <network class="mr-2 text-primary" network="facebook">
+            <font-awesome-icon :icon="['fab', 'facebook']" size="2x" />
+          </network>
+          <network class="text-success" network="line">
+            <font-awesome-icon :icon="['fab', 'line']" size="2x" />
+          </network>
         </div>
-        <div
-          id="collapseTwo"
-          class="collapse"
-          aria-labelledby="headingTwo"
-          data-parent="#accordionExample"
-        >
-          <div
-            class="card-body"
-          >Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciun</div>
-        </div>
-      </div>
-      <!--card two end-->
-      <div class="card">
-        <div class="card-header" id="headingThree">
-          <h2 class="mb-0">
-            <button
-              class="btn btn-link collapsed"
-              type="button"
-              data-toggle="collapse"
-              data-target="#collapseThree"
-              aria-expanded="false"
-              aria-controls="collapseThree"
-            >退換貨須知</button>
-          </h2>
-        </div>
-        <div
-          id="collapseThree"
-          class="collapse"
-          aria-labelledby="headingThree"
-          data-parent="#accordionExample"
-        >
-          <div
-            class="card-body"
-          >Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee</div>
-        </div>
-      </div>
-      <!--card three end-->
+      </social-sharing>
     </div>
   </div>
 </template>
 <script>
+import $ from "jquery";
 import cartsAPI from "./../apis/carts";
 import { mapState } from "vuex";
 import { Toast } from "./../utils/helpers";
+import { currencyFilter } from "../utils/mixins";
 export default {
+  mixins: [currencyFilter],
   props: {
     initialProduct: {
       type: Object,
@@ -138,12 +126,11 @@ export default {
       product: this.initialProduct,
       quantity: 0,
       size: "",
-      color: "",
-      isProcessing: false
+      color: ""
     };
   },
   computed: {
-    ...mapState(["currentUser"]),
+    ...mapState(["currentUser", "isProcessing"]),
     isAuthenticated() {
       return this.$store.state.isAuthenticated;
     },
@@ -155,6 +142,11 @@ export default {
         color,
         quantity
       };
+    },
+    currentURL() {
+      //const baseURL = "https://localhost:8080/#";
+      //let path = this.$route.path;
+      return "https://www.chickimmiu.com/products/t1901132";
     }
   },
   watch: {
@@ -189,10 +181,17 @@ export default {
       }
     },
     async addToCartSubmit() {
-      if (!this.color || !this.size || !this.quantity) {
+      if (!this.color || !this.size) {
         Toast.fire({
           type: "warning",
           title: "請確認顏色、尺寸、數量皆需填寫！"
+        });
+        return;
+      }
+      if (this.quantity <= 0 && this.quantity >= 10) {
+        Toast.fire({
+          type: "warning",
+          title: "請確認確認數量喔！"
         });
         return;
       }
@@ -227,7 +226,15 @@ export default {
           title: "商品暫時無法加入購物車，請稍後再試"
         });
       }
+    },
+    heartToggle() {
+      $('[data-toggle="popover"]').popover();
     }
   }
 };
 </script>
+<style lang="css" scoped>
+#sharing-icon {
+  cursor: pointer;
+}
+</style>

@@ -58,16 +58,32 @@
             >Ｘ</button>
           </td>
         </tr>
-        <th scope="row"></th>
-        <td colspan="3">小計</td>
-        <td>NTD {{total}}</td>
+        <tr v-if="coupon.isValid">
+          <th scope="row"></th>
+          <td colspan="3">折扣碼({{coupon.coupon_code}})</td>
+          <td>- {{coupon.discount_amount}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <th scope="row"></th>
+          <td colspan="3">小計</td>
+          <td>NTD {{total}}</td>
+          <td></td>
+        </tr>
       </tbody>
     </table>
 
-    <form class="form-inline ml-3">
+    <form class="form-inline ml-3" @submit="postCoupon">
       <div class="form-group mx-sm-3">
         <label for="input-coupon" class="sr-only">輸入優惠序號</label>
-        <input type="text" class="form-control" id="coupon" placeholder="Enter coupon code" />
+        <input
+          type="text"
+          class="form-control"
+          v-model="couponCode"
+          id="couponCode"
+          name="couponCode"
+          placeholder="Enter coupon code"
+        />
       </div>
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
@@ -90,6 +106,12 @@ export default {
       total: 0,
       cacheItem: {},
       cacheQty: 0,
+      coupon: {
+        id: 0,
+        coupon_code: "",
+        discount_amount: 0,
+        isValid: false
+      },
       couponCode: ""
     };
   },
@@ -109,7 +131,8 @@ export default {
       return this.$store.state.cart;
     },
     totalPrice() {
-      return this.items.reduce((t, p) => t + p.sell_price * p.quantity, 0);
+      let total = this.items.reduce((t, p) => t + p.sell_price * p.quantity, 0);
+      return total - this.coupon.discount_amount;
     },
     cartData() {
       const { cacheQty } = this;
@@ -151,15 +174,16 @@ export default {
       this.cacheItem = {};
       this.cacheQty = 0;
     },
+    //修改購物車商品數量
     async putCartItem(item) {
       const userId = this.currentUser.id;
       let itemId = item.id;
-      let cartData = this.cartData;
+      let { quantity } = this.cartData;
       try {
         const { data, statusText } = await cartsAPI.putCartItem({
           userId,
           itemId,
-          cartData
+          quantity
         });
         if (statusText !== "OK" || data.status !== "success") {
           throw new Error(statusText);
@@ -183,11 +207,32 @@ export default {
         });
       }
     },
+    async postCoupon() {
+      const { couponCode } = this.orderData;
+      try {
+        const { data, statusText } = await cartsAPI.postCoupon({ couponCode });
+        if (statusText !== "OK" || data.status !== "success") {
+          throw new Error(statusText);
+        }
+        this.coupon = {
+          ...this.coupon,
+          ...data.CouponId,
+          isValid: true
+        };
+        this.total = this.totalPrice;
+        this.couponCode = "";
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "折扣碼有誤，請確認後再試"
+        });
+      }
+    },
     //成立訂單
     async postOrder() {
-      let orderData = this.orderData;
+      const { couponCode } = this.orderData;
       try {
-        const { data, statusText } = await cartsAPI.postOrder({ orderData });
+        const { data, statusText } = await cartsAPI.postOrder({ couponCode });
         if (statusText !== "OK" || data.status !== "success") {
           throw new Error(statusText);
         }
