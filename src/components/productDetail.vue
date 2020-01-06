@@ -162,10 +162,17 @@ export default {
       }
     },
     async addToCartSubmit() {
-      if (!this.color || !this.size || !this.quantity) {
+      if (!this.color || !this.size) {
         Toast.fire({
           type: "warning",
           title: "請確認顏色、尺寸、數量皆需填寫！"
+        });
+        return;
+      }
+      if (this.quantity <= 0 && this.quantity >= 10) {
+        Toast.fire({
+          type: "warning",
+          title: "請確認確認數量喔！"
         });
         return;
       }
