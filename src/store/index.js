@@ -115,7 +115,7 @@ export default new Vuex.Store({
     },
     async addFavorite(context, productId) {
       try {
-        // this.isProcessing = true;
+        context.dispatch("updateProcessing", true);
         console.log(this.state.currentUser)
         const { data, statusText } = await productsAPI.addFavorite({
           productId
@@ -128,9 +128,9 @@ export default new Vuex.Store({
           type: "success",
           title: "商品成功加入Wish List"
         });
-        // this.isProcessing = false;
+        context.dispatch("updateProcessing", false);
       } catch (error) {
-        // this.isProcessing = false;
+        context.dispatch("updateProcessing", false);
         Toast.fire({
           type: "error",
           title: "無法將商品加入Wish List，請稍後再試"
@@ -139,7 +139,7 @@ export default new Vuex.Store({
     },
     async deleteFavorite(context, productId) {
       try {
-        // this.isProcessing = true;
+        context.dispatch("updateProcessing", true);
         const { data, statusText } = await productsAPI.deleteFavorite({
           productId
         });
@@ -151,9 +151,9 @@ export default new Vuex.Store({
           type: "success",
           title: "商品成功從Wish List移除"
         });
-        // this.isProcessing = false;
+        context.dispatch("updateProcessing", false);
       } catch (error) {
-        // this.isProcessing = false;
+        context.dispatch("updateProcessing", false);
         Toast.fire({
           type: "error",
           title: "無法將商品從Wish List移除，請稍後再試"
