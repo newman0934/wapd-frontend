@@ -1,10 +1,7 @@
 <template>
   <div>
     <admin-nav></admin-nav>
-    <form
-      class="container mb-5"
-      @submit.stop.prevent="handleSubmit($route.params.id)"
-    >
+    <form class="container mb-5" @submit.stop.prevent="handleSubmit($route.params.id)">
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="name">名稱</label>
@@ -30,36 +27,19 @@
               v-for="category in categories"
               :key="category.id"
               :value="category.id"
-              >{{ category.category }}</option
-            >
+            >{{ category.category }}</option>
           </select>
         </div>
         <div class="form-group col-md-2">
           <label for="status">目前狀態</label>
-          <select
-            name="status"
-            id="status"
-            class="form-control"
-            v-model="product.status"
-          >
+          <select name="status" id="status" class="form-control" v-model="product.status">
             <option value="on">上架</option>
             <option value="off">下架</option>
           </select>
         </div>
       </div>
       <div class="form-row">
-        <div class="form-group col-md-4">
-          <label for="cost">成本</label>
-          <input
-            type="text"
-            name="cost"
-            id="cost"
-            class="form-control"
-            placeholder="商品成本"
-            v-model="product.cost"
-          />
-        </div>
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-6">
           <label for="originPrice">原價</label>
           <input
             type="text"
@@ -70,7 +50,7 @@
             v-model="product.originPrice"
           />
         </div>
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-6">
           <label for="originPrice">售價</label>
           <input
             type="text"
@@ -95,26 +75,14 @@
         </div>
         <div class="form-group col-md-12">
           <label for="images">商品圖片</label>
-          <input
-            type="file"
-            class="form-control"
-            name="images"
-            id="images"
-            multiple="multiple"
-          />
+          <input type="file" class="form-control" name="images" id="images" multiple="multiple" />
         </div>
       </div>
       <div class="container adminProductImg">
         <div class="row">
-          <div
-            class="prodcutImg col-md-3 mb-3"
-            v-for="image in images"
-            :key="image.id"
-          >
+          <div class="prodcutImg col-md-3 mb-3" v-for="image in images" :key="image.id">
             <img :src="image.url" alt />
-            <div class="mask" @click="deleteImage" :data-imageId="image.id">
-              X
-            </div>
+            <div class="mask" @click="deleteImage" :data-imageId="image.id">X</div>
           </div>
         </div>
       </div>
@@ -124,9 +92,9 @@
   </div>
 </template>
 <script>
-import adminNav from './../components/adminNav'
-import adminAPI from './../apis/admin'
-import { Toast } from './../utils/helpers'
+import adminNav from "./../components/adminNav";
+import adminAPI from "./../apis/admin";
+import { Toast } from "./../utils/helpers";
 export default {
   components: {
     adminNav
@@ -134,122 +102,124 @@ export default {
   data() {
     return {
       product: {
-        name: '',
-        categoryId: '',
-        cost: 0,
+        name: "",
+        categoryId: "",
         originPrice: 0,
         sellPrice: 0,
-        status: '',
-        description: ''
+        status: "",
+        description: ""
       },
       images: [],
       categories: []
-    }
+    };
   },
   created() {
-    const { id } = this.$route.params
-    this.fetchAdminProduct(id)
-    this.fetchAdminCategories()
+    const { id } = this.$route.params;
+    this.fetchAdminProduct(id);
+    this.fetchAdminCategories();
   },
   methods: {
     async fetchAdminProduct(id) {
       try {
         const { data, statusText } = await adminAPI.products.getProductDetail({
           id
-        })
-        if (statusText !== 'OK' && data.status !== 'success') {
-          throw new Error(status)
+        });
+        console.log(data);
+        if (statusText !== "OK" && data.status !== "success") {
+          throw new Error(status);
         }
         this.product = {
           name: data.product.name,
           categoryId: data.product.CategoryId,
-          cost: data.product.cost,
           originPrice: data.product.origin_price,
           sellPrice: data.product.sell_price,
           status: data.product.status,
           description: data.product.description
-        }
-        this.images = data.product.images
+        };
+        this.images = data.product.images;
       } catch (error) {
         Toast.fire({
-          type: 'error',
-          title: '無法取得商品資訊'
-        })
+          type: "error",
+          title: "無法取得商品資訊"
+        });
       }
     },
     async fetchAdminCategories() {
       try {
-        const { data, statusText } = await adminAPI.categories.get()
-        if (statusText !== 'OK') {
-          throw new Error(statusText)
+        const { data, statusText } = await adminAPI.categories.get();
+        if (statusText !== "OK") {
+          throw new Error(statusText);
         }
 
-        this.categories = data.categories
+        this.categories = data.categories;
       } catch (error) {
         Toast.fire({
-          type: 'error',
-          title: '無法取得類別資料'
-        })
+          type: "error",
+          title: "無法取得類別資料"
+        });
       }
     },
-    async handleSubmit(productId) {
+    async handleSubmit(id) {
       try {
         if (
           !this.product.name ||
-          !this.product.cost ||
           !this.product.sellPrice ||
           !this.product.originPrice ||
           !this.product.description
         ) {
           Toast.fire({
-            type: 'warning',
-            title: '請確認輸入的內容'
-          })
-          return
+            type: "warning",
+            title: "請確認輸入的內容"
+          });
+          return;
         }
-        let e = window.event
-        const form = e.target
-        const formData = new FormData(form)
+        let e = window.event;
+        const form = e.target;
+        const formData = new FormData(form);
+        // for (let [name, value] of formData.entries()) {
+        //   console.log(name + ": " + value);
+        // }
+        // console.log(id);
         const { data, statusText } = await adminAPI.products.put({
-          productId,
+          id,
           formData
-        })
+        });
 
-        if (statusText !== 'OK' || data.status !== 'success') {
-          throw new Error(statusText)
+        if (statusText !== "OK" || data.status !== "success") {
+          throw new Error(statusText);
         }
-        this.$router.go(-1)
+        this.$router.go(-1);
       } catch (error) {
         Toast.fire({
-          type: 'error',
-          title: '修改商品資料失敗'
-        })
+          type: "error",
+          title: "修改商品資料失敗"
+        });
       }
     },
     async deleteImage(e) {
       try {
-        const { imageid } = e.target.dataset
+        const { imageid } = e.target.dataset;
         const { data, statusText } = await adminAPI.products.deleteImage(
           imageid
-        )
-        if (statusText !== 'OK' || data.status !== 'success') {
-          throw new Error(statusText)
+        );
+        if (statusText !== "OK" || data.status !== "success") {
+          throw new Error(statusText);
         }
-        this.images.splice(this.images.indexOf(imageid), 1)
+        this.images.splice(this.images.indexOf(imageid), 1);
         Toast.fire({
-          type: 'success',
-          title: '成功刪除圖片!!'
-        })
+          type: "success",
+          title: "成功刪除圖片!!"
+        });
       } catch (error) {
-        console.log(error)
+        console.log(error);
         Toast.fire({
-          type: 'error',
-          title: '刪除圖片失敗'
-        })
+          type: "error",
+          title: "刪除圖片失敗"
+        });
       }
     }
   }
-}
+};
 </script>
 <style scoped>
 img {

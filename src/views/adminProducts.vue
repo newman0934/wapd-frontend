@@ -89,7 +89,6 @@ export default {
           type: "error",
           title: "無法取得商品資料"
         });
-        console.log(error);
       }
     }
   }
