@@ -29,6 +29,7 @@ import orders from '../views/orders'
 import order from '../views/order'
 import signIn from '../views/signIn'
 import user from '../views/user'
+import about from '../views/about'
 import spgatewayPayment from '../views/spgatewayPayment'
 import store from '../store'
 
@@ -58,6 +59,11 @@ const routes = [
     path: '/index',
     name: 'index',
     component: Index
+  },
+  {
+    path: '/about',
+    name: 'about',
+    component: about
   },
   {
     path: '/products',
@@ -233,6 +239,7 @@ router.beforeEach(async (to, from, next) => {
   const pathsWithoutAuthentication = [
     'signIn',
     'index',
+    'about',
     'products',
     'product',
     'userForgetPassword',
