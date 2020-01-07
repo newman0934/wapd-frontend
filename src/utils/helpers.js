@@ -5,7 +5,7 @@ let baseURL = ''
 if(process.env.NODE_ENV === "development"){
    baseURL = 'http://localhost:3000/api'
 }else{
-   baseURL = 'http://wapd-backend.herokuapp.com/api'
+   baseURL = 'https://wapd-backend.herokuapp.com/api'
 }
 
 console.log(baseURL)
