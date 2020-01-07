@@ -8,6 +8,8 @@ if(process.env.NODE_ENV === "development"){
    baseURL = 'http://wapd-backend.herokuapp.com/api'
 }
 
+console.log(baseURL)
+
 export const axiosInstance = axios.create({ baseURL, withCredentials: true })
 
 axiosInstance.interceptors.request.use(
