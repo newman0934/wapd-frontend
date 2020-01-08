@@ -106,7 +106,7 @@ const routes = [
     component: paymentComplete
   },
   {
-    path: '/users/:id',
+    path: '/users/',
     name: 'users',
     component: user,
     children: [

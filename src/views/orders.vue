@@ -44,25 +44,12 @@ export default {
     ...mapState(["currentUser"])
   },
   created() {
-    const { id } = this.$route.params;
-    if (id.toString() !== this.currentUser.id.toString()) {
-      this.$router.push({ name: "notFound" });
-      return;
-    }
-    this.fetchUserOrders(id);
+    this.fetchUserOrders();
   },
-  // beforeRouteUpdate(to, from, next) {
-  //   const { id } = to.params;
-  //   if (id.toString() !== this.currentUser.id.toString()) {
-  //     this.$router.push({ name: "notFound" });
-  //     return;
-  //   }
-  //   next()
-  // },
   methods: {
-    async fetchUserOrders(userId) {
+    async fetchUserOrders() {
       try {
-        const { data, statusText } = await usersAPI.getUserOrders({ userId });
+        const { data, statusText } = await usersAPI.getUserOrders();
         if (statusText !== "OK") {
           throw new Error(statusText);
         }
