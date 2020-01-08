@@ -116,12 +116,7 @@ export default {
     };
   },
   async created() {
-    const { id } = this.$route.params;
-    if (id.toString() !== this.currentUser.id.toString()) {
-      this.$router.push({ name: "notFound" });
-      return;
-    }
-    await this.$store.dispatch("fetchUserCart", id);
+    await this.$store.dispatch("fetchUserCart");
     this.items = this.cartItems;
     this.total = this.totalPrice;
   },
@@ -152,7 +147,7 @@ export default {
           throw new Error(statusText);
         }
         //update vuex
-        await this.$store.dispatch("fetchUserCart", this.currentUser.id);
+        await this.$store.dispatch("fetchUserCart");
         //render view
         this.items = this.items.filter(item => item.id !== itemId);
         Toast.fire({
@@ -176,12 +171,10 @@ export default {
     },
     //修改購物車商品數量
     async putCartItem(item) {
-      const userId = this.currentUser.id;
       let itemId = item.id;
       let { quantity } = this.cartData;
       try {
         const { data, statusText } = await cartsAPI.putCartItem({
-          userId,
           itemId,
           quantity
         });
@@ -193,7 +186,7 @@ export default {
           title: "商品更新成功"
         });
         //update vuex
-        await this.$store.dispatch("fetchUserCart", userId);
+        await this.$store.dispatch("fetchUserCart");
         this.items = this.cartItems;
         this.total = this.totalPrice;
         //render view
@@ -238,7 +231,7 @@ export default {
         }
         const orderId = data.OrderId;
         //update vuex
-        await this.$store.dispatch("fetchUserCart", this.currentUser.id);
+        await this.$store.dispatch("fetchUserCart");
         this.$router.push(`/orders/${orderId}/checkout`);
       } catch (error) {
         console.log(error);

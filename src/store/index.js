@@ -159,9 +159,9 @@ export default new Vuex.Store({
         });
       }
     },
-    async fetchUserCart(context, userId) {
+    async fetchUserCart(context) {
       try {
-        const { data, statusText } = await cartsAPI.getUserCart({ userId });
+        const { data, statusText } = await cartsAPI.getUserCart();
         if (statusText !== "OK") {
           throw new Error(statusText);
         }
