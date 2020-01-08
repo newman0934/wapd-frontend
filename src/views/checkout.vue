@@ -305,8 +305,14 @@ export default {
       }
     },
     userData() {
-      let { name, phone, address } = this.user;
-      return { name, phone, address };
+      return {
+        formData: {
+          name: this.user.name,
+          phone: this.user.phone,
+          address: this.user.address,
+          email: this.currentUser.email
+        }
+      };
     },
     formData() {
       return {
@@ -339,11 +345,10 @@ export default {
       }
     },
     async updateUser() {
-      // const { id } = this.$route.params;
-      const userData = this.userData;
+      const { formData } = this.userData;
       try {
         this.$store.dispatch("updateProcessing", true);
-        const { data, statusText } = await usersAPI.putUser({ userData });
+        const { data, statusText } = await usersAPI.putUser({ formData });
         if (statusText !== "OK" || data.status !== "success") {
           throw new Error(statusText);
         }
@@ -352,8 +357,7 @@ export default {
           type: "success",
           title: "使用者資料更新成功"
         });
-        await this.$store.dispatch("updateCurrentUser", userData);
-        // this.$router.push({ name: "checkout", params: { id } });
+        await this.$store.dispatch("updateCurrentUser", formData);
         this.$store.dispatch("updateProcessing", false);
       } catch (error) {
         console.log(error);
@@ -368,12 +372,10 @@ export default {
       if (checked == false) {
         this.receiver.name = this.user.name;
         this.receiver.phone = this.user.phone;
-        this.receiver.email = this.user.email;
         this.receiver.address = this.user.address;
       } else {
         this.receiver.name = "";
         this.receiver.phone = "";
-        this.receiver.email = "";
         this.receiver.address = "";
       }
     },
