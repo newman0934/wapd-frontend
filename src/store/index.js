@@ -122,7 +122,7 @@ export default new Vuex.Store({
         if (statusText !== "OK" || data.status !== "success") {
           throw new Error(statusText);
         }
-        await context.dispatch('fetchUserFavorite', this.state.currentUser.id)
+        await context.dispatch('fetchUserFavorite')
         Toast.fire({
           type: "success",
           title: "商品成功加入Wish List"
@@ -145,7 +145,7 @@ export default new Vuex.Store({
         if (statusText !== "OK" || data.status !== "success") {
           throw new Error(statusText);
         }
-        await context.dispatch('fetchUserFavorite', this.state.currentUser.id)
+        await context.dispatch('fetchUserFavorite')
         Toast.fire({
           type: "success",
           title: "商品成功從Wish List移除"
