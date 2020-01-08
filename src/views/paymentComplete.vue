@@ -82,15 +82,13 @@ export default {
     };
   },
   created() {
-    const { id } = this.$route.params;
     const { Status, orderId } = this.$route.query;
-    this.fetchPaymentComplete({ id, Status, orderId });
+    this.fetchPaymentComplete({ Status, orderId });
   },
   methods: {
-    async fetchPaymentComplete({ userId, Status, orderId }) {
+    async fetchPaymentComplete({ Status, orderId }) {
       try {
         const { data, statusText } = await cartsAPI.getPaymentComplete({
-          userId,
           Status,
           orderId
         });

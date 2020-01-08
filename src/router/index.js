@@ -86,7 +86,7 @@ const routes = [
     component: userResetPassword
   },
   {
-    path: '/users/:id/cart',
+    path: '/users/cart',
     name: 'cart',
     component: cart
   },
@@ -101,12 +101,12 @@ const routes = [
     component: spgatewayPayment
   },
   {
-    path: '/users/:id/paymentcomplete',
+    path: '/users/paymentcomplete',
     name: 'paymentComplete',
     component: paymentComplete
   },
   {
-    path: '/users/:id',
+    path: '/users/',
     name: 'users',
     component: user,
     children: [

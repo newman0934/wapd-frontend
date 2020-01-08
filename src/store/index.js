@@ -99,9 +99,9 @@ export default new Vuex.Store({
         return false
       }
     },
-    async fetchUserFavorite(context, userId) {
+    async fetchUserFavorite(context) {
       try {
-        const { data, statusText } = await usersAPI.getUserFavorite({ userId })
+        const { data, statusText } = await usersAPI.getUserFavorite()
         if (statusText !== "OK") {
           throw new Error(statusText);
         }
@@ -122,7 +122,7 @@ export default new Vuex.Store({
         if (statusText !== "OK" || data.status !== "success") {
           throw new Error(statusText);
         }
-        await context.dispatch('fetchUserFavorite', this.state.currentUser.id)
+        await context.dispatch('fetchUserFavorite')
         Toast.fire({
           type: "success",
           title: "商品成功加入Wish List"
@@ -145,7 +145,7 @@ export default new Vuex.Store({
         if (statusText !== "OK" || data.status !== "success") {
           throw new Error(statusText);
         }
-        await context.dispatch('fetchUserFavorite', this.state.currentUser.id)
+        await context.dispatch('fetchUserFavorite')
         Toast.fire({
           type: "success",
           title: "商品成功從Wish List移除"
@@ -159,9 +159,9 @@ export default new Vuex.Store({
         });
       }
     },
-    async fetchUserCart(context, userId) {
+    async fetchUserCart(context) {
       try {
-        const { data, statusText } = await cartsAPI.getUserCart({ userId });
+        const { data, statusText } = await cartsAPI.getUserCart();
         if (statusText !== "OK") {
           throw new Error(statusText);
         }

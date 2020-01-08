@@ -96,11 +96,6 @@ export default {
     }
   },
   created() {
-    const { id } = this.$route.params;
-    if (id.toString() !== this.currentUser.id.toString()) {
-      this.$router.push({ name: "notFound" });
-      return;
-    }
     this.setUser();
   },
   methods: {
