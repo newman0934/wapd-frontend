@@ -7,55 +7,70 @@
       <p class="text-left w-80 ml-3">＊訂單一旦取消後，若要再次購買，只能重新訂購，並以訂購當下官網顯示的商品價格及活動為主</p>
       <p class="text-left w-80 ml-3">＊若訂單顯示出貨中，表示已進入出貨流程，恕無法取消訂單</p>
 
-      <h5 class="text-left">選擇物流</h5>
-      <hr />
-      <div class="ml-3 text-left">
-        <div class="form-check">
-          <label class="form-check-label">
-            <input
-              type="radio"
-              class="form-check-input"
-              name="deliverToHome"
-              id="deliverToHome"
-              value="option1"
-            />
-            宅配
-          </label>
+      <div class="row">
+        <div class="col-md-6">
+          <h5 class="text-left">選擇物流</h5>
+          <hr />
+          <div class="ml-3 text-left">
+            <div class="form-check">
+              <label class="form-check-label">
+                <input
+                  type="radio"
+                  class="form-check-input"
+                  name="deliverToHome"
+                  id="deliverToHome"
+                  value="0"
+                  v-model="deliver"
+                />
+                宅配
+              </label>
+            </div>
+            <div class="form-check">
+              <label class="form-check-label">
+                <input
+                  type="radio"
+                  class="form-check-input"
+                  name="deliverToShop"
+                  id="deliverToShop"
+                  value="1"
+                  v-model="deliver"
+                />
+                超商取貨
+              </label>
+            </div>
+            <div class="form-check">
+              <label class="form-check-label">
+                <input
+                  type="radio"
+                  class="form-check-input"
+                  name="payToShop"
+                  id="payToShop"
+                  value="2"
+                  v-model="deliver"
+                />
+                超商取貨付款
+              </label>
+            </div>
+          </div>
         </div>
-        <!-- <div class="form-check">
-          <label class="form-check-label">
-            <input type="radio" class="form-check-input" name="pay-by-atm" id="atm" value="option1" />
-            Option one is this and that&mdash;be sure to include why it's great
-          </label>
-        </div>-->
-      </div>
-
-      <h5 class="text-left mt-3">選擇金流</h5>
-      <hr />
-      <div class="ml-3 text-left">
-        <div class="form-check">
-          <label class="form-check-label">
-            <input
-              type="radio"
-              class="form-check-input"
-              name="payOnline"
-              id="payOnline"
-              value="option2"
-            />
-            線上刷卡
-          </label>
-        </div>
-        <div class="form-check">
-          <label class="form-check-label">
-            <input
-              type="radio"
-              class="form-check-input"
-              name="payByAtm"
-              id="payByAtm"
-              value="option3"
-            />
-            ATM轉帳
-          </label>
+        <div class="col-md-6">
+          <h5 class="text-left">選擇金流</h5>
+          <hr />
+          <div class="ml-3 text-left">
+            <div class="form-check">
+              <label class="form-check-label">
+                <input
+                  type="radio"
+                  class="form-check-input"
+                  name="payOnline"
+                  id="payOnline"
+                  value="spgateway"
+                  v-model="payment"
+                />
+                藍新金流
+              </label>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -291,7 +306,9 @@ export default {
         email: "",
         address: "",
         checked: false
-      }
+      },
+      deliver: "0",
+      payment: "spgateway"
     };
   },
   created() {
@@ -307,7 +324,8 @@ export default {
         receiverAddress: this.receiver.address,
         receiverEmail: this.receiver.email,
         total: this.total,
-        orderId: this.$route.params.id
+        orderId: this.$route.params.id,
+        deliver: this.deliver
       };
     }
   },
@@ -367,10 +385,7 @@ export default {
       }
     },
     async handleSubmit() {
-      // const form = e.target;
-      // const formData = new FormData(form);
       const formData = this.formData;
-      console.log(formData);
       const orderId = this.$route.params.id;
       try {
         const { data } = await cartsAPI.postCheckout({ formData });
