@@ -10,8 +10,8 @@ export default {
   getUserOrder({ orderId }) {
     return apiHelper.get(`/users/orders/${orderId}`)
   },
-  getUserFavorite({ userId }) {
-    return apiHelper.get(`/users/${userId}/wishlist`)
+  getUserFavorite() {
+    return apiHelper.get(`/users/wishlist`)
   },
   postPasswordChange({ formData }) {
     return apiHelper.post(`/users/password_change`, formData)

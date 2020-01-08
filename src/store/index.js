@@ -99,9 +99,9 @@ export default new Vuex.Store({
         return false
       }
     },
-    async fetchUserFavorite(context, userId) {
+    async fetchUserFavorite(context) {
       try {
-        const { data, statusText } = await usersAPI.getUserFavorite({ userId })
+        const { data, statusText } = await usersAPI.getUserFavorite()
         if (statusText !== "OK") {
           throw new Error(statusText);
         }
