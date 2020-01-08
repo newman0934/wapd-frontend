@@ -116,7 +116,7 @@
           <tr class="table-light">
             <th></th>
             <td colspan="3">運費</td>
-            <td>NTD {{ shippingTotal }}</td>
+            <td>NTD {{ deliverCost }}</td>
           </tr>
           <tr class="table-light">
             <th></th>
@@ -126,7 +126,7 @@
           <tr class="table-info">
             <th></th>
             <td colspan="3">總計</td>
-            <td>NTD {{ total }}</td>
+            <td>NTD {{ amount }}</td>
           </tr>
         </tbody>
       </table>
@@ -139,13 +139,11 @@
               <tr>
                 <th scope="row"></th>
                 <td class="d-flex">
-                  <input
-                    type="checkbox"
-                    class="mr-2"
-                    v-model="user.checked"
-                    @click="includeUserData(user.checked)"
-                  />
-                  自動帶入會員資料
+                  <button
+                    class="btn btn-outline-success btn-sm"
+                    @click.prevent.stop="updateUser()"
+                    :disabled="isProcessing"
+                  >同步更新會員資料</button>
                 </td>
               </tr>
               <tr>
@@ -171,19 +169,6 @@
                     name="orderPhone"
                     class="form-control"
                     placeholder="phone number"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">連絡信箱</th>
-                <td>
-                  <input
-                    type="text"
-                    id="order-email"
-                    v-model="user.email"
-                    name="orderEmail"
-                    class="form-control"
-                    placeholder="email"
                   />
                 </td>
               </tr>
@@ -247,19 +232,6 @@
                 </td>
               </tr>
               <tr>
-                <th scope="row">連絡信箱</th>
-                <td>
-                  <input
-                    type="text"
-                    id="receiver-email"
-                    v-model="receiver.email"
-                    name="receiverEmail"
-                    class="form-control"
-                    placeholder="email"
-                  />
-                </td>
-              </tr>
-              <tr>
                 <th scope="row">寄件地址</th>
                 <td>
                   <input
@@ -282,6 +254,7 @@
 </template>
 <script>
 import cartsAPI from "./../apis/carts";
+import usersAPI from "./../apis/users";
 import { Toast } from "./../utils/helpers";
 import { mapState } from "vuex";
 
@@ -296,14 +269,11 @@ export default {
       user: {
         name: "",
         phone: "",
-        email: "",
-        address: "",
-        checked: false
+        address: ""
       },
       receiver: {
         name: "",
         phone: "",
-        email: "",
         address: "",
         checked: false
       },
@@ -314,29 +284,39 @@ export default {
   created() {
     const { id } = this.$route.params;
     this.fetchCheckout(id);
+    this.user.name = this.currentUser.name;
+    this.user.phone = this.currentUser.phone;
+    this.user.address = this.currentUser.address;
   },
   computed: {
-    ...mapState(["currentUser"]),
+    ...mapState(["currentUser", "isProcessing"]),
+    amount() {
+      if (this.deliver == 0) {
+        return this.total + 100;
+      } else {
+        return this.total;
+      }
+    },
+    deliverCost() {
+      if (this.deliver == 0) {
+        return this.shippingTotal + 100;
+      } else {
+        return this.shippingTotal;
+      }
+    },
+    userData() {
+      let { name, phone, address } = this.user;
+      return { name, phone, address };
+    },
     formData() {
       return {
         receiverName: this.receiver.name,
         receiverPhone: this.receiver.phone,
         receiverAddress: this.receiver.address,
-        receiverEmail: this.receiver.email,
-        total: this.total,
+        total: this.amount,
         orderId: this.$route.params.id,
         deliver: this.deliver
       };
-    }
-  },
-  watch: {
-    user: {
-      handler: function() {
-        if (this.receiver.checked == true) {
-          this.includeReceiverData(!this.receiver.checked);
-        }
-      },
-      deep: true
     }
   },
   methods: {
@@ -358,17 +338,30 @@ export default {
         });
       }
     },
-    includeUserData(checked) {
-      if (checked == false) {
-        this.user.name = this.currentUser.name;
-        this.user.phone = this.currentUser.phone;
-        this.user.email = this.currentUser.email;
-        this.user.address = this.currentUser.address;
-      } else {
-        this.user.name = "";
-        this.user.phone = "";
-        this.user.email = "";
-        this.user.address = "";
+    async updateUser() {
+      // const { id } = this.$route.params;
+      const userData = this.userData;
+      try {
+        this.$store.dispatch("updateProcessing", true);
+        const { data, statusText } = await usersAPI.putUser({ userData });
+        if (statusText !== "OK" || data.status !== "success") {
+          throw new Error(statusText);
+        }
+        console.log(data);
+        Toast.fire({
+          type: "success",
+          title: "使用者資料更新成功"
+        });
+        await this.$store.dispatch("updateCurrentUser", userData);
+        // this.$router.push({ name: "checkout", params: { id } });
+        this.$store.dispatch("updateProcessing", false);
+      } catch (error) {
+        console.log(error);
+        this.$store.dispatch("updateProcessing", false);
+        Toast.fire({
+          type: "error",
+          title: "無法更新使用者資料，請稍後再試"
+        });
       }
     },
     includeReceiverData(checked) {
