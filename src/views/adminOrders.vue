@@ -32,7 +32,7 @@
               <td scope="row">{{order.sn}}</td>
               <td scope="row">{{order.total_price}}</td>
               <td scope="row">{{order.payment_method}}</td>
-              <td scope="row">{{order.payment_status}}</td>
+              <td scope="row">{{order.payment_status==1?"已付款":"未付款"}}</td>
               <td scope="row">{{order.shipping_status}}</td>
               <td scope="row">
                 <button
@@ -86,7 +86,7 @@ export default {
       let amt = order.total_price;
       let sn = order.sn;
       try {
-        const { data, statusText } = await ordersAPI.postTransition({
+        const { statusText } = await ordersAPI.postTransition({
           amt,
           sn
         });
