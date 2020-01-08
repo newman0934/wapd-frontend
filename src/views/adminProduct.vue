@@ -7,19 +7,18 @@
         <tbody>
           <tr>
             <td>名稱</td>
-            <td>{{product.name}}</td>
+            <td colspan="2">{{product.name}}</td>
             <td>分類</td>
-            <td>{{product.category}}</td>
-            <td>狀態</td>
-            <td>{{product.status}}</td>
+            <td colspan="2">{{product.category}}</td>
+
           </tr>
           <tr>
-            <td>成本</td>
-            <td>{{product.cost}}</td>
             <td>原價</td>
             <td>{{product.originPrice}}</td>
             <td>販售價</td>
             <td>{{product.sellPrice}}</td>
+                        <td>狀態</td>
+            <td>{{product.status}}</td>
           </tr>
           <tr>
             <td>產品描述</td>
