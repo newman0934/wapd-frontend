@@ -83,16 +83,18 @@ export default {
       }
     },
     async postTransition(order) {
-      let { amt } = order.total_price;
-      let { sn } = order.sn;
+      let amt = order.total_price;
+      let sn = order.sn;
       try {
         const { data, statusText } = await ordersAPI.postTransition({
           amt,
           sn
         });
-        console.log(data, statusText);
+        if (statusText !== "OK") {
+          throw new Error(statusText);
+        }
+        await this.fetchAdminOrders();
       } catch (error) {
-        console.log(error);
         Toast.fire({
           type: "error",
           title: "暫無法更新訂單，請稍後再試"
