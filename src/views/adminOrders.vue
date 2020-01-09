@@ -156,7 +156,6 @@ export default {
         if (statusText !== "OK") {
           throw new Error(statusText);
         }
-        console.log(data.response.Result);
         this.spgResponse = data.response.Result;
         await this.fetchAdminOrders();
         this.openOrderModal();
