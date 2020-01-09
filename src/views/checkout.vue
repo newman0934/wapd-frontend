@@ -395,7 +395,6 @@ export default {
         await this.$store.dispatch("updateCurrentUser", formData);
         this.$store.dispatch("updateProcessing", false);
       } catch (error) {
-        console.log(error);
         this.$store.dispatch("updateProcessing", false);
         Toast.fire({
           type: "error",

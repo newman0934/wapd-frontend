@@ -73,7 +73,7 @@
       </tbody>
     </table>
 
-    <form class="form-inline ml-3" @submit="postCoupon">
+    <form class="form-inline ml-3">
       <div class="form-group mx-sm-3">
         <label for="input-coupon" class="sr-only">輸入優惠序號</label>
         <input
@@ -85,13 +85,13 @@
           placeholder="Enter coupon code"
         />
       </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button class="btn btn-primary" @click.prevent.stop="postCoupon(couponCode)">Submit</button>
     </form>
 
     <button
-      type="submit"
       class="btn btn-outline-secondary btn-block mt-3"
-      @click.stop.prevent="postOrder"
+      @click.stop.prevent="postOrder()"
+      :disabled="isProcessing"
     >結帳</button>
   </div>
 </template>
@@ -123,7 +123,7 @@ export default {
     this.total = this.totalPrice;
   },
   computed: {
-    ...mapState(["currentUser"]),
+    ...mapState(["currentUser", "isProcessing"]),
     cartItems() {
       return this.$store.state.cart;
     },
@@ -136,8 +136,11 @@ export default {
       return { quantity: cacheQty };
     },
     orderData() {
-      const { couponCode } = this;
-      return { couponCode };
+      return {
+        formData: {
+          couponCode: this.coupon.coupon_code
+        }
+      };
     }
   },
   methods: {
@@ -202,12 +205,27 @@ export default {
         });
       }
     },
-    async postCoupon() {
-      const { couponCode } = this.orderData;
+    async postCoupon(code) {
+      const couponCode = code;
+      if (!code) {
+        Toast.fire({
+          type: "error",
+          title: "請輸入折扣碼後再試"
+        });
+        return;
+      }
       try {
         const { data, statusText } = await cartsAPI.postCoupon({ couponCode });
         if (statusText !== "OK" || data.status !== "success") {
           throw new Error(statusText);
+        }
+        if (this.total * 0.3 <= data.CouponId.discount_amount) {
+          Toast.fire({
+            type: "error",
+            title: "折扣碼條件不符，請確認後再試"
+          });
+          this.couponCode = "";
+          return;
         }
         this.coupon = {
           ...this.coupon,
@@ -225,9 +243,10 @@ export default {
     },
     //成立訂單
     async postOrder() {
-      const { couponCode } = this.orderData;
+      const { formData } = this.orderData;
       try {
-        const { data, statusText } = await cartsAPI.postOrder({ couponCode });
+        this.$store.dispatch("updateProcessing", true);
+        const { data, statusText } = await cartsAPI.postOrder({ formData });
         if (statusText !== "OK" || data.status !== "success") {
           throw new Error(statusText);
         }
@@ -235,8 +254,13 @@ export default {
         //update vuex
         await this.$store.dispatch("fetchUserCart");
         this.$router.push(`/orders/${orderId}/checkout`);
+        this.$store.dispatch("updateProcessing", false);
       } catch (error) {
-        console.log(error);
+        this.$store.dispatch("updateProcessing", false);
+        Toast.fire({
+          type: "error",
+          title: "Error"
+        });
       }
     }
   }
