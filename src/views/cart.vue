@@ -82,10 +82,10 @@
           v-model="couponCode"
           id="couponCode"
           name="couponCode"
-          placeholder="Enter coupon code"
+          placeholder="輸入優惠序號"
         />
       </div>
-      <button class="btn btn-primary" @click.prevent.stop="postCoupon(couponCode)">Submit</button>
+      <button class="btn btn-outline-primary" @click.prevent.stop="postCoupon(couponCode)">使用</button>
     </form>
 
     <button
@@ -109,7 +109,7 @@ export default {
       cacheItem: {},
       cacheQty: 0,
       coupon: {
-        id: 0,
+        id: -1,
         coupon_code: "",
         discount_amount: 0,
         isValid: false
@@ -129,6 +129,13 @@ export default {
     },
     totalPrice() {
       let total = this.items.reduce((t, p) => t + p.sell_price * p.quantity, 0);
+      if (total * 0.3 <= this.coupon.discount_amount) {
+        Toast.fire({
+          type: "error",
+          title: "折扣碼已未達金額限制"
+        });
+        this.cleanCoupon();
+      }
       return total - this.coupon.discount_amount;
     },
     cartData() {
@@ -144,6 +151,12 @@ export default {
     }
   },
   methods: {
+    cleanCoupon() {
+      this.coupon.id = -1;
+      this.coupon.coupon_code = "";
+      this.coupon.discount_amount = 0;
+      this.coupon.isValid = false;
+    },
     //刪除購物車商品及編輯購物車數量
     async deleteCartItem(itemId) {
       try {
