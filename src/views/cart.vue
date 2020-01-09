@@ -26,7 +26,7 @@
             <router-link :to="{name:'product', params:{id:item.ProductId}}">{{item.name}}</router-link>
             <p>Color:{{item.color}}, Size:{{item.size}}</p>
           </td>
-          <td class="align-middle">NTD {{item.sell_price}}</td>
+          <td class="align-middle">{{item.sell_price | currency}}</td>
           <td class="align-middle" @dblclick="editQty(item)">
             <div v-if="item.id === cacheItem.id">
               <form @submit.prevent.stop="putCartItem(item)">
@@ -49,7 +49,7 @@
             </div>
             <div v-else>{{item.quantity}}</div>
           </td>
-          <td class="align-middle">NTD {{item.sell_price*item.quantity}}</td>
+          <td class="align-middle">{{item.sell_price*item.quantity | currency}}</td>
           <td class="align-middle">
             <button
               type="button"
@@ -61,19 +61,19 @@
         <tr v-if="coupon.isValid">
           <th scope="row"></th>
           <td colspan="3">折扣碼({{coupon.coupon_code}})</td>
-          <td>- {{coupon.discount_amount}}</td>
+          <td>- {{coupon.discount_amount | currency}}</td>
           <td></td>
         </tr>
         <tr>
           <th scope="row"></th>
           <td colspan="3">小計</td>
-          <td>NTD {{total}}</td>
+          <td>{{total | currency}}</td>
           <td></td>
         </tr>
       </tbody>
     </table>
 
-    <form class="form-inline ml-3" @submit="postCoupon">
+    <form class="form-inline ml-3">
       <div class="form-group mx-sm-3">
         <label for="input-coupon" class="sr-only">輸入優惠序號</label>
         <input
@@ -82,16 +82,16 @@
           v-model="couponCode"
           id="couponCode"
           name="couponCode"
-          placeholder="Enter coupon code"
+          placeholder="輸入優惠序號"
         />
       </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button class="btn btn-outline-primary" @click.prevent.stop="postCoupon(couponCode)">使用</button>
     </form>
 
     <button
-      type="submit"
       class="btn btn-outline-secondary btn-block mt-3"
-      @click.stop.prevent="postOrder"
+      @click.stop.prevent="postOrder()"
+      :disabled="isProcessing"
     >結帳</button>
   </div>
 </template>
@@ -99,7 +99,9 @@
 import cartsAPI from "./../apis/carts";
 import { mapState } from "vuex";
 import { Toast } from "./../utils/helpers";
+import { currencyFilter } from "../utils/mixins";
 export default {
+  mixins: [currencyFilter],
   data() {
     return {
       items: [],
@@ -107,7 +109,7 @@ export default {
       cacheItem: {},
       cacheQty: 0,
       coupon: {
-        id: 0,
+        id: -1,
         coupon_code: "",
         discount_amount: 0,
         isValid: false
@@ -121,12 +123,19 @@ export default {
     this.total = this.totalPrice;
   },
   computed: {
-    ...mapState(["currentUser"]),
+    ...mapState(["currentUser", "isProcessing"]),
     cartItems() {
       return this.$store.state.cart;
     },
     totalPrice() {
       let total = this.items.reduce((t, p) => t + p.sell_price * p.quantity, 0);
+      if (total * 0.3 <= this.coupon.discount_amount) {
+        Toast.fire({
+          type: "error",
+          title: "折扣碼已未達金額限制"
+        });
+        this.cleanCoupon();
+      }
       return total - this.coupon.discount_amount;
     },
     cartData() {
@@ -134,11 +143,20 @@ export default {
       return { quantity: cacheQty };
     },
     orderData() {
-      const { couponCode } = this;
-      return { couponCode };
+      return {
+        formData: {
+          couponCode: this.coupon.coupon_code
+        }
+      };
     }
   },
   methods: {
+    cleanCoupon() {
+      this.coupon.id = -1;
+      this.coupon.coupon_code = "";
+      this.coupon.discount_amount = 0;
+      this.coupon.isValid = false;
+    },
     //刪除購物車商品及編輯購物車數量
     async deleteCartItem(itemId) {
       try {
@@ -200,12 +218,27 @@ export default {
         });
       }
     },
-    async postCoupon() {
-      const { couponCode } = this.orderData;
+    async postCoupon(code) {
+      const couponCode = code;
+      if (!code) {
+        Toast.fire({
+          type: "error",
+          title: "請輸入折扣碼後再試"
+        });
+        return;
+      }
       try {
         const { data, statusText } = await cartsAPI.postCoupon({ couponCode });
         if (statusText !== "OK" || data.status !== "success") {
           throw new Error(statusText);
+        }
+        if (this.total * 0.3 <= data.CouponId.discount_amount) {
+          Toast.fire({
+            type: "error",
+            title: "折扣碼條件不符，請確認後再試"
+          });
+          this.couponCode = "";
+          return;
         }
         this.coupon = {
           ...this.coupon,
@@ -223,9 +256,10 @@ export default {
     },
     //成立訂單
     async postOrder() {
-      const { couponCode } = this.orderData;
+      const { formData } = this.orderData;
       try {
-        const { data, statusText } = await cartsAPI.postOrder({ couponCode });
+        this.$store.dispatch("updateProcessing", true);
+        const { data, statusText } = await cartsAPI.postOrder({ formData });
         if (statusText !== "OK" || data.status !== "success") {
           throw new Error(statusText);
         }
@@ -233,8 +267,13 @@ export default {
         //update vuex
         await this.$store.dispatch("fetchUserCart");
         this.$router.push(`/orders/${orderId}/checkout`);
+        this.$store.dispatch("updateProcessing", false);
       } catch (error) {
-        console.log(error);
+        this.$store.dispatch("updateProcessing", false);
+        Toast.fire({
+          type: "error",
+          title: "Error"
+        });
       }
     }
   }

@@ -103,36 +103,39 @@
                 }}
               </p>
             </td>
-            <td class="align-middle">NTD {{ order.orderItem.sell_price }}</td>
+            <td class="align-middle">{{ order.orderItem.sell_price | currency}}</td>
             <td class="align-middle">{{ order.orderItem.quantity }}</td>
-            <td class="align-middle">NTD {{ order.subtotal }}</td>
+            <td class="align-middle">{{ order.subtotal | currency}}</td>
           </tr>
 
           <tr class="table-light" style="border-top:3px gray solid;">
             <th></th>
             <td colspan="3">小計</td>
-            <td>NTD {{ orderSubTotal }}</td>
+            <td>{{ orderSubTotal | currency}}</td>
           </tr>
           <tr class="table-light">
             <th></th>
             <td colspan="3">運費</td>
-            <td>NTD {{ deliverCost }}</td>
+            <td>{{ deliverCost | currency}}</td>
           </tr>
           <tr class="table-light">
             <th></th>
             <td colspan="3">折扣</td>
-            <td>NTD -{{ couponDiscount }}</td>
+            <td>-{{ couponDiscount | currency}}</td>
           </tr>
           <tr class="table-info">
             <th></th>
             <td colspan="3">總計</td>
-            <td>NTD {{ amount }}</td>
+            <td>{{ amount | currency}}</td>
           </tr>
         </tbody>
       </table>
       <div class="row">
         <div class="col-md-6">
-          <h5 class="text-left mt-3">訂購人員</h5>
+          <h5 class="text-left mt-3">
+            訂購人員
+            <small class="text-muted">*訂單完成信件將會寄送至會員信箱，如已更改請至會員專區修改。</small>
+          </h5>
           <hr />
           <table class="table table-borderless">
             <tbody>
@@ -162,14 +165,22 @@
               <tr>
                 <th scope="row">手機號碼</th>
                 <td>
-                  <input
-                    type="text"
-                    id="order-phone"
-                    v-model="user.phone"
-                    name="orderPhone"
-                    class="form-control"
-                    placeholder="phone number"
-                  />
+                  <ValidationProvider
+                    :rules="{ regex: /^\(?(\d{2})\)?[\s\-]?(\d{4})\-?(\d{4})$/ }"
+                    v-slot="{ errors }"
+                  >
+                    <input
+                      type="text"
+                      id="order-phone"
+                      v-model="user.phone"
+                      name="orderPhone"
+                      class="form-control"
+                      placeholder="phone number"
+                    />
+                    <span class="d-flex">
+                      <small class="text-danger">{{ errors[0] }}</small>
+                    </span>
+                  </ValidationProvider>
                 </td>
               </tr>
               <tr>
@@ -208,40 +219,58 @@
               <tr>
                 <th scope="row">姓名</th>
                 <td>
-                  <input
-                    type="text"
-                    id="receiver-name"
-                    v-model="receiver.name"
-                    name="receiverName"
-                    class="form-control"
-                    placeholder="name"
-                  />
+                  <ValidationProvider rules="required" v-slot="{ errors }">
+                    <input
+                      type="text"
+                      id="receiver-name"
+                      v-model="receiver.name"
+                      name="receiverName"
+                      class="form-control"
+                      placeholder="name"
+                    />
+                    <span class="d-flex">
+                      <small class="text-danger">{{ errors[0] }}</small>
+                    </span>
+                  </ValidationProvider>
                 </td>
               </tr>
               <tr>
                 <th scope="row">手機號碼</th>
                 <td>
-                  <input
-                    type="text"
-                    id="receiver-phone"
-                    v-model="receiver.phone"
-                    name="receiverPhone"
-                    class="form-control"
-                    placeholder="phone number"
-                  />
+                  <ValidationProvider
+                    :rules="{ required: { allowFalse: false }, regex: /^\(?(\d{2})\)?[\s\-]?(\d{4})\-?(\d{4})$/ }"
+                    v-slot="{ errors }"
+                  >
+                    <input
+                      type="text"
+                      id="receiver-phone"
+                      v-model="receiver.phone"
+                      name="receiverPhone"
+                      class="form-control"
+                      placeholder="phone number"
+                    />
+                    <span class="d-flex">
+                      <small class="text-danger">{{ errors[0] }}</small>
+                    </span>
+                  </ValidationProvider>
                 </td>
               </tr>
               <tr>
                 <th scope="row">寄件地址</th>
                 <td>
-                  <input
-                    type="text"
-                    id="receiver-address"
-                    v-model="receiver.address"
-                    name="receiverAddress"
-                    class="form-control"
-                    placeholder="address"
-                  />
+                  <ValidationProvider rules="required" v-slot="{ errors }">
+                    <input
+                      type="text"
+                      id="receiver-address"
+                      v-model="receiver.address"
+                      name="receiverAddress"
+                      class="form-control"
+                      placeholder="address"
+                    />
+                    <span class="d-flex">
+                      <small class="text-danger">{{ errors[0] }}</small>
+                    </span>
+                  </ValidationProvider>
                 </td>
               </tr>
             </tbody>
@@ -253,12 +282,18 @@
   </div>
 </template>
 <script>
+import { ValidationProvider } from "vee-validate";
 import cartsAPI from "./../apis/carts";
 import usersAPI from "./../apis/users";
 import { Toast } from "./../utils/helpers";
 import { mapState } from "vuex";
+import { currencyFilter } from "../utils/mixins";
 
 export default {
+  mixins: [currencyFilter],
+  components: {
+    ValidationProvider
+  },
   data() {
     return {
       orders: [],
@@ -360,7 +395,6 @@ export default {
         await this.$store.dispatch("updateCurrentUser", formData);
         this.$store.dispatch("updateProcessing", false);
       } catch (error) {
-        console.log(error);
         this.$store.dispatch("updateProcessing", false);
         Toast.fire({
           type: "error",
