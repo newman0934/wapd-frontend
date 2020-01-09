@@ -20,9 +20,15 @@
             <p>NTD {{order.total_price}}</p>
             <p>商品總數量：{{order.OrderItems.length}}</p>
           </td>
-          <td class="align-middle">{{order.payment_status}}</td>
+          <td class="align-middle">{{order.payment_status==1 ? "已付款" : "未付款"}}</td>
           <td class="align-middle">{{order.shipping_status || "尚未出貨"}}</td>
-          <td></td>
+          <td class="align-middle">
+            <p v-if="!order.total_price">
+              尚未收到您的訂單，您可
+              <br />
+              <button class="btn btn-sm btn-outline-dark" @click="continuousOrder(order.id)">繼續下單</button>
+            </p>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -60,6 +66,9 @@ export default {
           title: "無法取得訂單資料，請稍後再試"
         });
       }
+    },
+    continuousOrder(id) {
+      this.$router.push({ name: "checkout", params: { id } });
     }
   }
 };

@@ -29,7 +29,7 @@
               <td scope="row">{{order.UserId}}</td>
               <td scope="row">{{order.receiver_name}}</td>
               <td scope="row">{{order.phone}}</td>
-              <td scope="row">{{order.sn?order.sn:"訂單尚未成立"}}</td>
+              <td scope="row">{{order.sn || "訂單尚未成立"}}</td>
               <td scope="row">{{order.total_price}}</td>
               <td scope="row">{{order.payment_method}}</td>
               <td scope="row">{{order.payment_status==1?"已付款":"未付款"}}</td>
