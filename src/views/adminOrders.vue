@@ -29,7 +29,7 @@
               <td scope="row">{{order.UserId}}</td>
               <td scope="row">{{order.receiver_name}}</td>
               <td scope="row">{{order.phone}}</td>
-              <td scope="row">{{order.sn}}</td>
+              <td scope="row">{{order.sn?order.sn:"訂單尚未成立"}}</td>
               <td scope="row">{{order.total_price}}</td>
               <td scope="row">{{order.payment_method}}</td>
               <td scope="row">{{order.payment_status==1?"已付款":"未付款"}}</td>
@@ -73,31 +73,33 @@
                         <br />
                         <small
                           class="text-muted"
-                        >英文回應代表: CREDIT=信用卡付款 / VACC=銀行ATM轉帳付款 / WEBATM=網路銀行轉帳付款 / BARCODE=超商條碼繳費 / CVS=超商代碼繳費</small>
+                        >英文回應代表: CREDIT=信用卡付款 / CVSCOM=超商取貨付款 / VACC=銀行ATM轉帳付款 / WEBATM=網路銀行轉帳付款 / BARCODE=超商條碼繳費 / CVS=超商代碼繳費</small>
                       </p>
                       <p>交易建立時間：{{spgResponse.CreateTime}}</p>
                       <p>支付時間：{{spgResponse.PayTime}}</p>
                       <p>檢核碼CheckCode：{{spgResponse.CheckCode}}</p>
                       <p>預計撥款日：{{spgResponse.FundTime}}</p>
                       <hr />
-                      <p class="text-success">當該筆交易為信用卡交易時，會新增回應下列欄位：</p>
-                      <p>
-                        交易類別：{{spgResponse.PaymentMethod}}
-                        <br />
-                        <small
-                          class="text-muted"
-                        >英文回應代表: CREDIT = 台灣發卡機構核發之信用卡 / FOREIGN = 國外發卡機構核發之卡 / NTCB = 國民旅遊卡 / UNIONPAY = 銀聯卡 / APPLEPAY = ApplePay / GOOGLEPAY = GooglePay / SAMSUNGPAY = SamsungPay</small>
-                      </p>
-                      <p>金融機構回應碼：{{spgResponse.RespondCode}}</p>
-                      <p>授權碼：{{spgResponse.Auth}}</p>
-                      <p>請款金額：{{spgResponse.CloseAmt}}</p>
-                      <p>請款狀態：{{spgResponse.CloseStatus}}</p>
-                      <p>可退款餘額：{{spgResponse.BackBalance}}</p>
-                      <p>退款狀態：{{spgResponse.BackStatus}}</p>
-                      <p>授權結果訊息：{{spgResponse.RespondMsg}}</p>
-                      <p>分期-期別：{{spgResponse.Inst}}</p>
-                      <p>分期-首期金額：{{spgResponse.InstFirst}}</p>
-                      <p>分期-每期金額：{{spgResponse.InstEach}}</p>
+                      <div v-if="spgResponse.PaymentType=='CREDIT'">
+                        <p class="text-success">當該筆交易為信用卡交易時，會新增回應下列欄位：</p>
+                        <p>
+                          交易類別：{{spgResponse.PaymentMethod}}
+                          <br />
+                          <small
+                            class="text-muted"
+                          >英文回應代表: CREDIT = 台灣發卡機構核發之信用卡 / FOREIGN = 國外發卡機構核發之卡 / NTCB = 國民旅遊卡 / UNIONPAY = 銀聯卡 / APPLEPAY = ApplePay / GOOGLEPAY = GooglePay / SAMSUNGPAY = SamsungPay</small>
+                        </p>
+                        <p>金融機構回應碼：{{spgResponse.RespondCode}}</p>
+                        <p>授權碼：{{spgResponse.Auth}}</p>
+                        <p>請款金額：{{spgResponse.CloseAmt}}</p>
+                        <p>請款狀態：{{spgResponse.CloseStatus}}</p>
+                        <p>可退款餘額：{{spgResponse.BackBalance}}</p>
+                        <p>退款狀態：{{spgResponse.BackStatus}}</p>
+                        <p>授權結果訊息：{{spgResponse.RespondMsg}}</p>
+                        <p>分期-期別：{{spgResponse.Inst}}</p>
+                        <p>分期-首期金額：{{spgResponse.InstFirst}}</p>
+                        <p>分期-每期金額：{{spgResponse.InstEach}}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -162,7 +164,7 @@ export default {
       } catch (error) {
         Toast.fire({
           type: "error",
-          title: "暫無法更新訂單，請稍後再試"
+          title: "暫無法查詢/更新訂單，請稍後再試"
         });
       }
     },
