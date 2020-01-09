@@ -7,12 +7,10 @@
         <form class="my-4">
           <div class="form-row">
             <div class="col-auto">
-              <input
-                v-model="newCategoryName"
-                type="text"
-                class="form-control"
-                placeholder="新增類別..."
-              />
+              <h3>新增類別：</h3>
+            </div>
+            <div class="col-auto">
+              <input v-model="newCategoryName" type="text" class="form-control" placeholder="請輸入類別" />
             </div>
             <div class="col-auto">
               <button type="button" class="btn btn-primary" @click.stop.prevent="createCategory">新增</button>
@@ -80,7 +78,6 @@ import adminNav from "./../components/adminNav";
 import adminAPI from "./../apis/admin";
 import { Toast } from "./../utils/helpers";
 
-
 export default {
   components: {
     adminNav
@@ -126,7 +123,6 @@ export default {
         }
 
         this.categories.push({
-
           ...data.category,
           isEditing: false
         });
@@ -189,18 +185,18 @@ export default {
         };
       });
     },
-    handleCancel(categoryId){
+    handleCancel(categoryId) {
       this.categories = this.categories.map(category => {
-        if(category.id !== categoryId){
-          return category
+        if (category.id !== categoryId) {
+          return category;
         }
 
         return {
           ...category,
           category: category.nameCached
-        }
-      })
-      this.toggleIsEditing(categoryId)
+        };
+      });
+      this.toggleIsEditing(categoryId);
     }
   }
 };
