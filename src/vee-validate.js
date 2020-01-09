@@ -1,5 +1,5 @@
 //include vee-validate
-import { required, confirmed, length, email, alpha_num } from "vee-validate/dist/rules";
+import { required, confirmed, length, email, alpha_num, regex } from "vee-validate/dist/rules";
 import { extend, localize } from "vee-validate";
 import TW from 'vee-validate/dist/locale/zh_TW.json'
 
@@ -34,4 +34,9 @@ extend("length", {
 extend("alpha_num", {
   ...alpha_num,
   message: "僅可填入英文及數字"
+});
+
+extend("regex", {
+  ...regex,
+  message: "格式有誤"
 });

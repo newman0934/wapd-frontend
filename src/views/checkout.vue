@@ -165,14 +165,22 @@
               <tr>
                 <th scope="row">手機號碼</th>
                 <td>
-                  <input
-                    type="text"
-                    id="order-phone"
-                    v-model="user.phone"
-                    name="orderPhone"
-                    class="form-control"
-                    placeholder="phone number"
-                  />
+                  <ValidationProvider
+                    :rules="{ regex: /^\(?(\d{2})\)?[\s\-]?(\d{4})\-?(\d{4})$/ }"
+                    v-slot="{ errors }"
+                  >
+                    <input
+                      type="text"
+                      id="order-phone"
+                      v-model="user.phone"
+                      name="orderPhone"
+                      class="form-control"
+                      placeholder="phone number"
+                    />
+                    <span class="d-flex">
+                      <small class="text-danger">{{ errors[0] }}</small>
+                    </span>
+                  </ValidationProvider>
                 </td>
               </tr>
               <tr>
@@ -211,40 +219,58 @@
               <tr>
                 <th scope="row">姓名</th>
                 <td>
-                  <input
-                    type="text"
-                    id="receiver-name"
-                    v-model="receiver.name"
-                    name="receiverName"
-                    class="form-control"
-                    placeholder="name"
-                  />
+                  <ValidationProvider rules="required" v-slot="{ errors }">
+                    <input
+                      type="text"
+                      id="receiver-name"
+                      v-model="receiver.name"
+                      name="receiverName"
+                      class="form-control"
+                      placeholder="name"
+                    />
+                    <span class="d-flex">
+                      <small class="text-danger">{{ errors[0] }}</small>
+                    </span>
+                  </ValidationProvider>
                 </td>
               </tr>
               <tr>
                 <th scope="row">手機號碼</th>
                 <td>
-                  <input
-                    type="text"
-                    id="receiver-phone"
-                    v-model="receiver.phone"
-                    name="receiverPhone"
-                    class="form-control"
-                    placeholder="phone number"
-                  />
+                  <ValidationProvider
+                    :rules="{ required: { allowFalse: false }, regex: /^\(?(\d{2})\)?[\s\-]?(\d{4})\-?(\d{4})$/ }"
+                    v-slot="{ errors }"
+                  >
+                    <input
+                      type="text"
+                      id="receiver-phone"
+                      v-model="receiver.phone"
+                      name="receiverPhone"
+                      class="form-control"
+                      placeholder="phone number"
+                    />
+                    <span class="d-flex">
+                      <small class="text-danger">{{ errors[0] }}</small>
+                    </span>
+                  </ValidationProvider>
                 </td>
               </tr>
               <tr>
                 <th scope="row">寄件地址</th>
                 <td>
-                  <input
-                    type="text"
-                    id="receiver-address"
-                    v-model="receiver.address"
-                    name="receiverAddress"
-                    class="form-control"
-                    placeholder="address"
-                  />
+                  <ValidationProvider rules="required" v-slot="{ errors }">
+                    <input
+                      type="text"
+                      id="receiver-address"
+                      v-model="receiver.address"
+                      name="receiverAddress"
+                      class="form-control"
+                      placeholder="address"
+                    />
+                    <span class="d-flex">
+                      <small class="text-danger">{{ errors[0] }}</small>
+                    </span>
+                  </ValidationProvider>
                 </td>
               </tr>
             </tbody>
@@ -256,6 +282,7 @@
   </div>
 </template>
 <script>
+import { ValidationProvider } from "vee-validate";
 import cartsAPI from "./../apis/carts";
 import usersAPI from "./../apis/users";
 import { Toast } from "./../utils/helpers";
@@ -264,6 +291,9 @@ import { currencyFilter } from "../utils/mixins";
 
 export default {
   mixins: [currencyFilter],
+  components: {
+    ValidationProvider
+  },
   data() {
     return {
       orders: [],

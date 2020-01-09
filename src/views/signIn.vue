@@ -24,11 +24,13 @@
                     placeholder="請輸入Email"
                     required
                   />
-                  <span class="d-flex">{{ errors[0] }}</span>
+                  <span class="d-flex">
+                    <small class="text-danger">{{ errors[0] }}</small>
+                  </span>
                 </div>
               </ValidationProvider>
 
-              <ValidationProvider rules="required|alpha_num|password" v-slot="{ errors }">
+              <ValidationProvider rules="required|password" v-slot="{ errors }">
                 <div class="form-label-group mb-3">
                   <input
                     id="password"
@@ -39,7 +41,9 @@
                     placeholder="請輸入密碼"
                     required
                   />
-                  <span class="d-flex">{{ errors[0] }}</span>
+                  <span class="d-flex">
+                    <small class="text-danger">{{ errors[0] }}</small>
+                  </span>
                 </div>
               </ValidationProvider>
 
@@ -67,11 +71,13 @@
                     placeholder="請輸入Email"
                     required
                   />
-                  <span class="d-flex">{{ errors[0] }}</span>
+                  <span class="d-flex">
+                    <small class="text-danger">{{ errors[0] }}</small>
+                  </span>
                 </div>
               </ValidationProvider>
               <ValidationProvider
-                rules="required|alpha_num|password"
+                rules="required|password"
                 v-slot="{ errors }"
                 vid="registerPassword"
               >
@@ -85,7 +91,9 @@
                     placeholder="請輸入密碼"
                     required
                   />
-                  <span class="d-flex">{{ errors[0] }}</span>
+                  <span class="d-flex">
+                    <small class="text-danger">{{ errors[0] }}</small>
+                  </span>
                 </div>
               </ValidationProvider>
               <ValidationProvider rules="required|confirmed:registerPassword" v-slot="{ errors }">
@@ -99,7 +107,9 @@
                     placeholder="請再次輸入密碼驗證"
                     required
                   />
-                  <span class="d-flex">{{ errors[0] }}</span>
+                  <span class="d-flex">
+                    <small class="text-danger">{{ errors[0] }}</small>
+                  </span>
                 </div>
               </ValidationProvider>
               <button
