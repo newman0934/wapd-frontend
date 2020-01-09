@@ -132,7 +132,10 @@
       </table>
       <div class="row">
         <div class="col-md-6">
-          <h5 class="text-left mt-3">訂購人員</h5>
+          <h5 class="text-left mt-3">
+            訂購人員
+            <small class="text-muted">*訂單完成信件將會寄送至會員信箱，如已更改請至會員專區修改。</small>
+          </h5>
           <hr />
           <table class="table table-borderless">
             <tbody>
