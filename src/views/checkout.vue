@@ -103,30 +103,30 @@
                 }}
               </p>
             </td>
-            <td class="align-middle">NTD {{ order.orderItem.sell_price }}</td>
+            <td class="align-middle">{{ order.orderItem.sell_price | currency}}</td>
             <td class="align-middle">{{ order.orderItem.quantity }}</td>
-            <td class="align-middle">NTD {{ order.subtotal }}</td>
+            <td class="align-middle">{{ order.subtotal | currency}}</td>
           </tr>
 
           <tr class="table-light" style="border-top:3px gray solid;">
             <th></th>
             <td colspan="3">小計</td>
-            <td>NTD {{ orderSubTotal }}</td>
+            <td>{{ orderSubTotal | currency}}</td>
           </tr>
           <tr class="table-light">
             <th></th>
             <td colspan="3">運費</td>
-            <td>NTD {{ deliverCost }}</td>
+            <td>{{ deliverCost | currency}}</td>
           </tr>
           <tr class="table-light">
             <th></th>
             <td colspan="3">折扣</td>
-            <td>NTD -{{ couponDiscount }}</td>
+            <td>-{{ couponDiscount | currency}}</td>
           </tr>
           <tr class="table-info">
             <th></th>
             <td colspan="3">總計</td>
-            <td>NTD {{ amount }}</td>
+            <td>{{ amount | currency}}</td>
           </tr>
         </tbody>
       </table>
@@ -257,8 +257,10 @@ import cartsAPI from "./../apis/carts";
 import usersAPI from "./../apis/users";
 import { Toast } from "./../utils/helpers";
 import { mapState } from "vuex";
+import { currencyFilter } from "../utils/mixins";
 
 export default {
+  mixins: [currencyFilter],
   data() {
     return {
       orders: [],

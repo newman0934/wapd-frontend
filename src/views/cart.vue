@@ -26,7 +26,7 @@
             <router-link :to="{name:'product', params:{id:item.ProductId}}">{{item.name}}</router-link>
             <p>Color:{{item.color}}, Size:{{item.size}}</p>
           </td>
-          <td class="align-middle">NTD {{item.sell_price}}</td>
+          <td class="align-middle">{{item.sell_price | currency}}</td>
           <td class="align-middle" @dblclick="editQty(item)">
             <div v-if="item.id === cacheItem.id">
               <form @submit.prevent.stop="putCartItem(item)">
@@ -49,7 +49,7 @@
             </div>
             <div v-else>{{item.quantity}}</div>
           </td>
-          <td class="align-middle">NTD {{item.sell_price*item.quantity}}</td>
+          <td class="align-middle">{{item.sell_price*item.quantity | currency}}</td>
           <td class="align-middle">
             <button
               type="button"
@@ -61,13 +61,13 @@
         <tr v-if="coupon.isValid">
           <th scope="row"></th>
           <td colspan="3">折扣碼({{coupon.coupon_code}})</td>
-          <td>- {{coupon.discount_amount}}</td>
+          <td>- {{coupon.discount_amount | currency}}</td>
           <td></td>
         </tr>
         <tr>
           <th scope="row"></th>
           <td colspan="3">小計</td>
-          <td>NTD {{total}}</td>
+          <td>{{total | currency}}</td>
           <td></td>
         </tr>
       </tbody>
@@ -99,7 +99,9 @@
 import cartsAPI from "./../apis/carts";
 import { mapState } from "vuex";
 import { Toast } from "./../utils/helpers";
+import { currencyFilter } from "../utils/mixins";
 export default {
+  mixins: [currencyFilter],
   data() {
     return {
       items: [],
