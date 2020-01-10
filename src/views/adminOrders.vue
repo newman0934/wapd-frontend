@@ -22,7 +22,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="order in orders" :key="order.id">
+            <tr v-for="order in filterOrders" :key="order.id">
               <td scope="row">
                 <router-link :to="{name:'adminOrder', params:{ order_id:order.id }}">{{order.id}}</router-link>
               </td>
@@ -129,6 +129,11 @@ export default {
   },
   created() {
     this.fetchAdminOrders();
+  },
+  computed: {
+    filterOrders() {
+      return this.orders.filter(order => order.payment_status !== "99");
+    }
   },
   methods: {
     async fetchAdminOrders() {
