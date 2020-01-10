@@ -86,8 +86,8 @@
           </div>
         </div>
       </div>
-      <a href="#" class="btn btn-primary mx-3">回上一頁</a>
-      <button type="submit" class="btn btn-primary mx-3">確認修改</button>
+      <a href="#" class="btn btn-primary mx-3" @click="$router.go(-1)">回上一頁</a>
+      <button type="submit" class="btn btn-outline-dark mx-3" :disabled="isProcessing">確認修改</button>
     </form>
   </div>
 </template>
@@ -117,6 +117,16 @@ export default {
     const { id } = this.$route.params;
     this.fetchAdminProduct(id);
     this.fetchAdminCategories();
+  },
+  computed: {
+    isProcessing() {
+      return this.$store.state.isProcessing;
+    }
+  },
+  beforeRouteUpdate(to, from, next) {
+    const { id } = to.params;
+    this.fetchAdminProduct(id);
+    next();
   },
   methods: {
     async fetchAdminProduct(id) {
@@ -173,6 +183,7 @@ export default {
           });
           return;
         }
+        this.$store.dispatch("updateProcessing", true);
         let e = window.event;
         const form = e.target;
         const formData = new FormData(form);
@@ -188,8 +199,10 @@ export default {
         if (statusText !== "OK" || data.status !== "success") {
           throw new Error(statusText);
         }
-        this.$router.go(-1);
+        this.$store.dispatch("updateProcessing", false);
+        this.$router.push({name:"adminProducts"});
       } catch (error) {
+        this.$store.dispatch("updateProcessing", false);
         Toast.fire({
           type: "error",
           title: "修改商品資料失敗"
