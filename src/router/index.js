@@ -259,6 +259,19 @@ router.beforeEach(async (to, from, next) => {
     next('/products')
     return
   }
+  // 如果中斷結帳提醒
+  if (from.name === "checkout" && to.name === "spgatewayPayment") {
+    next();
+  } else if (from.name === "checkout" && to.name !== "spgatewayPayment") {
+    const question = window.confirm(
+      "訂單尚未成立，確定要離開? (*提醒：本筆訂單可於兩小時內於[會員]>[訂單查詢]繼續下單*)"
+    );
+    if (question) {
+      next();
+    } else {
+      next(false);
+    }
+  }
   next()
 })
 

@@ -423,6 +423,17 @@ export default {
     async handleSubmit() {
       const formData = this.formData;
       const orderId = this.$route.params.id;
+      if (
+        !this.receiver.name ||
+        !this.receiver.phone ||
+        !this.receiver.address
+      ) {
+        Toast.fire({
+          type: "error",
+          title: "收件人相關資訊皆需填寫"
+        });
+        return;
+      }
       try {
         const { data } = await cartsAPI.postCheckout({ formData });
         if (data.status === "success") {
