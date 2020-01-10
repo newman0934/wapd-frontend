@@ -87,7 +87,7 @@
           <tr>
             <th scope="row"></th>
             <td colspan="3">小計</td>
-            <td>{{total | currency}}</td>
+            <td>{{totalPrice | currency}}</td>
             <td></td>
           </tr>
         </tbody>
@@ -170,7 +170,8 @@ export default {
     orderData() {
       return {
         formData: {
-          couponCode: this.coupon.coupon_code
+          couponCode: this.coupon.coupon_code,
+          total: this.totalPrice
         }
       };
     }
