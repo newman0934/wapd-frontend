@@ -4,7 +4,11 @@
       <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner">
           <div v-for="image in images" :key="image.id" class="carousel-item active">
-            <img :src="imageUrl || image.url" class="d-block w-100" alt="slide" />
+            <vue-load-image>
+              <img slot="image" :src="imageUrl || image.url" class="d-block w-100" alt="slide" />
+              <img slot="preloader" class="d-block w-100" src="./../static/loading.gif" />
+              <div slot="error" class="d-block w-100">圖片下載失敗</div>
+            </vue-load-image>
           </div>
         </div>
       </div>
@@ -16,14 +20,19 @@
         <div class="carousel-item active">
           <div v-for="image in images" :key="image.id" class="col-xs-2 col-sm-2 col-md-2">
             <div class="card">
-              <img
-                class="card-img-top"
-                :src="image.url"
-                @click.stop.prevent="toggleImageUrl(image.url)"
-              />
+              <vue-load-image>
+                <img
+                  slot="image"
+                  class="card-img-top"
+                  :src="image.url"
+                  @click.stop.prevent="toggleImageUrl(image.url)"
+                />
+                <img slot="preloader" class="card-img-top" src="./../static/1260x750.png" />
+                <div slot="error" class="card-img-top">圖片下載失敗</div>
+              </vue-load-image>
             </div>
           </div>
-          <div class="col-xs-2 col-sm-2 col-md-2">
+          <!-- <div class="col-xs-2 col-sm-2 col-md-2">
             <div class="card">
               <img
                 class="card-img-top"
@@ -40,7 +49,7 @@
                 @click.stop.prevent="toggleImageUrl('https://picsum.photos/id/1000/5626/3635')"
               />
             </div>
-          </div>
+          </div>-->
         </div>
       </div>
       <!-- Left and right controls -->
@@ -54,7 +63,11 @@
   </div>
 </template>
 <script>
+import VueLoadImage from "vue-load-image";
 export default {
+  components: {
+    "vue-load-image": VueLoadImage
+  },
   props: {
     productImages: {
       type: Array,

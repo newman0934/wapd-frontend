@@ -19,7 +19,17 @@
         <tr v-for="item in items" :key="item.id">
           <th scope="row">
             <router-link :to="{name:'product', params:{id:item.ProductId}}">
-              <img :src="item.images[0].url" class="img-fluid" alt="Responsive image" width="150px" />
+              <vue-load-image>
+                <img
+                  slot="image"
+                  :src="item.images[0].url"
+                  class="img-fluid"
+                  alt="Responsive image"
+                  width="150px"
+                />
+                <img slot="preloader" class="img-fluid" width="150px" src="./../static/loading.gif" />
+                <div slot="error" class="img-fluid">圖片下載失敗</div>
+              </vue-load-image>
             </router-link>
           </th>
           <td class="align-middle">
@@ -100,8 +110,12 @@ import cartsAPI from "./../apis/carts";
 import { mapState } from "vuex";
 import { Toast } from "./../utils/helpers";
 import { currencyFilter } from "../utils/mixins";
+import VueLoadImage from "vue-load-image";
 export default {
   mixins: [currencyFilter],
+  components: {
+    "vue-load-image": VueLoadImage
+  },
   data() {
     return {
       items: [],

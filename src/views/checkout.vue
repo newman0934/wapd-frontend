@@ -88,12 +88,17 @@
         <tbody>
           <tr v-for="order in orders" :key="order.orderItem.id">
             <th scope="row">
-              <img
-                :src="order.images[0].url"
-                class="img-fluid"
-                alt="Responsive image"
-                width="150px"
-              />
+              <vue-load-image>
+                <img
+                  slot="image"
+                  :src="order.images[0].url"
+                  class="img-fluid"
+                  alt="Responsive image"
+                  width="150px"
+                />
+                <img slot="preloader" class="img-fluid" width="150px" src="./../static/loading.gif" />
+                <div slot="error" class="img-fluid">圖片下載失敗</div>
+              </vue-load-image>
             </th>
             <td class="align-middle">
               {{ order.productName }}
@@ -288,11 +293,13 @@ import usersAPI from "./../apis/users";
 import { Toast } from "./../utils/helpers";
 import { mapState } from "vuex";
 import { currencyFilter } from "../utils/mixins";
+import VueLoadImage from "vue-load-image";
 
 export default {
   mixins: [currencyFilter],
   components: {
-    ValidationProvider
+    ValidationProvider,
+    "vue-load-image": VueLoadImage
   },
   data() {
     return {

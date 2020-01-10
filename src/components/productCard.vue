@@ -2,13 +2,18 @@
   <div class="col-md-6 col-lg-4">
     <div class="card mb-3" id="product-card">
       <router-link :to="{name:'product', params:{id:product.id}}">
-        <img
-          class="card-img-top"
-          :src="cardImg"
-          alt="card-image-cap"
-          @mouseover="imgMouseover(product.image)"
-          @mouseleave="imgMouseleave(product.image)"
-        />
+        <vue-load-image>
+          <img
+            slot="image"
+            class="card-img-top"
+            :src="cardImg"
+            alt="card-image-cap"
+            @mouseover="imgMouseover(product.image)"
+            @mouseleave="imgMouseleave(product.image)"
+          />
+          <img slot="preloader" class="card-img-top" src="./../static/1260x750.png" />
+          <div slot="error" class="card-img-top">圖片下載失敗</div>
+        </vue-load-image>
         <div class="card-body p-1">
           <p class="card-title text-left text-dark">{{product.name}}</p>
         </div>
@@ -67,9 +72,13 @@
 </template>
 <script>
 import { currencyFilter } from "../utils/mixins";
+import VueLoadImage from "vue-load-image";
 import $ from "jquery";
 export default {
   mixins: [currencyFilter],
+  components: {
+    "vue-load-image": VueLoadImage
+  },
   props: {
     initialProduct: {
       type: Object,
