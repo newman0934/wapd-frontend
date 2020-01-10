@@ -3,7 +3,7 @@
     <adminNav />
     <div class="container mb-5">
       <div class="text-left">
-        <h1>coupon列表</h1>
+        <h1>優惠碼列表</h1>
         <form class="my-4">
           <div class="form-row">
             <div class="col-auto">
@@ -21,7 +21,7 @@
               />
             </div>
             <div class="col-auto">
-              <button type="button" class="btn btn-primary" @click.stop.prevent="createCoupon">新增</button>
+              <button type="button" class="btn btn-outline-primary" @click.stop.prevent="createCoupon" :disabled="isProcessing">確認新增</button>
             </div>
           </div>
         </form>
@@ -46,6 +46,7 @@
                   type="button"
                   class="btn btn-outline-danger"
                   @click.stop.prevent="deleteCoupon(coupon.id)"
+                  :disabled="isProcessing"
                 >刪除</button>
               </td>
             </tr>
@@ -74,6 +75,11 @@ export default {
   created() {
     this.fetchCoupons();
   },
+  computed: {
+    isProcessing() {
+      return this.$store.state.isProcessing;
+    }
+  },
   methods: {
     async fetchCoupons() {
       try {
@@ -92,6 +98,7 @@ export default {
     },
     async createCoupon() {
       try {
+        this.$store.dispatch("updateProcessing", true);
         const { data, statusText } = await adminAPI.coupons.post({
           couponCode: this.newCouponCode,
           discountAmount: this.newCouponAmount
@@ -108,7 +115,9 @@ export default {
         this.newCouponCode = "";
         this.newCouponAmount = "";
         this.fetchCoupons();
+        this.$store.dispatch("updateProcessing", false);
       } catch (error) {
+        this.$store.dispatch("updateProcessing", false);
         Toast.fire({
           type: "error",
           title: "新增優惠碼失敗"
@@ -117,6 +126,7 @@ export default {
     },
     async deleteCoupon(couponId) {
       try {
+        this.$store.dispatch("updateProcessing", true);
         const { data, statusText } = await adminAPI.coupons.delete({
           id: couponId
         });
@@ -126,7 +136,9 @@ export default {
         }
 
         this.coupons = this.coupons.filter(coupon => coupon.id !== couponId);
+        this.$store.dispatch("updateProcessing", false);
       } catch (error) {
+        this.$store.dispatch("updateProcessing", false);
         Toast.fire({
           type: "error",
           title: "刪除優惠碼失敗"

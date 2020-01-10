@@ -24,7 +24,7 @@
     </div>
 
     <div class="mb-5">
-      <button @click="goToBack()" class="btn btn-dark">回上一頁</button>
+      <button @click="goToBack()" class="btn btn-outline-success">回上一頁</button>
     </div>
   </div>
 </template>

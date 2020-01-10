@@ -2,9 +2,9 @@
   <div>
     <adminNav />
     <div class="container">
-      <h3 class="text-left my-5">商品9</h3>
+      <h3 class="text-left my-5">商品ID：{{$route.params.id}}</h3>
       <div class="text-left">
-        <router-link class="btn btn-outline-secondary" :to="{name:'adminProductStatusCreate'}">新增種類</router-link>
+        <router-link class="btn btn-outline-primary" :to="{name:'adminProductStatusCreate'}">新增種類</router-link>
       </div>
       <div class="table-responsive-md mb-5">
         <table class="table table-striped">
@@ -32,7 +32,7 @@
               </td>
               <td scope="col">
                 <button
-                  class="btn btn-outline-dark"
+                  class="btn btn-outline-danger"
                   @click.stop.prevent="deleteProductStatus(status.ProductId, status.id)"
                 >刪除</button>
               </td>
@@ -75,7 +75,7 @@ export default {
         const { data, statusText } = await adminAPI.products.getStatus({
           id
         });
-
+        console.log(data)
         if (statusText !== "OK") {
           throw new Error(statusText);
         }

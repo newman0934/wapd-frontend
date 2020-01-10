@@ -5,7 +5,7 @@
       <div class="text-left">
         <h1>商品列表</h1>
         <h1>
-          <router-link class="btn btn-outline-secondary" :to="{name:'adminProductCreate'}">新增商品</router-link>
+          <router-link class="btn btn-outline-primary" :to="{name:'adminProductCreate'}">新增商品</router-link>
         </h1>
       </div>
       <div class="table-responsive-md">
@@ -15,9 +15,7 @@
               <th scope="col">id</th>
               <th scope="col">商品名稱</th>
               <th scope="col">商品分類</th>
-              <th scope="col">成本</th>
               <th scope="col">價格</th>
-              <th scope="col">圖片</th>
               <th scope="col">狀態</th>
               <th scope="cole">庫存查詢</th>
               <th scope="col">商品編輯</th>
@@ -30,20 +28,16 @@
                 <router-link :to="{name:'adminProduct',params:{id:product.id}}">{{product.name}}</router-link>
               </td>
               <td scope="col">{{product.category}}</td>
-              <td scope="col">{{product.cost}}</td>
               <td scope="col">{{product.sell_price}}</td>
-              <td scope="col">
-                <img :src="product.images[0].url" style="max-width:100px" />
-              </td>
               <td scope="col">{{product.status}}</td>
               <td scope="col">
                 <router-link
-                  class="btn btn-outline-secondary"
+                  class="btn btn-outline-info"
                   :to="{name:'adminProductStatus', params:{ id: product.id}}"
                 >查詢</router-link>
               </td>
               <td scope="col">
-                <router-link :to="{name:'adminProductEdit', params:{id:product.id}}" class="btn btn-outline-secondary">編輯</router-link>
+                <router-link :to="{name:'adminProductEdit', params:{id:product.id}}" class="btn btn-outline-dark">編輯</router-link>
               </td>
             </tr>
           </tbody>

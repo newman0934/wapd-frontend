@@ -3,7 +3,7 @@
     <adminNav />
     <div class="container">
       <div class="col-sm-6 mx-auto">
-        <h3>商品9</h3>
+        <h3>商品ID：{{productStatus.ProductId}}</h3>
         <form class="mb-5">
           <div class="form-group row">
             <label for="productSize" class="col-sm-2 col-form-label">尺寸</label>
@@ -14,7 +14,7 @@
                 id="productSize"
                 name="productSize"
                 placeholder="商品尺寸"
-                v-model="editSize"
+                v-model="productStatus.size"
               />
             </div>
           </div>
@@ -27,7 +27,7 @@
                 id="productColor"
                 name="productColor"
                 placeholder="商品顏色"
-                v-model="editColor"
+                v-model="productStatus.color"
               />
             </div>
           </div>
@@ -40,16 +40,17 @@
                 id="productStock"
                 name="productStock"
                 placeholder="商品庫存"
-                v-model="editStock"
+                v-model="productStatus.stock"
               />
             </div>
           </div>
-          <a href="#" class="btn btn-primary mx-3">回上一頁</a>
+          <a href="#" class="btn btn-outline-success mx-3" @click="$router.go(-1)">回上一頁</a>
           <button
             type="submit"
-            class="btn btn-primary mx-3"
+            class="btn btn-outline-dark mx-3"
             @click.stop.prevent="putAdminProductStatus($route.params.id,$route.params.stock_id)"
-          >送出</button>
+            :disabled="isProcessing"
+          >確認修改</button>
         </form>
       </div>
     </div>
@@ -65,14 +66,29 @@ export default {
   },
   data() {
     return {
-      editColor: "",
-      editSize: "",
-      editStock: ""
+      productStatus: {
+        ProductId: "",
+        color: "",
+        id: "",
+        size: "",
+        stock: 0
+      }
+
     };
   },
   created() {
     const { id, stock_id } = this.$route.params;
     this.fetchAdminProductStatus(id, stock_id);
+  },
+  computed: {
+    isProcessing() {
+      return this.$store.state.isProcessing;
+    }
+  },
+  beforeRouteUpdate(to, from, next) {
+    const { id, stock_id } = to.params;
+    this.addProductStatus(id, stock_id);
+    next();
   },
   methods: {
     async fetchAdminProductStatus(id, stock_id) {
@@ -81,35 +97,43 @@ export default {
           id,
           stock_id
         });
-
+        console.log(data);
         if (statusText !== "OK") {
           throw new Error(statusText);
         }
-        this.editColor = data.productStatus.color;
-        this.editSize = data.productStatus.size;
-        this.editStock = data.productStatus.stock;
+
+        this.productStatus = {
+          ProductId: data.productStatus.ProductId,
+          color: data.productStatus.color,
+          id: data.productStatus.id,
+          size: data.productStatus.size,
+          stock: data.productStatus.stock
+        };
       } catch (error) {
         Toast.fire({
-          type:"error",
-          title:"取得商品尺寸、顏色、庫存失敗"
-        })
+          type: "error",
+          title: "取得商品尺寸、顏色、庫存失敗"
+        });
       }
     },
     async putAdminProductStatus(id, stock_id) {
       try {
+        this.$store.dispatch("updateProcessing", true);
         const { data, statusText } = await adminAPI.products.putStatus({
           id,
           stock_id,
-          color: this.editColor,
-          size: this.editSize,
-          stock: this.editStock
+          color: this.productStatus.color,
+          size: this.productStatus.size,
+          stock: this.productStatus.stock
         });
-        console.log(id, stock_id)
+        console.log(id, stock_id);
         if (statusText !== "OK" && data.status !== "success") {
           throw new Error(statusText);
         }
-        this.$router.go(-1);
+        this.$store.dispatch("updateProcessing", false);
+        this.$router.push({name:"adminProductStatus",params:{id:id}});
       } catch (error) {
+        this.$store.dispatch("updateProcessing", false);
         Toast.fire({
           type: "error",
           title: "編輯商品尺寸、顏色、庫存失敗"

@@ -132,8 +132,8 @@
         </div>
       </div>
       <div class="container">
-        <a href="#" class="btn btn-outline-success mx-3 my-5">回上一頁</a>
-        <a href="#" class="btn btn-outline-success mx-3 my-5">確認編輯</a>
+        <a href="#" class="btn btn-outline-success mx-3 my-5" @click="$router.go(-1)">回上一頁</a>
+        <a href="#" class="btn btn-outline-dark mx-3 my-5">確認編輯</a>
       </div>
     </form>
   </div>
@@ -161,7 +161,12 @@ export default {
     };
   },
   created() {
-    this.fetchAdminOrder()
+    this.fetchAdminOrder();
+  },
+  beforeRouteUpdate(to, from, next) {
+    const { id } = to.params;
+    this.fetchAdminOrder(id);
+    next();
   },
   methods: {
     fetchAdminOrder() {},

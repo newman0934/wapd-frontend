@@ -13,7 +13,12 @@
               <input v-model="newCategoryName" type="text" class="form-control" placeholder="請輸入類別" />
             </div>
             <div class="col-auto">
-              <button type="button" class="btn btn-primary" @click.stop.prevent="createCategory">新增</button>
+              <button
+                type="button"
+                class="btn btn-outline-primary"
+                @click.stop.prevent="createCategory"
+                :disabled="isProcessing"
+              >確認新增</button>
             </div>
           </div>
         </form>
@@ -48,13 +53,15 @@
               <td scope="row">
                 <button
                   v-if="!category.isEditing"
-                  class="btn btn-dark"
+                  class="btn btn-outline-dark"
                   @click.stop.prevent="toggleIsEditing(category.id)"
-                >Edit</button>
+                  :disabled="isProcessing"
+                >編輯</button>
                 <button
                   v-if="category.isEditing"
                   class="btn btn-dark"
                   @click.stop.prevent="editCategory({categoryId: category.id, category:category.category})"
+                  :disabled="isProcessing"
                 >儲存</button>
               </td>
               <td scope="row">
@@ -62,6 +69,7 @@
                   type="button"
                   class="btn btn-outline-danger"
                   @click.stop.prevent="deleteCategory(category.id)"
+                  :disabled="isProcessing"
                 >刪除</button>
               </td>
             </tr>
@@ -92,6 +100,11 @@ export default {
   created() {
     this.fetchCategories();
   },
+  computed: {
+    isProcessing() {
+      return this.$store.state.isProcessing;
+    }
+  },
   methods: {
     async fetchCategories() {
       try {
@@ -113,6 +126,7 @@ export default {
     },
     async createCategory() {
       try {
+        this.$store.dispatch("updateProcessing", true);
         const { data, statusText } = await adminAPI.categories.create({
           category: this.newCategoryName
         });
@@ -129,7 +143,9 @@ export default {
 
         this.newCategoryName = "";
         this.fetchCategories();
+        this.$store.dispatch("updateProcessing", false);
       } catch (error) {
+        this.$store.dispatch("updateProcessing", false);
         Toast.fire({
           type: "error",
           title: "無法新增類別"
@@ -138,6 +154,7 @@ export default {
     },
     async editCategory({ categoryId, category }) {
       try {
+        this.$store.dispatch("updateProcessing", true);
         const { data, statusText } = await adminAPI.categories.update({
           categoryId,
           category
@@ -148,7 +165,9 @@ export default {
         }
 
         this.toggleIsEditing(categoryId);
+        this.$store.dispatch("updateProcessing", false);
       } catch (error) {
+        this.$store.dispatch("updateProcessing", false);
         Toast.fire({
           type: "error",
           title: "無法修改類別"
@@ -157,6 +176,7 @@ export default {
     },
     async deleteCategory(categoryId) {
       try {
+        this.$store.dispatch("updateProcessing", true);
         const { data, statusText } = await adminAPI.categories.delete({
           categoryId
         });
@@ -167,7 +187,9 @@ export default {
         this.categories = this.categories.filter(
           category => category.id !== categoryId
         );
+        this.$store.dispatch("updateProcessing", false);
       } catch (error) {
+        this.$store.dispatch("updateProcessing", false);
         Toast.fire({
           type: "error",
           title: "無法刪除類別"
@@ -175,6 +197,7 @@ export default {
       }
     },
     toggleIsEditing(categoryId) {
+      this.$store.dispatch("updateProcessing", true);
       this.categories = this.categories.map(category => {
         if (category.id !== categoryId) return category;
 
@@ -184,6 +207,7 @@ export default {
           isEditing: !category.isEditing
         };
       });
+      this.$store.dispatch("updateProcessing", false);
     },
     handleCancel(categoryId) {
       this.categories = this.categories.map(category => {

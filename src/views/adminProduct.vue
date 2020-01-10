@@ -10,14 +10,13 @@
             <td colspan="2">{{product.name}}</td>
             <td>分類</td>
             <td colspan="2">{{product.category}}</td>
-
           </tr>
           <tr>
             <td>原價</td>
             <td>{{product.originPrice}}</td>
             <td>販售價</td>
             <td>{{product.sellPrice}}</td>
-                        <td>狀態</td>
+            <td>狀態</td>
             <td>{{product.status}}</td>
           </tr>
           <tr>
@@ -36,8 +35,11 @@
     </div>
     <div class="container my-5">
       <div class="row justify-content-center">
-        <button @click="goToBack" class="btn btn-outline-primary mx-3">回上一頁</button>
-        <a class="btn btn-outline-primary mx-3" href="#">編輯商品</a>
+        <button @click="goToBack" class="btn btn-outline-success mx-3">回上一頁</button>
+        <router-link
+          class="btn btn-outline-dark mx-3"
+          :to="{name:'adminProductEdit', params:{id:product.id}}"
+        >編輯商品</router-link>
       </div>
     </div>
   </div>
@@ -54,6 +56,7 @@ export default {
   data() {
     return {
       product: {
+        id: "",
         name: "",
         category: "",
         cost: 0,
@@ -69,6 +72,11 @@ export default {
     const { id } = this.$route.params;
     this.fetchAdminProduct(id);
   },
+  beforeRouteUpdate(to, from, next) {
+    const { id } = to.params;
+    this.fetchAdminProduct(id);
+    next();
+  },
   methods: {
     async fetchAdminProduct(id) {
       try {
@@ -80,6 +88,7 @@ export default {
           throw new Error(statusText);
         }
         this.product = {
+          id: data.product.id,
           name: data.product.name,
           category: data.product.category,
           cost: data.product.cost,
@@ -88,7 +97,7 @@ export default {
           status: data.product.status,
           description: data.product.description
         };
-        this.images = data.product.images
+        this.images = data.product.images;
       } catch (error) {
         Toast.fire({
           type: "error",
@@ -96,8 +105,8 @@ export default {
         });
       }
     },
-    goToBack(){
-      this.$router.go(-1)
+    goToBack() {
+      this.$router.go(-1);
     }
   }
 };
