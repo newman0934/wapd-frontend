@@ -11,7 +11,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="order in orders" :key="order.id">
+        <tr v-for="order in filterOrders" :key="order.id">
           <th scope="row" class="align-middle">
             <router-link :to="{name:'order', params:{ order_id:order.id }}">#{{order.sn}}</router-link>
             <p>@{{order.createdAt | timeFormate}}</p>
@@ -47,7 +47,10 @@ export default {
     };
   },
   computed: {
-    ...mapState(["currentUser"])
+    ...mapState(["currentUser"]),
+    filterOrders() {
+      return this.orders.filter(order => order.payment_status !== "99");
+    }
   },
   created() {
     this.fetchUserOrders();

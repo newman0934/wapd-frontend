@@ -1,6 +1,9 @@
 <template>
   <div class="container py-5">
-    <div class="row">
+    <div v-if="isLoading">
+      <spinner />
+    </div>
+    <div v-else class="row">
       <div class="col-md-12">
         <productBreadcrumb :path="path" />
       </div>
@@ -17,6 +20,7 @@
 import productBreadcrumb from "./../components/productBreadcrumb";
 import productCarousel from "./../components/productCarousel";
 import productDetail from "./../components/productDetail";
+import spinner from "./../components/spinner";
 import productsAPI from "./../apis/products";
 import { Toast } from "./../utils/helpers";
 
@@ -24,7 +28,8 @@ export default {
   components: {
     productBreadcrumb,
     productCarousel,
-    productDetail
+    productDetail,
+    spinner
   },
   data() {
     return {
@@ -45,6 +50,11 @@ export default {
       productImgs: []
     };
   },
+  computed: {
+    isLoading() {
+      return this.$store.state.isLoading;
+    }
+  },
   created() {
     const { id: productId } = this.$route.params;
     this.fetchProduct(productId);
@@ -57,6 +67,7 @@ export default {
   methods: {
     async fetchProduct(productId) {
       try {
+        this.$store.dispatch("updateLoading", true);
         const { data, statusText } = await productsAPI.getProduct({
           productId
         });
@@ -95,7 +106,9 @@ export default {
           };
         }
         this.productImgs = data.product.images;
+        this.$store.dispatch("updateLoading", false);
       } catch (error) {
+        this.$store.dispatch("updateLoading", false);
         Toast.fire({
           type: "error",
           title: "無法取得商品資訊，請稍後再試"

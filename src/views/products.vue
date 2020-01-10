@@ -58,6 +58,7 @@ export default {
   methods: {
     async fetchProducts({ page = 1, categoryId = "" }) {
       try {
+        this.$store.dispatch("updateLoading", true);
         const { data, statusText } = await productsAPI.getProducts({
           page,
           categoryId
