@@ -79,7 +79,7 @@
     </div>
     <div class="container">
       <button @click="goToBack" class="btn btn-outline-success mx-3 my-5">回上一頁</button>
-      <a href="#" class="btn btn-outline-success mx-3 my-5">編輯訂單</a>
+      <a href="#" class="btn btn-outline-dark mx-3 my-5">編輯訂單</a>
     </div>
   </div>
 </template>
@@ -105,16 +105,21 @@ export default {
         shippingMethod: "",
         paymentStatus: "",
         paymentMethod: "",
-        comment:""
+        comment: ""
       },
       coupon: [],
       productItems: [],
-      originPrice:0
+      originPrice: 0
     };
   },
   created() {
     const { order_id } = this.$route.params;
     this.fetchAdminOrder(order_id);
+  },
+  beforeRouteUpdate(to, from, next) {
+    const { id } = to.params;
+    this.fetchAdminOrder(id);
+    next();
   },
   methods: {
     async fetchAdminOrder(orderId) {
@@ -125,10 +130,10 @@ export default {
         if (statusText !== "OK") {
           throw new Error(statusText);
         }
-        let sum = 0
-        let priceArray = data.order.orderItems.map(item => item.SellPrice)
-        for(let i = 0; i < priceArray.length; i++){
-          sum += priceArray[i]
+        let sum = 0;
+        let priceArray = data.order.orderItems.map(item => item.SellPrice);
+        for (let i = 0; i < priceArray.length; i++) {
+          sum += priceArray[i];
         }
         this.order = {
           id: data.order.id,
@@ -141,11 +146,11 @@ export default {
           shippingMethod: data.order.shipping_method,
           paymentStatus: data.order.payment_status,
           paymentMethod: data.order.payment_method,
-          comment:data.order.comment
+          comment: data.order.comment
         };
         this.coupon = data.order.coupon;
         this.productItems = data.order.orderItems;
-        this.originPrice = sum
+        this.originPrice = sum;
       } catch (error) {
         Toast.fire({
           type: "error",
@@ -154,8 +159,8 @@ export default {
         console.log(error);
       }
     },
-    goToBack(){
-      this.$router.go(-1)
+    goToBack() {
+      this.$router.go(-1);
     }
   }
 };

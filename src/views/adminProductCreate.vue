@@ -73,8 +73,8 @@
           <div class="DashboardContainer" name="image"></div>
         </div>
       </div>
-      <a href="#" class="btn btn-primary mx-3">回上一頁</a>
-      <button type="submit" class="btn btn-primary mx-3">新增商品</button>
+      <a href="#" class="btn btn-outline-success mx-3" @click="$router.go(-1)">回上一頁</a>
+      <button type="submit" class="btn btn-outline-primary mx-3" :disabled="isProcessing">新增商品</button>
     </form>
   </div>
 </template>
@@ -110,6 +110,11 @@ export default {
   },
   created() {
     this.fetchAdminCategories();
+  },
+  computed: {
+    isProcessing() {
+      return this.$store.state.isProcessing;
+    }
   },
   methods: {
     openUppyDashboard() {
@@ -177,8 +182,9 @@ export default {
           });
           return;
         }
+        this.$store.dispatch("updateProcessing", true);
         this.images = this.uppy.getFiles().map(f => f.data);
-        
+
         const form = e.target;
         const formData = new FormData(form);
 
@@ -186,8 +192,8 @@ export default {
         //   console.log(name + ": " + value);
         // }
         // console.log(this.images)
- 
-        console.log(formData)
+
+        console.log(formData);
         const { data, statusText } = await adminAPI.products.post({
           formData,
           images: this.images
@@ -195,11 +201,11 @@ export default {
 
         if (statusText !== "OK" || data.status !== "success") {
           throw new Error(statusText);
-
         }
-
-        this.$router.go(-1);
+        this.$store.dispatch("updateProcessing", false);
+        this.$router.push({name:"adminProducts"});
       } catch (error) {
+        this.$store.dispatch("updateProcessing", false);
         Toast.fire({
           type: "error",
           title: "建立商品失敗"

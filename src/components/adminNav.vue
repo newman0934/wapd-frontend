@@ -13,6 +13,9 @@
     <li class="nav-item">
       <router-link :to="{name:'adminCategories'}" class="nav-link">類別</router-link>
     </li>
+        <li class="nav-item">
+      <router-link :to="{name:'adminCoupon'}" class="nav-link">優惠碼</router-link>
+    </li>
   </ul>
 </div>
 </template>

@@ -78,5 +78,16 @@ export default {
     getProductDetail({ id }) {
       return apiHelper.get(`/admins/products/${id}`);
     }
+  },
+  coupons:{
+    get(){
+      return apiHelper.get("/admins/coupons")
+    },
+    post({couponCode, discountAmount}){
+      return apiHelper.post("/admins/coupons",{couponCode, discountAmount})
+    },
+    delete({id}){
+      return apiHelper.delete(`/admins/coupons/${id}`)
+    }
   }
 };
