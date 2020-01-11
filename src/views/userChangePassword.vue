@@ -4,39 +4,54 @@
       <form class="w-75 mt-4" @submit.stop.prevent="handleSubmit">
         <div class="form-label-group mb-2">
           <label for="name" class="d-flex">舊密碼:</label>
-          <input
-            id="used-password"
-            name="usedPassword"
-            v-model="usedPassword"
-            type="password"
-            class="form-control"
-            placeholder="請輸入目前使用的舊密碼"
-            required
-          />
+          <ValidationProvider rules="required|password" v-slot="{ errors }">
+            <input
+              id="used-password"
+              name="usedPassword"
+              v-model="usedPassword"
+              type="password"
+              class="form-control"
+              placeholder="請輸入目前使用的舊密碼"
+              required
+            />
+            <span class="d-flex">
+              <small class="text-danger">{{ errors[0] }}</small>
+            </span>
+          </ValidationProvider>
         </div>
         <div class="form-label-group mb-2">
           <label for="name" class="d-flex">新密碼:</label>
-          <input
-            id="new-password"
-            name="newPassword"
-            v-model="newPassword"
-            type="password"
-            class="form-control"
-            placeholder="請設定您的新密碼"
-            required
-          />
+          <ValidationProvider rules="required|password" v-slot="{ errors }">
+            <input
+              id="new-password"
+              name="newPassword"
+              v-model="newPassword"
+              type="password"
+              class="form-control"
+              placeholder="請設定您的新密碼"
+              required
+            />
+            <span class="d-flex">
+              <small class="text-danger">{{ errors[0] }}</small>
+            </span>
+          </ValidationProvider>
         </div>
         <div class="form-label-group mb-2">
           <label for="name" class="d-flex">新密碼確認:</label>
-          <input
-            id="password-check"
-            name="passwordCheck"
-            v-model="passwordCheck"
-            type="password"
-            class="form-control"
-            placeholder="請再輸入新密碼做確認"
-            required
-          />
+          <ValidationProvider rules="required|confirmed:newPassword" v-slot="{ errors }">
+            <input
+              id="password-check"
+              name="passwordCheck"
+              v-model="passwordCheck"
+              type="password"
+              class="form-control"
+              placeholder="請再輸入新密碼做確認"
+              required
+            />
+            <span class="d-flex">
+              <small class="text-danger">{{ errors[0] }}</small>
+            </span>
+          </ValidationProvider>
         </div>
 
         <button
@@ -48,9 +63,13 @@
   </div>
 </template>
 <script>
+import { ValidationProvider } from "vee-validate";
 import usersAPI from "./../apis/users";
 import { Toast } from "./../utils/helpers";
 export default {
+  components: {
+    ValidationProvider
+  },
   data() {
     return {
       usedPassword: "",

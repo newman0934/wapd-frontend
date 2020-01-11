@@ -11,7 +11,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="order in orders" :key="order.id">
+        <tr v-for="order in filterOrders" :key="order.id">
           <th scope="row" class="align-middle">
             <router-link :to="{name:'order', params:{ order_id:order.id }}">#{{order.sn}}</router-link>
             <p>@{{order.createdAt | timeFormate}}</p>
@@ -20,9 +20,15 @@
             <p>NTD {{order.total_price}}</p>
             <p>商品總數量：{{order.OrderItems.length}}</p>
           </td>
-          <td class="align-middle">{{order.payment_status}}</td>
+          <td class="align-middle">{{order.payment_status==1 ? "已付款" : "未付款"}}</td>
           <td class="align-middle">{{order.shipping_status || "尚未出貨"}}</td>
-          <td></td>
+          <td class="align-middle">
+            <p v-if="!order.total_price">
+              尚未收到您的訂單，您可
+              <br />
+              <button class="btn btn-sm btn-outline-dark" @click="continuousOrder(order.id)">繼續下單</button>
+            </p>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -41,28 +47,18 @@ export default {
     };
   },
   computed: {
-    ...mapState(["currentUser"])
+    ...mapState(["currentUser"]),
+    filterOrders() {
+      return this.orders.filter(order => order.payment_status !== "99");
+    }
   },
   created() {
-    const { id } = this.$route.params;
-    if (id.toString() !== this.currentUser.id.toString()) {
-      this.$router.push({ name: "notFound" });
-      return;
-    }
-    this.fetchUserOrders(id);
+    this.fetchUserOrders();
   },
-  // beforeRouteUpdate(to, from, next) {
-  //   const { id } = to.params;
-  //   if (id.toString() !== this.currentUser.id.toString()) {
-  //     this.$router.push({ name: "notFound" });
-  //     return;
-  //   }
-  //   next()
-  // },
   methods: {
-    async fetchUserOrders(userId) {
+    async fetchUserOrders() {
       try {
-        const { data, statusText } = await usersAPI.getUserOrders({ userId });
+        const { data, statusText } = await usersAPI.getUserOrders();
         if (statusText !== "OK") {
           throw new Error(statusText);
         }
@@ -73,6 +69,9 @@ export default {
           title: "無法取得訂單資料，請稍後再試"
         });
       }
+    },
+    continuousOrder(id) {
+      this.$router.push({ name: "checkout", params: { id } });
     }
   }
 };

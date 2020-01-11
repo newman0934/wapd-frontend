@@ -15,26 +15,39 @@
         </div>
         <div class="form-label-group mb-2">
           <label for="email" class="d-flex">Email:</label>
-          <input
-            id="email"
-            name="email"
-            v-model="email"
-            type="email"
-            class="form-control"
-            placeholder="email"
-            disabled
-          />
+          <ValidationProvider rules="required|email" v-slot="{ errors }">
+            <input
+              id="email"
+              name="email"
+              v-model="email"
+              type="email"
+              class="form-control"
+              placeholder="email"
+            />
+            <span class="d-flex">
+              <small class="text-danger">{{ errors[0] }}</small>
+            </span>
+          </ValidationProvider>
+          <small class="text-muted">＊提醒：Email為會員登入帳號及聯絡信箱。</small>
         </div>
         <div class="form-label-group mb-2">
           <label for="birthday" class="d-flex">生日:</label>
-          <input
-            id="birth"
-            name="birth"
-            v-model="birthday"
-            type="date"
-            class="form-control"
-            value="2019-12-25"
-          />
+          <ValidationProvider
+            :rules="{ regex: '^\\d{4}[\\-/\\.](0?[1-9]|1[012])[\\-/\\.](0?[1-9]|[12][0-9]|3[01])$' }"
+            v-slot="{ errors }"
+          >
+            <input
+              id="birth"
+              name="birth"
+              v-model="birthday"
+              type="date"
+              class="form-control"
+              value="2019-12-25"
+            />
+            <span class="d-flex">
+              <small class="text-danger">{{ errors[0] }}</small>
+            </span>
+          </ValidationProvider>
         </div>
         <div class="form-label-group mb-2">
           <label for="address" class="d-flex">地址:</label>
@@ -49,14 +62,22 @@
         </div>
         <div class="form-label-group mb-3">
           <label for="phone" class="d-flex">聯絡電話:</label>
-          <input
-            id="phone"
-            name="phone"
-            v-model="phone"
-            type="text"
-            class="form-control"
-            placeholder="Enter phone number"
-          />
+          <ValidationProvider
+            :rules="{ regex: /^\(?(\d{2})\)?[\s\-]?(\d{4})\-?(\d{4})$/ }"
+            v-slot="{ errors }"
+          >
+            <input
+              id="phone"
+              name="phone"
+              v-model="phone"
+              type="text"
+              class="form-control"
+              placeholder="Enter phone number"
+            />
+            <span class="d-flex">
+              <small class="text-danger">{{ errors[0] }}</small>
+            </span>
+          </ValidationProvider>
         </div>
 
         <button
@@ -70,9 +91,13 @@
 </template>
 <script>
 import usersAPI from "./../apis/users";
+import { ValidationProvider } from "vee-validate";
 import { mapState } from "vuex";
 import { Toast } from "./../utils/helpers";
 export default {
+  components: {
+    ValidationProvider
+  },
   data() {
     return {
       id: 0,
@@ -96,11 +121,6 @@ export default {
     }
   },
   created() {
-    const { id } = this.$route.params;
-    if (id.toString() !== this.currentUser.id.toString()) {
-      this.$router.push({ name: "notFound" });
-      return;
-    }
     this.setUser();
   },
   methods: {

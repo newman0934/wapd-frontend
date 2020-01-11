@@ -24,25 +24,15 @@ export default {
     }
   },
   created() {
-    const { id } = this.$route.params;
-    if (id.toString() !== this.currentUser.id.toString()) {
-      this.$router.push({ name: "notFound" });
-      return;
-    }
-    this.fetchUserFavorite(id);
+    this.fetchUserFavorite();
   },
   beforeRouteUpdate(to, from, next) {
-    const { id } = to.params;
-    if (id.toString() !== this.currentUser.id.toString()) {
-      this.$router.push({ name: "notFound" });
-      return;
-    }
-    this.fetchUserFavorite(id);
+    this.fetchUserFavorite();
     next();
   },
   methods: {
-    fetchUserFavorite(userId) {
-      this.$store.dispatch("fetchUserFavorite", userId);
+    fetchUserFavorite() {
+      this.$store.dispatch("fetchUserFavorite");
     }
   }
 };

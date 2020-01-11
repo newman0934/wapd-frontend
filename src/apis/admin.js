@@ -30,6 +30,12 @@ export default {
     },
     getDetail({ orderId }) {
       return apiHelper.get(`/admins/orders/${orderId}`);
+    },
+    deleteOrderProduct({id}){
+      return apiHelper.delete(`/admins/orders/${id}/product`)
+    },
+    put({id, formData}){
+      return apiHelper.put(`/admins/orders/${id}`,formData)
     }
   },
   products: {
@@ -77,6 +83,17 @@ export default {
     },
     getProductDetail({ id }) {
       return apiHelper.get(`/admins/products/${id}`);
+    }
+  },
+  coupons:{
+    get(){
+      return apiHelper.get("/admins/coupons")
+    },
+    post({couponCode, discountAmount}){
+      return apiHelper.post("/admins/coupons",{couponCode, discountAmount})
+    },
+    delete({id}){
+      return apiHelper.delete(`/admins/coupons/${id}`)
     }
   }
 };

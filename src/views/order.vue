@@ -127,33 +127,23 @@ export default {
     }
   },
   created() {
-    const { id, order_id } = this.$route.params;
-    if (id.toString() !== this.currentUser.id.toString()) {
-      this.$router.push({ name: "notFound" });
-      return;
-    }
-    this.fetchUserOrder(id, order_id);
+    const { order_id } = this.$route.params;
+    this.fetchUserOrder(order_id);
   },
   beforeRouteUpdate(to, from, next) {
-    const { id, order_id } = to.params;
-    if (id.toString() !== this.currentUser.id.toString()) {
-      this.$router.push({ name: "notFound" });
-      return;
-    }
-    this.fetchUserOrder(id, order_id);
+    const { order_id } = to.params;
+    this.fetchUserOrder(order_id);
     next();
   },
   methods: {
-    async fetchUserOrder(userId, orderId) {
+    async fetchUserOrder(orderId) {
       try {
         const { data, statusText } = await usersAPI.getUserOrder({
-          userId,
           orderId
         });
         if (statusText !== "OK") {
           throw new Error(statusText);
         }
-        console.log(data);
         this.order = {
           id: data.orders.id,
           sn: data.orders.sn,

@@ -24,7 +24,7 @@
     </div>
 
     <div class="mb-5">
-     <button @click="goToBack()" class="btn btn-dark">回上一頁</button> 
+      <button @click="goToBack()" class="btn btn-outline-success">回上一頁</button>
     </div>
   </div>
 </template>
@@ -40,8 +40,8 @@ export default {
   },
   data() {
     return {
-      user:{
-        name:""
+      user: {
+        name: ""
       },
       orders: []
     };
@@ -67,8 +67,8 @@ export default {
           throw new Error(statusText);
         }
         this.user = {
-          name:data.users.name
-        }
+          name: data.users.name
+        };
         this.orders = data.users.orders;
       } catch (error) {
         Toast.fire({
@@ -77,7 +77,7 @@ export default {
         });
       }
     },
-    goToBack(){
+    goToBack() {
       this.$router.go(-1);
     }
   }

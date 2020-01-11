@@ -1,14 +1,14 @@
 import { apiHelper } from '../utils/helpers'
 
 export default {
-  getUserCart({ userId }) {
-    return apiHelper.get(`/users/${userId}/cart`)
+  getUserCart() {
+    return apiHelper.get(`/users/cart`)
   },
   deleteCartItem({ itemId }) {
     return apiHelper.delete(`users/cart/${itemId}`)
   },
-  putCartItem({ userId, itemId, quantity }) {
-    return apiHelper.put(`/users/${userId}/cart/${itemId}`,
+  putCartItem({ itemId, quantity }) {
+    return apiHelper.put(`/users/cart/${itemId}`,
       { quantity })
   },
   postCoupon({ couponCode }) {
@@ -20,8 +20,8 @@ export default {
   notLoginPostCart({ formData }) {
     return apiHelper.post(`/products/notLoginCart`, formData)
   },
-  postOrder({ couponCode }) {
-    return apiHelper.post(`/users/orders`, { couponCode })
+  postOrder({ formData }) {
+    return apiHelper.post(`/users/orders`, formData)
   },
   getCheckout({ orderId }) {
     return apiHelper.get(`/orders/${orderId}/checkout`)
@@ -32,8 +32,8 @@ export default {
   getPayment(orderId) {
     return apiHelper.get(`/orders/${orderId}/payment`)
   },
-  getPaymentComplete({ userId, Status, orderId }) {
+  getPaymentComplete({ Status, orderId }) {
     const searchParams = new URLSearchParams({ Status, orderId })
-    return apiHelper.get(`/users/${userId}/paymentcomplete?${searchParams.toString()}`)
+    return apiHelper.get(`/users/paymentcomplete?${searchParams.toString()}`)
   }
 }
