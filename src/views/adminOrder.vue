@@ -65,7 +65,7 @@
         </h3>
         <h3 class="my-2">
           折扣：-
-          <span>{{coupon.discount_amount}}</span>
+          <span>{{coupon}}</span>
         </h3>
         <h3 class="my-2">
           金額：
@@ -79,7 +79,7 @@
     </div>
     <div class="container">
       <button @click="goToBack" class="btn btn-outline-success mx-3 my-5">回上一頁</button>
-      <a href="#" class="btn btn-outline-dark mx-3 my-5">編輯訂單</a>
+      <router-link :to="{name:'adminOrderEdit', params:{id:order.id}}" class="btn btn-outline-dark mx-3 my-5">編輯訂單</router-link>
     </div>
   </div>
 </template>
@@ -107,7 +107,7 @@ export default {
         paymentMethod: "",
         comment: ""
       },
-      coupon: [],
+      coupon: 0,
       productItems: [],
       originPrice: 0
     };
@@ -127,6 +127,7 @@ export default {
         const { data, statusText } = await adminAPI.orders.getDetail({
           orderId
         });
+        console.log(data)
         if (statusText !== "OK") {
           throw new Error(statusText);
         }
@@ -148,7 +149,7 @@ export default {
           paymentMethod: data.order.payment_method,
           comment: data.order.comment
         };
-        this.coupon = data.order.coupon;
+        this.coupon = data.order.coupon || 0;
         this.productItems = data.order.orderItems;
         this.originPrice = sum;
       } catch (error) {

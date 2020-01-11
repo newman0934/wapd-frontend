@@ -30,6 +30,12 @@ export default {
     },
     getDetail({ orderId }) {
       return apiHelper.get(`/admins/orders/${orderId}`);
+    },
+    deleteOrderProduct({id}){
+      return apiHelper.delete(`/admins/orders/${id}/product`)
+    },
+    put({id, formData}){
+      return apiHelper.put(`/admins/orders/${id}`,formData)
     }
   },
   products: {
