@@ -1,7 +1,7 @@
 <template>
   <div class="adminOrderEdit">
     <admin-nav></admin-nav>
-    <form action>
+    <form class="container mb-5" @submit.stop.prevent="putAdminOrder($route.params.id)">
       <h3 class="container text-left">會員資料</h3>
       <div class="table-responsive-md">
         <table class="userInfo table container mb-5">
@@ -14,8 +14,8 @@
                 <input
                   type="text"
                   v-model="order.receiverName"
-                  name="name"
-                  id="name"
+                  name="receiver_name"
+                  id="receiver_name"
                   class="name form-control"
                 />
               </td>
@@ -31,29 +31,33 @@
               </td>
             </tr>
             <tr>
-              <td class="font-weight-bold">Email</td>
-              <td>text@gmail.com</td>
+              <td class="font-weight-bold">會員編號</td>
+              <td>{{order.UserId}}</td>
               <td class="font-weight-bold">付款方式</td>
-              <td>{{order.paymentMethod}}</td>
+              <td><input type="text" disabled name="paymentMethod" id="paymentMethod" class="paymentMethod form-control" v-model="order.paymentMethod"></td>
               <td class="font-weight-bold">付款狀態</td>
               <td>
-                <select class="form-control" v-model="order.paymentStatus" disabled>
+                <select class="form-control" v-model="order.paymentStatus" id="payment_status" name="payment_status">
                   <option value="0">未付款</option>
                   <option value="1">付款成功</option>
                   <option value="2">付款失敗</option>
-                  <option value="3">取消付款</option>
+                  <option value="99">取消付款</option>
                 </select>
               </td>
             </tr>
             <tr>
               <td class="font-weight-bold">配送方式</td>
-              <td>{{order.shippingMethod}}</td>
+              <td><select class="form-control" id="shipping_method" name="shipping_method" v-model="order.shippingMethod">
+                <option value="0">宅配</option>
+                <option value="1">超商</option>
+                <option value="2">超商</option>
+                </select></td>
               <td class="font-weight-bold">配送地址</td>
               <td>
                 <input
                   type="text"
-                  name="shippingAddress"
-                  id="shippingAddress"
+                  name="address"
+                  id="address"
                   class="shippingAddress form-control"
                   v-model="order.receiverAddress"
                 />
@@ -74,7 +78,6 @@
                   <th>顏色</th>
                   <th>尺寸</th>
                   <th>價格</th>
-                  <th>刪除</th>
                 </tr>
               </thead>
               <tbody>
@@ -84,13 +87,6 @@
                   <td>{{product.color}}</td>
                   <td>{{product.size}}</td>
                   <td>{{product.SellPrice}}</td>
-                  <td>
-                    <button
-                      type="button"
-                      class="btn btn-outline-danger"
-                      @click.stop.prevent="handleDelete(product.ProductId)"
-                    >刪除</button>
-                  </td>
                 </tr>
               </tbody>
             </table>
@@ -118,10 +114,7 @@
       </div>
       <div class="container">
         <a href="#" class="btn btn-outline-success mx-3 my-5" @click="$router.go(-1)">回上一頁</a>
-        <router-link
-          :to="{name:'adminOrderEdit', params:{id:$route.params.id}}"
-          class="btn btn-outline-dark mx-3 my-5"
-        >確認編輯</router-link>
+<button type="submit" class="btn btn-outline-dark mx-3">確認修改</button>
       </div>
     </form>
   </div>
@@ -138,6 +131,7 @@ export default {
     return {
       order: {
         id: 0,
+        UserId:"",
         sn: "",
         totalPrice: 0,
         receiverName: "",
@@ -181,6 +175,7 @@ export default {
         this.order = {
           id: data.order.id,
           sn: data.order.sn,
+          UserId: data.order.UserId,
           totalPrice: data.order.total_price,
           receiverName: data.order.receiver_name,
           receiverAddress: data.order.address,
@@ -201,7 +196,35 @@ export default {
         });
       }
     },
-    handleDelete() {}
+    async putAdminOrder(id) {
+      try {
+        let e = window.event;
+        const form = e.target;
+        const formData = new FormData(form);
+        const { data, statusText} = await adminAPI.orders.put({
+          id,
+          formData
+        })
+
+        // console.log(data)
+        // for (let [name, value] of formData.entries()) {
+        //   console.log(name + ": " + value);
+        // }
+        // console.log(id);
+
+        if (statusText !== "OK" || data.status !== "OK") {
+          throw new Error(statusText);
+        }
+
+        this.$router.push({name:"adminOrders"});
+      } catch (error) {
+        // Toast.fire({
+        //   type:"error",
+        //   title:"編輯訂單資料失敗"
+        // })
+        console.log(error)
+      }
+    }
   }
 };
 </script>
