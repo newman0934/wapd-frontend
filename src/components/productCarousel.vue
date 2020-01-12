@@ -14,51 +14,21 @@
       </div>
     </div>
 
-    <div id="indexProductSlider" class="carousel slide mt-2" data-ride="carousel">
-      <!-- The slideshow -->
-      <div class="carousel-inner no-padding">
-        <div class="carousel-item active">
-          <div v-for="image in images" :key="image.id" class="col-xs-2 col-sm-2 col-md-2">
-            <div class="card">
-              <vue-load-image>
-                <img
-                  slot="image"
-                  class="card-img-top"
-                  :src="image.url"
-                  @click.stop.prevent="toggleImageUrl(image.url)"
-                />
-                <img slot="preloader" class="card-img-top" src="./../static/1260x750.png" />
-                <div slot="error" class="card-img-top">圖片下載失敗</div>
-              </vue-load-image>
-            </div>
-          </div>
-          <!-- <div class="col-xs-2 col-sm-2 col-md-2">
-            <div class="card">
-              <img
-                class="card-img-top"
-                src="https://picsum.photos/id/1004/5616/3744"
-                @click.stop.prevent="toggleImageUrl('https://picsum.photos/id/1004/5616/3744')"
-              />
-            </div>
-          </div>
-          <div class="col-xs-2 col-sm-2 col-md-2">
-            <div class="card">
-              <img
-                class="card-img-top"
-                src="https://picsum.photos/id/1000/5626/3635"
-                @click.stop.prevent="toggleImageUrl('https://picsum.photos/id/1000/5626/3635')"
-              />
-            </div>
-          </div>-->
+    <div class="row mt-2 mb-2">
+      <div v-for="image in images" :key="image.id" class="col-xs-2 col-sm-2 col-md-2">
+        <div class="card">
+          <vue-load-image>
+            <img
+              slot="image"
+              class="card-img-top"
+              :src="image.url"
+              @click.stop.prevent="toggleImageUrl(image.url)"
+            />
+            <img slot="preloader" class="card-img-top" src="./../static/1260x750.png" />
+            <div slot="error" class="card-img-top">圖片下載失敗</div>
+          </vue-load-image>
         </div>
       </div>
-      <!-- Left and right controls -->
-      <a class="carousel-control-prev" href="#indexProductSlider" data-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
-      </a>
-      <a class="carousel-control-next" href="#indexProductSlider" data-slide="next">
-        <span class="carousel-control-next-icon"></span>
-      </a>
     </div>
   </div>
 </template>
