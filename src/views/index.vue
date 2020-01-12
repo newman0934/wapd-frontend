@@ -10,6 +10,7 @@
         </div>
       </div>
     </div>
+    <hr />
     <index-category></index-category>
   </div>
 </template>
