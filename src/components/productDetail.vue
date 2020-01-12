@@ -146,7 +146,6 @@ export default {
     currentURL() {
       const baseURL = "https://newman0934.github.io/wapd-frontend/#";
       let path = this.$route.path;
-      console.log(baseURL + path);
       return baseURL + path;
       // return "https://www.chickimmiu.com/products/t1901132";
     }
