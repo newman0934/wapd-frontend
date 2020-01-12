@@ -14,8 +14,8 @@
                 <input
                   type="text"
                   v-model="order.receiverName"
-                  name="name"
-                  id="name"
+                  name="receiver_name"
+                  id="receiver_name"
                   class="name form-control"
                 />
               </td>
@@ -37,7 +37,7 @@
               <td><input type="text" disabled name="paymentMethod" id="paymentMethod" class="paymentMethod form-control" v-model="order.paymentMethod"></td>
               <td class="font-weight-bold">付款狀態</td>
               <td>
-                <select class="form-control" v-model="order.paymentStatus" id="paymentStatus" name="paymentStatus">
+                <select class="form-control" v-model="order.paymentStatus" id="payment_status" name="payment_status">
                   <option value="0">未付款</option>
                   <option value="1">付款成功</option>
                   <option value="2">付款失敗</option>
@@ -47,7 +47,7 @@
             </tr>
             <tr>
               <td class="font-weight-bold">配送方式</td>
-              <td><select class="form-control" id="shippingMethod" name="shippingMethod" v-model="order.shippingMethod">
+              <td><select class="form-control" id="shipping_method" name="shipping_method" v-model="order.shippingMethod">
                 <option value="0">宅配</option>
                 <option value="1">超商</option>
                 <option value="2">超商</option>
@@ -56,8 +56,8 @@
               <td>
                 <input
                   type="text"
-                  name="shippingAddress"
-                  id="shippingAddress"
+                  name="address"
+                  id="address"
                   class="shippingAddress form-control"
                   v-model="order.receiverAddress"
                 />
@@ -206,17 +206,17 @@ export default {
           formData
         })
 
-        console.log(data)
-        for (let [name, value] of formData.entries()) {
-          console.log(name + ": " + value);
-        }
-        console.log(id);
+        // console.log(data)
+        // for (let [name, value] of formData.entries()) {
+        //   console.log(name + ": " + value);
+        // }
+        // console.log(id);
 
         if (statusText !== "OK" || data.status !== "OK") {
           throw new Error(statusText);
         }
 
-        // this.$router.push({name:"adminOrders"});
+        this.$router.push({name:"adminOrders"});
       } catch (error) {
         // Toast.fire({
         //   type:"error",
