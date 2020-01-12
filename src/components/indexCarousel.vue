@@ -8,7 +8,17 @@
       </ol>
       <div class="carousel-inner">
         <div class="carousel-item active">
-          <img src="https://lorempixel.com/1200/400" class="d-block w-100" />
+          <vue-load-image>
+            <img slot="image" src="https://lorempixel.com/1200/400" class="d-block w-100" />
+            <img
+              slot="preloader"
+              class="d-block"
+              height="500px"
+              width="100%"
+              src="./../static/1260x750.png"
+            />
+            <div slot="error" class="cd-block w-100">圖片下載失敗</div>
+          </vue-load-image>
         </div>
         <div class="carousel-item">
           <img src="https://lorempixel.com/1200/400" class="d-block w-100" />
@@ -29,6 +39,11 @@
   </div>
 </template>
 <script>
-export default {};
+import VueLoadImage from "vue-load-image";
+export default {
+  components: {
+    "vue-load-image": VueLoadImage
+  }
+};
 </script>
 
