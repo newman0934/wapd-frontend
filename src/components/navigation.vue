@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-12">
           <nav class="navbar navbar-expand-md">
-            <a class="navbar-brand" href="#">WAP-D</a>
+            <router-link class="navbar-brand" :to="{name:'index'}">WAP-D</router-link>
 
             <button
               class="navbar-toggler"
@@ -20,7 +20,7 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="navbar-nav ml-auto">
-                <li class="nav-item pl-4 m-auto">
+                <!-- <li class="nav-item pl-4 m-auto">
                   <form class="form-inline search">
                     <input
                       class="form-control mr-sm-2"
@@ -32,12 +32,12 @@
                       <font-awesome-icon icon="search" size="1x" />
                     </button>
                   </form>
-                </li>
-                <li class="nav-item pl-4 my-auto">
+                </li> -->
+                <!-- <li class="nav-item pl-4 my-auto">
                   <a class="nav-link" href="#">HOME</a>
-                </li>
+                </li> -->
                 <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
-                  <a class="nav-link" href="#">最新商品</a>
+                  <router-link class="nav-link" :to="{name:'about'}">關於我們</router-link>
                 </li>
 
                 <li class="nav-item dropdown my-auto pl-4 pl-md-0 ml-0 ml-md-4">
@@ -48,12 +48,10 @@
                     role="button"
                     aria-haspopup="true"
                     aria-expanded="false"
-                  >store</a>
+                  >購物商城</a>
                   <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Web Design</a>
-                    <a class="dropdown-item" href="#">Web Development</a>
-                    <a class="dropdown-item" href="#">SEO</a>
-                    <a class="dropdown-item" href="#">AI Development</a>
+                    <router-link class="dropdown-item" v-for="category in categories" :key="category.id" :to="{name:'products',query:{categoryId:category.id}}">{{category.category}}</router-link>
+
                   </div>
                 </li>
                 <template v-if="!isAuthenticated || !currentUser.role === 'admin'">
@@ -98,14 +96,39 @@
 </template>
 <script>
 import {mapState} from "vuex"
+import adminAPI from "./../apis/admin"
+import { Toast } from "./../utils/helpers"
 export default {
+  data(){
+    return {
+      categories:[]
+    }
+  },
   computed:{
     ...mapState(["currentUser", "isAuthenticated"])
+  },
+  created(){
+    this.fetchCategories()
   },
   methods: {
     logout(){
       this.$store.commit("revokeAuthentication")
       this.$router.push("/index")
+    },
+    async fetchCategories(){
+      try{
+        const { data, statusText} = await adminAPI.categories.get()
+        
+        if(statusText !== "OK"){
+          throw new Error(statusText)
+        }
+        this.categories = data.categories
+      }catch(error){
+        Toast.fire({
+          type:"error",
+          title:"取得類別資料失敗"
+        })
+      }
     }
   }
 }
@@ -116,6 +139,7 @@ export default {
 }
 .navigation-wrap {
   font-size: 16px;
+  background-color: white;
 }
 .navigation-wrap a,
 .navigation-wrap .navbar-toggler-icon,
