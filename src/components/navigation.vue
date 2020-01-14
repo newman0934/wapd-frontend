@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-12">
           <nav class="navbar navbar-expand-md">
-            <router-link class="navbar-brand" :to="{name:'index'}">WAP-D</router-link>
+            <router-link class="navbar-brand" :to="{name:'index'}"><img src="https://i.imgur.com/Yyxe9Fn.png" alt="logo" style="max-width:100px"></router-link>
 
             <button
               class="navbar-toggler"
@@ -96,7 +96,7 @@
 </template>
 <script>
 import {mapState} from "vuex"
-import adminAPI from "./../apis/admin"
+import categoriesAPI from "./../apis/categories"
 import { Toast } from "./../utils/helpers"
 export default {
   data(){
@@ -117,8 +117,8 @@ export default {
     },
     async fetchCategories(){
       try{
-        const { data, statusText} = await adminAPI.categories.get()
-        
+        const { data, statusText} = await categoriesAPI.getCategories()
+        console.log(data)
         if(statusText !== "OK"){
           throw new Error(statusText)
         }
@@ -138,7 +138,7 @@ export default {
   max-width: 90%;
 }
 .navigation-wrap {
-  font-size: 16px;
+  font-size: 12px;
   background-color: white;
 }
 .navigation-wrap a,

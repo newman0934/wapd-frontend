@@ -191,7 +191,7 @@ body {
   font-family: Helvetica, sans-serif;
   position: relative;
   max-width: 1200px;
-  xmargin: 0 auto;
+  margin: 0 auto;
 }
 
 /* The actual timeline (the vertical ruler) */
