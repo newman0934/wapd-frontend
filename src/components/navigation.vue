@@ -57,9 +57,9 @@
                   </div>
                 </li>
                 <template v-if="!isAuthenticated || !currentUser.role === 'admin'">
-                <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
-                  <router-link class="nav-link" :to="{name:'signIn'}">Login / LogUp</router-link>
-                </li>
+                  <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
+                    <router-link class="nav-link" :to="{name:'signIn'}">Login / LogUp</router-link>
+                  </li>
                 </template>
                 <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
                   <router-link class="nav-link" :to="{name: 'cart', params:{id: currentUser.id}}">
@@ -70,23 +70,29 @@
                   <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
                     <a href="#" class="nav-link my-2 my-sm-0" @click="logout">登出</a>
                   </li>
-                <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
-                  <router-link class="nav-link" :to="{name: 'orders', params:{id: currentUser.id}}">
-                    <font-awesome-icon icon="user" size="2x" />
-                  </router-link>
-                </li>
-                <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
-                  <router-link class="nav-link" :to="{name: 'userWishList', params:{id: currentUser.id}}">
-                    <font-awesome-icon icon="heart" size="2x" />
-                  </router-link>
-                </li>
+                  <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
+                    <router-link
+                      class="nav-link"
+                      :to="{name: 'orders', params:{id: currentUser.id}}"
+                    >
+                      <font-awesome-icon icon="user" size="2x" />
+                    </router-link>
+                  </li>
+                  <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
+                    <router-link
+                      class="nav-link"
+                      :to="{name: 'userWishList', params:{id: currentUser.id}}"
+                    >
+                      <font-awesome-icon icon="heart" size="2x" />
+                    </router-link>
+                  </li>
                 </template>
                 <template v-if="currentUser.role === 'admin'">
-                <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
-                  <router-link class="nav-link" :to="{name: 'adminOrders'}">
-                    <font-awesome-icon icon="user-cog" size="2x" />
-                  </router-link>
-                </li>
+                  <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
+                    <router-link class="nav-link" :to="{name: 'adminOrders'}">
+                      <font-awesome-icon icon="user-cog" size="2x" />
+                    </router-link>
+                  </li>
                 </template>
               </ul>
             </div>
@@ -97,18 +103,18 @@
   </div>
 </template>
 <script>
-import {mapState} from "vuex"
+import { mapState } from "vuex";
 export default {
-  computed:{
+  computed: {
     ...mapState(["currentUser", "isAuthenticated"])
   },
   methods: {
-    logout(){
-      this.$store.commit("revokeAuthentication")
-      this.$router.push("/index")
+    logout() {
+      this.$store.commit("revokeAuthentication");
+      this.$router.push("/index");
     }
   }
-}
+};
 </script>
 <style>
 .container {
