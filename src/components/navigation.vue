@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-12">
           <nav class="navbar navbar-expand-md">
-            <a class="navbar-brand" href="#">WAP-D</a>
+            <a class="navbar-brand" href="#" @click="gotoContact('#contact')">WAP-D</a>
 
             <button
               class="navbar-toggler"
@@ -112,6 +112,9 @@ export default {
     logout() {
       this.$store.commit("revokeAuthentication");
       this.$router.push("/index");
+    },
+    gotoContact(el) {
+      this.$router.push({ name: "about", query: { el } });
     }
   }
 };
