@@ -4,9 +4,9 @@
       <div class="row">
         <div class="col-12">
           <nav class="navbar navbar-expand-md">
-            <a class="navbar-brand" href="#" @click="gotoContact('#contact')">
+            <router-link class="navbar-brand col-2" :to="{name:'index'}">
               <img src="https://i.imgur.com/Yyxe9Fn.png" alt="logo" style="max-width:100px" />
-            </a>
+            </router-link>
 
             <button
               class="navbar-toggler"
@@ -20,7 +20,7 @@
               <font-awesome-icon class="bar" icon="bars" size="2x" />
             </button>
 
-            <div class="collapse navbar-collapse col-5" id="navbarSupportedContent">
+            <div class="collapse navbar-collapse col-6" id="navbarSupportedContent">
               <ul class="navbar-nav mx-auto">
                 <!-- <li class="nav-item pl-4 m-auto">
                   <form class="form-inline search">
@@ -65,7 +65,7 @@
                   <router-link class="nav-link" :to="{name:'index'}">FAQ</router-link>
                 </li>
                 <li class="nav-item pl-4 my-auto">
-                  <router-link class="nav-link" :to="{name:'index'}">聯絡我們</router-link>
+                  <a class="navbar-link" href="#" @click.stop.prevent="gotoContact('#contact')">聯絡我們</a>
                 </li>
               </ul>
             </div>
@@ -159,7 +159,6 @@ export default {
     },
     gotoContact(el) {
       this.$router.push({ name: "about", query: { el } });
-
     }
   }
 };
