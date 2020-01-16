@@ -9,11 +9,13 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import store from './store'
 import "./vee-validate.js"
 import SocialSharing from 'vue-social-sharing'
+import VueScrollTo from 'vue-scrollto'
 
 library.add(faUser, faSearch, faBars, faShoppingCart, faFacebook, faLine, faInstagram, faHeart, farHeart, faUserCog, faUserLock, faKey, faSadTear, faCommentDollar, faQuestion, faMapMarker, faPhone, faEnvelope);
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.use(SocialSharing)
+Vue.use(VueScrollTo)
 
 Vue.config.productionTip = false
 

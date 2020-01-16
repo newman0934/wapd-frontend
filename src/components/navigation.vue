@@ -4,9 +4,9 @@
       <div class="row">
         <div class="col-12">
           <nav class="navbar navbar-expand-md">
-            <router-link class="navbar-brand col-3 justify-content-start d-flex" :to="{name:'index'}">
-              <img src="https://i.imgur.com/Yyxe9Fn.png" alt="logo" style="max-width:100px" />
-            </router-link>
+
+            <a class="navbar-brand" href="#" @click="gotoContact('#contact')"><img src="https://i.imgur.com/Yyxe9Fn.png" alt="logo" style="max-width:100px" /></a>
+
 
             <button
               class="navbar-toggler"
@@ -60,6 +60,7 @@
                     >{{category.category}}</router-link>
                   </div>
                 </li>
+
                 <li class="nav-item pl-4 my-auto">
                   <router-link class="nav-link" :to="{name:'index'}">FAQ</router-link>
                 </li>
@@ -71,6 +72,7 @@
 
             <div class="collapse navbar-collapse col-4" id="navbarSupportedContent">
               <ul class="navbar-nav ml-auto">
+
                 <template v-if="!isAuthenticated || !currentUser.role === 'admin'">
                   <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
                     <router-link class="nav-link" :to="{name:'signIn'}">Login / LogUp</router-link>
@@ -119,6 +121,7 @@
 </template>
 <script>
 import { mapState } from "vuex";
+
 import categoriesAPI from "./../apis/categories";
 import { Toast } from "./../utils/helpers";
 export default {
@@ -127,6 +130,7 @@ export default {
       categories: []
     };
   },
+
   computed: {
     ...mapState(["currentUser", "isAuthenticated"])
   },
@@ -138,6 +142,7 @@ export default {
       this.$store.commit("revokeAuthentication");
       this.$router.push("/index");
     },
+
     async fetchCategories() {
       try {
         const { data, statusText } = await categoriesAPI.getCategories();
@@ -151,7 +156,11 @@ export default {
           type: "error",
           title: "取得類別資料失敗"
         });
-      }
+      },
+
+    gotoContact(el) {
+      this.$router.push({ name: "about", query: { el } });
+
     }
   }
 };
