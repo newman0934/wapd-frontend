@@ -10,7 +10,7 @@
               <h3>新增類別：</h3>
             </div>
             <div class="col-auto">
-              <input v-model="newCategoryName" type="text" class="form-control" placeholder="請輸入類別" />
+              <input v-model="newCategoryName" type="text" class="form-control" required placeholder="請輸入類別" />
             </div>
             <div class="col-auto">
               <button
@@ -43,6 +43,7 @@
                   v-model="category.category"
                   type="text"
                   class="form-control"
+                  required="required"
                 />
                 <span
                   v-show="category.isEditing"
@@ -126,6 +127,16 @@ export default {
     },
     async createCategory() {
       try {
+        if (
+          !this.newCategoryName
+        ) {
+          Toast.fire({
+            type: "warning",
+            title: "請輸入類別"
+          });
+          return;
+        }
+
         this.$store.dispatch("updateProcessing", true);
         const { data, statusText } = await adminAPI.categories.create({
           category: this.newCategoryName

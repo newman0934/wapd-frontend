@@ -15,6 +15,7 @@
                 name="productSize"
                 placeholder="商品尺寸"
                 v-model="productStatus.size"
+                required="required"
               />
             </div>
           </div>
@@ -28,6 +29,7 @@
                 name="productColor"
                 placeholder="商品顏色"
                 v-model="productStatus.color"
+                required="required"
               />
             </div>
           </div>
@@ -41,6 +43,7 @@
                 name="productStock"
                 placeholder="商品庫存"
                 v-model="productStatus.stock"
+                required="required"
               />
             </div>
           </div>
@@ -118,6 +121,13 @@ export default {
     },
     async putAdminProductStatus(id, stock_id) {
       try {
+        if(!this.productStatus.color || !this.productStatus.size || !this.productStatus.stock){
+          Toast.fire({
+            type:"error",
+            title:"請輸入顏色、尺寸與庫存"
+          })
+          return
+        }
         this.$store.dispatch("updateProcessing", true);
         const { data, statusText } = await adminAPI.products.putStatus({
           id,

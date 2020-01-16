@@ -21,7 +21,12 @@
               />
             </div>
             <div class="col-auto">
-              <button type="button" class="btn btn-outline-primary" @click.stop.prevent="createCoupon" :disabled="isProcessing">確認新增</button>
+              <button
+                type="button"
+                class="btn btn-outline-primary"
+                @click.stop.prevent="createCoupon"
+                :disabled="isProcessing"
+              >確認新增</button>
             </div>
           </div>
         </form>
@@ -98,6 +103,13 @@ export default {
     },
     async createCoupon() {
       try {
+        if (!this.newCouponCode || !this.newCouponAmount) {
+          Toast.fire({
+            type: "warning",
+            title: "請輸入優惠碼編號跟金額"
+          });
+          return;
+        }
         this.$store.dispatch("updateProcessing", true);
         const { data, statusText } = await adminAPI.coupons.post({
           couponCode: this.newCouponCode,
