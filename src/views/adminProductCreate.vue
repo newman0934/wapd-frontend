@@ -128,7 +128,7 @@ export default {
         autoProceed: false,
         debug: true,
         restrictions: {
-          maxFileSize: null,
+          maxFileSize: 50 * 1024 * 1024,
           maxNumberOfFiles: 10,
           minNumberOfFiles: 1,
           allowedFileTypes: ["image/*"]
@@ -150,7 +150,7 @@ export default {
         target: ".DashboardContainer",
         replaceTargetContent: true,
         showProgressDetails: true,
-        note: "Images and video only, 1–10 files, up to 1 MB",
+        note: "Images and video only, 1–10 files",
         height: 470,
         metaFields: [
           { id: "name", name: "Name", placeholder: "file name" },
