@@ -66,6 +66,14 @@ export default {
   methods: {
     async addProductStatus(productId) {
       try {
+        if (!this.newColor || !this.newSize) {
+          Toast.fire({
+            type: "error",
+            title: "請輸入顏色、尺寸"
+          });
+          return;
+        }
+
         this.$store.dispatch("updateProcessing", true);
         const { data, statusText } = await adminAPI.products.postStatus({
           productId,
@@ -76,7 +84,10 @@ export default {
           throw new Error(statusText);
         }
         this.$store.dispatch("updateProcessing", false);
-        this.$router.push({name:"adminProductStatus",params:{id:productId}});
+        this.$router.push({
+          name: "adminProductStatus",
+          params: { id: productId }
+        });
       } catch (error) {
         this.$store.dispatch("updateProcessing", false);
         Toast.fire({

@@ -12,6 +12,7 @@
             name="name"
             placeholder="商品名稱"
             v-model="product.name"
+            required="required"
           />
         </div>
         <div class="form-group col-md-6">
@@ -41,6 +42,7 @@
             id="originPrice"
             class="form-control"
             placeholder="商品原價"
+            required="required"
           />
         </div>
         <div class="form-group col-md-6">
@@ -52,6 +54,7 @@
             class="form-control"
             placeholder="商品售價"
             v-model="product.sellPrice"
+            required="required"
           />
         </div>
         <div class="form-group col-md-12">
