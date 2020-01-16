@@ -4,7 +4,9 @@
       <div class="row">
         <div class="col-12">
           <nav class="navbar navbar-expand-md">
-            <router-link class="navbar-brand" :to="{name:'index'}"><img src="https://i.imgur.com/Yyxe9Fn.png" alt="logo" style="max-width:100px"></router-link>
+            <router-link class="navbar-brand col-3 justify-content-start d-flex" :to="{name:'index'}">
+              <img src="https://i.imgur.com/Yyxe9Fn.png" alt="logo" style="max-width:100px" />
+            </router-link>
 
             <button
               class="navbar-toggler"
@@ -18,8 +20,8 @@
               <font-awesome-icon class="bar" icon="bars" size="2x" />
             </button>
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="navbar-nav ml-auto">
+            <div class="collapse navbar-collapse col-5" id="navbarSupportedContent">
+              <ul class="navbar-nav mx-auto">
                 <!-- <li class="nav-item pl-4 m-auto">
                   <form class="form-inline search">
                     <input
@@ -32,10 +34,10 @@
                       <font-awesome-icon icon="search" size="1x" />
                     </button>
                   </form>
-                </li> -->
-                <!-- <li class="nav-item pl-4 my-auto">
-                  <a class="nav-link" href="#">HOME</a>
-                </li> -->
+                </li>-->
+                <li class="nav-item pl-4 m-auto">
+                  <router-link class="nav-link" :to="{name:'index'}">HOME</router-link>
+                </li>
                 <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
                   <router-link class="nav-link" :to="{name:'about'}">關於我們</router-link>
                 </li>
@@ -50,14 +52,29 @@
                     aria-expanded="false"
                   >購物商城</a>
                   <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <router-link class="dropdown-item" v-for="category in categories" :key="category.id" :to="{name:'products',query:{categoryId:category.id}}">{{category.category}}</router-link>
-
+                    <router-link
+                      class="dropdown-item"
+                      v-for="category in categories"
+                      :key="category.id"
+                      :to="{name:'products',query:{categoryId:category.id}}"
+                    >{{category.category}}</router-link>
                   </div>
                 </li>
-                <template v-if="!isAuthenticated || !currentUser.role === 'admin'">
-                <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
-                  <router-link class="nav-link" :to="{name:'signIn'}">Login / LogUp</router-link>
+                <li class="nav-item pl-4 my-auto">
+                  <router-link class="nav-link" :to="{name:'index'}">FAQ</router-link>
                 </li>
+                <li class="nav-item pl-4 my-auto">
+                  <router-link class="nav-link" :to="{name:'index'}">聯絡我們</router-link>
+                </li>
+              </ul>
+            </div>
+
+            <div class="collapse navbar-collapse col-4" id="navbarSupportedContent">
+              <ul class="navbar-nav ml-auto">
+                <template v-if="!isAuthenticated || !currentUser.role === 'admin'">
+                  <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
+                    <router-link class="nav-link" :to="{name:'signIn'}">Login / LogUp</router-link>
+                  </li>
                 </template>
                 <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
                   <router-link class="nav-link" :to="{name: 'cart', params:{id: currentUser.id}}">
@@ -68,23 +85,29 @@
                   <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
                     <a href="#" class="nav-link my-2 my-sm-0" @click="logout">登出</a>
                   </li>
-                <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
-                  <router-link class="nav-link" :to="{name: 'orders', params:{id: currentUser.id}}">
-                    <font-awesome-icon icon="user" size="2x" />
-                  </router-link>
-                </li>
-                <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
-                  <router-link class="nav-link" :to="{name: 'userWishList', params:{id: currentUser.id}}">
-                    <font-awesome-icon icon="heart" size="2x" />
-                  </router-link>
-                </li>
+                  <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
+                    <router-link
+                      class="nav-link"
+                      :to="{name: 'orders', params:{id: currentUser.id}}"
+                    >
+                      <font-awesome-icon icon="user" size="2x" />
+                    </router-link>
+                  </li>
+                  <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
+                    <router-link
+                      class="nav-link"
+                      :to="{name: 'userWishList', params:{id: currentUser.id}}"
+                    >
+                      <font-awesome-icon icon="heart" size="2x" />
+                    </router-link>
+                  </li>
                 </template>
                 <template v-if="currentUser.role === 'admin'">
-                <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
-                  <router-link class="nav-link" :to="{name: 'adminOrders'}">
-                    <font-awesome-icon icon="user-cog" size="2x" />
-                  </router-link>
-                </li>
+                  <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
+                    <router-link class="nav-link" :to="{name: 'adminOrders'}">
+                      <font-awesome-icon icon="user-cog" size="2x" />
+                    </router-link>
+                  </li>
                 </template>
               </ul>
             </div>
@@ -95,43 +118,43 @@
   </div>
 </template>
 <script>
-import {mapState} from "vuex"
-import categoriesAPI from "./../apis/categories"
-import { Toast } from "./../utils/helpers"
+import { mapState } from "vuex";
+import categoriesAPI from "./../apis/categories";
+import { Toast } from "./../utils/helpers";
 export default {
-  data(){
+  data() {
     return {
-      categories:[]
-    }
+      categories: []
+    };
   },
-  computed:{
+  computed: {
     ...mapState(["currentUser", "isAuthenticated"])
   },
-  created(){
-    this.fetchCategories()
+  created() {
+    this.fetchCategories();
   },
   methods: {
-    logout(){
-      this.$store.commit("revokeAuthentication")
-      this.$router.push("/index")
+    logout() {
+      this.$store.commit("revokeAuthentication");
+      this.$router.push("/index");
     },
-    async fetchCategories(){
-      try{
-        const { data, statusText} = await categoriesAPI.getCategories()
-        console.log(data)
-        if(statusText !== "OK"){
-          throw new Error(statusText)
+    async fetchCategories() {
+      try {
+        const { data, statusText } = await categoriesAPI.getCategories();
+        console.log(data);
+        if (statusText !== "OK") {
+          throw new Error(statusText);
         }
-        this.categories = data.categories
-      }catch(error){
+        this.categories = data.categories;
+      } catch (error) {
         Toast.fire({
-          type:"error",
-          title:"取得類別資料失敗"
-        })
+          type: "error",
+          title: "取得類別資料失敗"
+        });
       }
     }
   }
-}
+};
 </script>
 <style>
 .container {

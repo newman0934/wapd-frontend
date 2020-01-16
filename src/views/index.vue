@@ -8,10 +8,11 @@
         <div class="row">
           <productCard v-for="product in products" :key="product.id" :initial-product="product" />
         </div>
+            <hr />
+    <index-category></index-category>
       </div>
     </div>
-    <hr />
-    <index-category></index-category>
+
   </div>
 </template>
 <script>
