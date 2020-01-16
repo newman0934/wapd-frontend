@@ -134,9 +134,7 @@ export default {
     ...mapState(["currentUser", "isAuthenticated"])
   },
   created() {
-    this.$store.dispatch("updateProcessing", false);
     this.fetchCategories();
-    
   },
   methods: {
     logout() {
