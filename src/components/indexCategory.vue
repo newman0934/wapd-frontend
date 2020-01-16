@@ -5,7 +5,7 @@
         <div class="single-banner mb-20 mb-3">
           <div class="banner-img">
             <vue-load-image>
-              <img slot="image" src="./../static/IMG_6021_mr1576267182597.jpg" />
+              <img slot="image" src="https://i.imgur.com/29i3jLA.jpg" />
               <img slot="preloader" height="323px" width="275px" src="./../static/1260x750.png" />
               <div slot="error" class="cd-block w-100">圖片下載失敗</div>
             </vue-load-image>
@@ -43,7 +43,7 @@
         <div class="single-banner mb-3">
           <div class="banner-img">
             <vue-load-image>
-              <img slot="image" src="./../static/IMG_6244_mh1576255490303.jpg" />
+              <img slot="image" src="https://i.imgur.com/qVBy4mB.jpg" />
               <img slot="preloader" height="323px" width="275px" src="./../static/1260x750.png" />
               <div slot="error" class="cd-block w-100">圖片下載失敗</div>
             </vue-load-image>
@@ -54,7 +54,7 @@
       <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
         <div class="single-banner">
           <vue-load-image>
-            <img slot="image" src="./../static/IMG_6215_mh1576254868722.jpg" />
+            <img slot="image" src="https://i.imgur.com/qeIQATh.jpg" />
             <img slot="preloader" height="550px" width="580px" src="./../static/1260x750.png" />
             <div slot="error" class="cd-block w-100">圖片下載失敗</div>
           </vue-load-image>
