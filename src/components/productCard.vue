@@ -2,7 +2,7 @@
   <div class="col-md-6 col-lg-4">
     <div class="card mb-3" id="product-card">
       <router-link :to="{name:'product', params:{id:product.id}}">
-        <div class="image-frame border rounded" style="height:23rem;line-height: 23rem;">
+        <div class="image-frame border rounded" style="height:31.5rem;line-height: 31.5rem;">
           <div style="vertical-align: middle;">
             <vue-load-image>
               <img
@@ -10,7 +10,7 @@
                 class="img-fluid"
                 :src="cardImg"
                 alt="card-image-cap"
-                style="max-height=23rem;"
+                style="max-height=31.5rem;"
                 @mouseover="imgMouseover(product.image)"
                 @mouseleave="imgMouseleave(product.image)"
               />
