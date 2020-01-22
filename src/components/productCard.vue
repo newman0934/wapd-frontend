@@ -2,18 +2,24 @@
   <div class="col-md-6 col-lg-4">
     <div class="card mb-3" id="product-card">
       <router-link :to="{name:'product', params:{id:product.id}}">
-        <vue-load-image>
-          <img
-            slot="image"
-            class="card-img-top"
-            :src="cardImg"
-            alt="card-image-cap"
-            @mouseover="imgMouseover(product.image)"
-            @mouseleave="imgMouseleave(product.image)"
-          />
-          <img slot="preloader" class="card-img-top" src="./../static/1260x750.png" />
-          <div slot="error" class="card-img-top">圖片下載失敗</div>
-        </vue-load-image>
+        <div class="image-frame border rounded" style="height:23rem;line-height: 23rem;">
+          <div style="vertical-align: middle;">
+            <vue-load-image>
+              <img
+                slot="image"
+                class="img-fluid"
+                :src="cardImg"
+                alt="card-image-cap"
+                style="max-height=23rem;"
+                @mouseover="imgMouseover(product.image)"
+                @mouseleave="imgMouseleave(product.image)"
+              />
+              <img slot="preloader" class="img-fluid" src="./../static/1260x750.png" />
+              <div slot="error" class="align-middle">圖片下載失敗</div>
+            </vue-load-image>
+          </div>
+        </div>
+
         <div class="card-body p-1">
           <p class="card-title text-left text-dark">{{product.name}}</p>
         </div>
