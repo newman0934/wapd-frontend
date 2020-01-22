@@ -5,7 +5,7 @@
         <div class="carousel-inner">
           <div v-for="image in images" :key="image.id" class="carousel-item active">
             <vue-load-image>
-              <img slot="image" :src="imageUrl || image.url" class="d-block w-100" alt="slide" />
+              <img slot="image" :src="imageUrl" class="d-block w-100" alt="slide" />
               <img slot="preloader" class="d-block w-100" src="./../static/loading.gif" />
               <div slot="error" class="d-block w-100">圖片下載失敗</div>
             </vue-load-image>
@@ -47,9 +47,11 @@ export default {
   data() {
     return {
       images: this.productImages,
-      imageUrl: "",
-      isLoading: false
+      imageUrl: ""
     };
+  },
+  created() {
+    this.imageUrl = this.images[0].url;
   },
   watch: {
     productImages(images) {
