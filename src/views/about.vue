@@ -75,7 +75,7 @@
       </div>
     </section>
     <hr />
-    <section class="store-info py-4 container">
+    <section class="store-info py-4 container" id="contact">
       <h2>我們的店</h2>
       <div class="row mt-4">
         <div class="col-sm-6">
@@ -111,6 +111,21 @@
     </section>
   </div>
 </template>
+<script>
+export default {
+  mounted() {
+    const { el } = this.$route.query;
+    if (el) {
+      this.gotoElement(el);
+    }
+  },
+  methods: {
+    gotoElement(el) {
+      return this.$scrollTo(el, 500);
+    }
+  }
+};
+</script>
 <style lang="css" scoped>
 @import url("https://fonts.googleapis.com/css?family=Josefin+Sans:400,400i,600,600i");
 html,
@@ -191,7 +206,7 @@ body {
   font-family: Helvetica, sans-serif;
   position: relative;
   max-width: 1200px;
-  xmargin: 0 auto;
+  margin: 0 auto;
 }
 
 /* The actual timeline (the vertical ruler) */

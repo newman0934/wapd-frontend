@@ -44,6 +44,7 @@
               <th>顏色</th>
               <th>尺寸</th>
               <th>價格</th>
+              <th>數量</th>
             </tr>
           </thead>
           <tbody>
@@ -53,6 +54,7 @@
               <td>{{product.color}}</td>
               <td>{{product.size}}</td>
               <td>{{product.SellPrice}}</td>
+              <td>{{product.quantity}}</td>
             </tr>
           </tbody>
         </table>
@@ -65,12 +67,17 @@
         </h3>
         <h3 class="my-2">
           折扣：-
-          <span>{{coupon}}</span>
+          <span>{{coupon.discount_amount}}</span>
         </h3>
         <h3 class="my-2">
-          金額：
+          運費：
+          <span>100</span>
+        </h3>
+        <h3 class="my-2">
+          總計：
           <span>{{order.totalPrice}}</span>
         </h3>
+        
       </div>
       <div class="container text-left">
         <h3>備註</h3>
@@ -117,8 +124,8 @@ export default {
     this.fetchAdminOrder(order_id);
   },
   beforeRouteUpdate(to, from, next) {
-    const { id } = to.params;
-    this.fetchAdminOrder(id);
+    const { order_id } = to.params;
+    this.fetchAdminOrder(order_id);
     next();
   },
   methods: {
@@ -131,8 +138,10 @@ export default {
         if (statusText !== "OK") {
           throw new Error(statusText);
         }
-        let sum = 0;
-        let priceArray = data.order.orderItems.map(item => item.SellPrice);
+        let sum = 0
+        let priceArray = data.order.orderItems.map(item => {
+          return item.SellPrice * item.quantity;
+        });
         for (let i = 0; i < priceArray.length; i++) {
           sum += priceArray[i];
         }
@@ -149,7 +158,7 @@ export default {
           paymentMethod: data.order.payment_method,
           comment: data.order.comment
         };
-        this.coupon = data.order.coupon || 0;
+        this.coupon = data.order.coupon || { coupon_code: "沒有使用優惠卷", discount_amount: 0};
         this.productItems = data.order.orderItems;
         this.originPrice = sum;
       } catch (error) {

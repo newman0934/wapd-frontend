@@ -12,6 +12,7 @@
             name="name"
             placeholder="商品名稱"
             v-model="product.name"
+            required="required"
           />
         </div>
         <div class="form-group col-md-6">
@@ -41,6 +42,7 @@
             id="originPrice"
             class="form-control"
             placeholder="商品原價"
+            required="required"
           />
         </div>
         <div class="form-group col-md-6">
@@ -52,6 +54,7 @@
             class="form-control"
             placeholder="商品售價"
             v-model="product.sellPrice"
+            required="required"
           />
         </div>
         <div class="form-group col-md-12">
@@ -125,7 +128,7 @@ export default {
         autoProceed: false,
         debug: true,
         restrictions: {
-          maxFileSize: 1000000,
+          maxFileSize: 50 * 1024 * 1024,
           maxNumberOfFiles: 10,
           minNumberOfFiles: 1,
           allowedFileTypes: ["image/*"]
@@ -147,7 +150,7 @@ export default {
         target: ".DashboardContainer",
         replaceTargetContent: true,
         showProgressDetails: true,
-        note: "Images and video only, 1–10 files, up to 1 MB",
+        note: "Images and video only, 1–10 files",
         height: 470,
         metaFields: [
           { id: "name", name: "Name", placeholder: "file name" },
