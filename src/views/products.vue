@@ -79,8 +79,10 @@ export default {
         } else {
           this.products = data.products;
         }
+        if (data.categoryId !== 0) {
+          this.categoryId = data.categoryId;
+        }
         this.categories = data.categories;
-        this.categoryId = data.categoryId;
         this.currentPage = data.page;
         this.totalPage = data.totalPage.length;
         this.$store.dispatch("updateLoading", false);
