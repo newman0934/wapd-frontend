@@ -17,16 +17,18 @@ export default {
     }
   },
   users: {
-    get() {
-      return apiHelper.get("/admins/users");
+    get({ page }) {
+      const searchParams = new URLSearchParams({page})
+      return apiHelper.get(`/admins/users?${searchParams}`);
     },
     getOrder({ id }) {
       return apiHelper.get(`/admins/users/${id}/orders`);
     }
   },
   orders: {
-    get() {
-      return apiHelper.get("/admins/orders");
+    get({ page }) {
+      const searchParams = new URLSearchParams({page})
+      return apiHelper.get(`/admins/orders?${searchParams}`);
     },
     getDetail({ orderId }) {
       return apiHelper.get(`/admins/orders/${orderId}`);
@@ -39,8 +41,9 @@ export default {
     }
   },
   products: {
-    get() {
-      return apiHelper.get("/admins/products");
+    get({ page }) {
+      const searchParams = new URLSearchParams({page})
+      return apiHelper.get(`/admins/products?${searchParams.toString()}`);
     },
     post({ formData, images }) {
       

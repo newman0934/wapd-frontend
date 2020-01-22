@@ -26,19 +26,52 @@
               <td scope="row">{{user.email}}</td>
               <td scope="row">{{user.address}}</td>
               <td scope="row">{{user.role}}</td>
-              <td scope="row"><router-link  class="btn btn-outline-info" :to="{name:'adminUserOrders', params:{ id:user.id }}">歷史訂單</router-link></td>
+              <td scope="row">
+                <router-link
+                  class="btn btn-outline-info"
+                  :to="{name:'adminUserOrders', params:{ id:user.id }}"
+                >歷史訂單</router-link>
+              </td>
             </tr>
           </tbody>
         </table>
       </div>
+      <nav v-if="totalPage > 1" aria-label="Page navigation">
+        <ul class="pagination">
+          <li v-show="previousPage" class="page-item">
+            <router-link
+              class="page-link"
+              aria-label="Previous"
+              :to="{name: 'adminUsers', query: { page: previousPage }}"
+            >
+              <span aria-hidden="true">&laquo;</span>
+            </router-link>
+          </li>
+          <li
+            v-for="page in totalPage"
+            :key="page"
+            :class="['page-item', { active: currentPage === page }]"
+          >
+            <router-link class="page-link" :to="{name: 'adminUsers', query: { page }}">{{ page }}</router-link>
+          </li>
+          <li v-show="nextPage" class="page-item">
+            <router-link
+              class="page-link"
+              :to="{name: 'adminUsers', query: { page: nextPage }}"
+              aria-label="Next"
+            >
+              <span aria-hidden="true">&raquo;</span>
+            </router-link>
+          </li>
+        </ul>
+      </nav>
     </div>
   </div>
 </template>
 <script>
-/* eslint-disable */
 import adminNav from "./../components/adminNav";
-import adminAPI from "./../apis/admin"
-import { Toast} from "./../utils/helpers"
+import adminAPI from "./../apis/admin";
+// import { Toast } from "./../utils/helpers";
 
 export default {
   components: {
@@ -46,27 +79,50 @@ export default {
   },
   data() {
     return {
-      users: []
+      users: [],
+      currentPage: 0,
+      totalPage: 0
+    };
+  },
+  created() {
+    const { page } = this.$route.query;
+    this.fetchUsers({ page });
+  },
+  beforeRouteUpdate(to, from, next) {
+    const { page } = to.query;
+    this.fetchUsers({ page });
+    next();
+  },
+  computed: {
+    previousPage() {
+      return this.currentPage === 1 ? null : this.currentPage - 1;
+    },
+    nextPage() {
+      return this.currentPage + 1 > this.totalPage
+        ? null
+        : this.currentPage + 1;
     }
   },
-  created(){
-    this.fetchUsers()
-  },
-  methods:{
-    async fetchUsers(){
-      try{
-        const {data, statusText} = await adminAPI.users.get()
-
-        if(statusText !== "OK"){
-          throw new Error(statusText)
+  methods: {
+    async fetchUsers({ page = 1 }) {
+      try {
+        const { data, statusText } = await adminAPI.users.get({
+          page
+        });
+        console.log(data);
+        if (statusText !== "OK") {
+          throw new Error(statusText);
         }
 
-        this.users = data.users
-      }catch(error){
-        Toast.fire({
-          type:"error",
-          title:"無法取得會員資料"
-        })
+        this.users = data.users.rows;
+        this.currentPage = data.page;
+        this.totalPage = data.totalPage.length;
+      } catch (error) {
+        // Toast.fire({
+        //   type: "error",
+        //   title: "無法取得會員資料"
+        // });
+        console.log(error)
       }
     }
   }
