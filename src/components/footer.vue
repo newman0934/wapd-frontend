@@ -3,7 +3,7 @@
     <div class="container text-center text-md-left">
       <div class="row py-5">
         <div class="col-md-4 m-auto text-center justify-content-center">
-                    <h5 class="font-weight-bold text-uppercase my-3">潮流資訊</h5>
+          <h5 class="font-weight-bold text-uppercase my-3">潮流資訊</h5>
           <hr />
           <facebook />
         </div>
@@ -45,14 +45,17 @@
               </a>
             </div>
             <div>
-              <a class="mr-4" href="https://www.facebook.com/KGT-%E5%B0%8F%E5%BA%B5%E7%9A%84%E5%BA%97-405388429508237/" target="_blank">
+              <a
+                class="mr-4"
+                href="https://www.facebook.com/KGT-%E5%B0%8F%E5%BA%B5%E7%9A%84%E5%BA%97-405388429508237/"
+                target="_blank"
+              >
                 <font-awesome-icon :icon="['fab', 'facebook']" size="3x" />
               </a>
             </div>
           </div>
         </div>
       </div>
-
     </div>
     <div class="footer-copyright text-center py-3">
       © 2019 Copyright:
@@ -73,7 +76,6 @@ footer {
   background-color: white;
   color: rgb(125, 125, 125);
   font-size: 16px;
-
 }
 
 footer a {
@@ -87,7 +89,7 @@ footer a:hover {
 hr {
   background-color: #222;
 }
-.footer-copyright{
+.footer-copyright {
   background-color: #222;
 }
 </style>

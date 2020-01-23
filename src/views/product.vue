@@ -34,6 +34,7 @@ export default {
   data() {
     return {
       path: {
+        categoryId: -1,
         categoryName: "",
         namd: ""
       },
@@ -80,6 +81,7 @@ export default {
         let wishlist = this.$store.state.wishList;
         //match API to data()
         this.path = {
+          categoryId: data.product.CategoryId,
           categoryName: data.product.category,
           name: data.product.name
         };
