@@ -1,18 +1,22 @@
 <template>
   <div class="py-5">
-    <index-carousel></index-carousel>
-    <div class="w-70">
-      <div class="container col-md-12">
-        <h1>最新商品</h1>
-        <hr />
-        <div class="row">
-          <productCard v-for="product in products" :key="product.id" :initial-product="product" />
+    <div v-if="isLoading">
+      <spinner />
+    </div>
+    <div v-else>
+      <index-carousel></index-carousel>
+      <div class="w-70">
+        <div class="container col-md-12">
+          <h1>最新商品</h1>
+          <hr />
+          <div class="row">
+            <productCard v-for="product in products" :key="product.id" :initial-product="product" />
+          </div>
+          <hr />
+          <index-category></index-category>
         </div>
-            <hr />
-    <index-category></index-category>
       </div>
     </div>
-
   </div>
 </template>
 <script>
@@ -20,13 +24,15 @@ import indexCarousel from "./../components/indexCarousel";
 import indexCategory from "./../components/indexCategory";
 import productCard from "./../components/productCard";
 import productsAPI from "./../apis/products";
+import spinner from "./../components/spinner";
 import { Toast } from "./../utils/helpers";
 
 export default {
   components: {
     indexCarousel,
     indexCategory,
-    productCard
+    productCard,
+    spinner
   },
   data() {
     return {

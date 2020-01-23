@@ -1,6 +1,9 @@
 <template>
   <div class="container py-5">
-    <div class="row">
+    <div v-if="isLoading">
+      <spinner />
+    </div>
+    <div v-else class="row">
       <div class="col-md-2">
         <leftCategoryNav :categories="categories" />
       </div>
@@ -19,7 +22,7 @@
   </div>
 </template>
 <script>
-// import spinner from "./../components/spinner";
+import spinner from "./../components/spinner";
 import leftCategoryNav from "./../components/leftCategoryNav";
 import productCard from "./../components/productCard";
 import productsPagination from "./../components/productsPagination";
@@ -30,7 +33,8 @@ export default {
   components: {
     leftCategoryNav,
     productCard,
-    productsPagination
+    productsPagination,
+    spinner
   },
   data() {
     return {
@@ -75,8 +79,10 @@ export default {
         } else {
           this.products = data.products;
         }
+        if (data.categoryId !== 0) {
+          this.categoryId = data.categoryId;
+        }
         this.categories = data.categories;
-        this.categoryId = data.categoryId;
         this.currentPage = data.page;
         this.totalPage = data.totalPage.length;
         this.$store.dispatch("updateLoading", false);

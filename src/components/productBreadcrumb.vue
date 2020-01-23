@@ -2,15 +2,17 @@
   <div>
     <ul class="breadcrumb">
       <li>
-        <a href="#">Home</a>
+        <router-link :to="{name:'index'}">Home</router-link>
         <span class="divider">></span>
       </li>
       <li>
-        <a href="#">store</a>
+        <router-link :to="{name:'products'}">store</router-link>
         <span class="divider">></span>
       </li>
       <li>
-        <a href="#">{{path.categoryName}}</a>
+        <router-link
+          :to="{name:'products',query:{categoryId:path.categoryId}}"
+        >{{path.categoryName}}</router-link>
         <span class="divider">></span>
       </li>
       <li class="active">{{path.name}}</li>
@@ -24,6 +26,9 @@ export default {
       type: Object,
       required: true
     }
+  },
+  created() {
+    console.log(this.path);
   },
   data() {
     return {
