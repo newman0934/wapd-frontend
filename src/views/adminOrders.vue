@@ -1,7 +1,10 @@
 <template>
   <div>
     <adminNav />
-    <div class="container mb-5">
+    <div v-if="isLoading">
+      <spinner />
+    </div>
+    <div v-else class="container mb-5">
       <div class="text-left">
         <h1>訂單列表</h1>
       </div>
@@ -141,6 +144,7 @@
   </div>
 </template>
 <script>
+import spinner from "./../components/spinner";
 import adminNav from "./../components/adminNav";
 import adminAPI from "./../apis/admin";
 import { Toast } from "./../utils/helpers";
@@ -148,7 +152,8 @@ import ordersAPI from "./../apis/orders";
 import $ from "jquery";
 export default {
   components: {
-    adminNav
+    adminNav,
+    spinner
   },
   data() {
     return {
@@ -178,15 +183,18 @@ export default {
       return this.currentPage + 1 > this.totalPage
         ? null
         : this.currentPage + 1;
+    },
+    isLoading() {
+      return this.$store.state.isLoading;
     }
   },
   methods: {
     async fetchAdminOrders({ page = 1 }) {
       try {
+        this.$store.dispatch("updateLoading", true);
         const { data, statusText } = await adminAPI.orders.get({
           page
         });
-        console.log(data);
         if (statusText !== "OK") {
           throw new Error(statusText);
         }
@@ -194,7 +202,9 @@ export default {
         this.orders = data.orders;
         this.currentPage = data.page;
         this.totalPage = data.totalPage.length;
+        this.$store.dispatch("updateLoading", false);
       } catch (error) {
+        this.$store.dispatch("updateLoading", false);
         Toast.fire({
           type: "error",
           title: "無法取得訂單資料"

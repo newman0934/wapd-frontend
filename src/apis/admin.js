@@ -81,7 +81,6 @@ export default {
       return apiHelper.delete(`/admins/products/${id}/stocks/${stock_id}`);
     },
     deleteImage(id) {
-      console.log("revoked");
       return apiHelper.delete(`/admins/image/${id}`);
     },
     getProductDetail({ id }) {
