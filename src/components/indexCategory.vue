@@ -9,7 +9,7 @@
               <img slot="preloader" height="323px" width="275px" src="./../static/1260x750.png" />
               <div slot="error" class="cd-block w-100">圖片下載失敗</div>
             </vue-load-image>
-            <a href="#" class="mask">潮服</a>
+            <router-link :to="{name:'products',query:{categoryId:21}}" class="mask">上衣</router-link>
           </div>
         </div>
         <div class="single-banner mb-3">
@@ -47,7 +47,7 @@
               <img slot="preloader" height="323px" width="275px" src="./../static/1260x750.png" />
               <div slot="error" class="cd-block w-100">圖片下載失敗</div>
             </vue-load-image>
-            <a href="#" class="mask">褲子</a>
+            <router-link :to="{name:'products',query:{categoryId:11}}" class="mask">褲子</router-link>
           </div>
         </div>
       </div>
@@ -58,7 +58,7 @@
             <img slot="preloader" height="550px" width="580px" src="./../static/1260x750.png" />
             <div slot="error" class="cd-block w-100">圖片下載失敗</div>
           </vue-load-image>
-          <a href="#" class="mask">西服</a>
+          <router-link :to="{name:'products',query:{categoryId:31}}" class="mask">西裝</router-link>
         </div>
       </div>
     </div>

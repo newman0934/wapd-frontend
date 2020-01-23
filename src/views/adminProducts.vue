@@ -1,7 +1,10 @@
 <template>
   <div>
     <adminNav />
-    <div class="container mb-5">
+    <div v-if="isLoading">
+      <spinner />
+    </div>
+    <div v-else class="container mb-5">
       <div class="text-left">
         <h1>商品列表</h1>
         <h1>
@@ -79,13 +82,15 @@
   </div>
 </template>
 <script>
+import spinner from "./../components/spinner";
 import adminNav from "./../components/adminNav";
 import adminAPI from "./../apis/admin";
 import { Toast } from "./../utils/helpers";
 import { mapState } from "vuex";
 export default {
   components: {
-    adminNav
+    adminNav,
+    spinner
   },
   data() {
     return {
@@ -104,6 +109,9 @@ export default {
       return this.currentPage + 1 > this.totalPage
         ? null
         : this.currentPage + 1;
+    },
+    isLoading() {
+      return this.$store.state.isLoading;
     }
   },
   created() {
@@ -118,6 +126,7 @@ export default {
   methods: {
     async fetchAdminProducts({ page = 1 }) {
       try {
+        this.$store.dispatch("updateLoading", true);
         const { data, statusText } = await adminAPI.products.get({
           page
         });
@@ -128,7 +137,9 @@ export default {
         this.products = data.products;
         this.currentPage = data.page;
         this.totalPage = data.totalPage.length;
+        this.$store.dispatch("updateLoading", false);
       } catch (error) {
+        this.$store.dispatch("updateLoading", false);
         Toast.fire({
           type: "error",
           title: "無法取得商品資料"

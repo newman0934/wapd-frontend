@@ -20,21 +20,8 @@
               <font-awesome-icon class="bar" icon="bars" size="2x" />
             </button>
 
-            <div class="collapse navbar-collapse col-6" id="navbarSupportedContent">
-              <ul class="navbar-nav mx-auto">
-                <!-- <li class="nav-item pl-4 m-auto">
-                  <form class="form-inline search">
-                    <input
-                      class="form-control mr-sm-2"
-                      type="search"
-                      placeholder="Search"
-                      aria-label="Search"
-                    />
-                    <button class="btn btn-outline-success" type="submit">
-                      <font-awesome-icon icon="search" size="1x" />
-                    </button>
-                  </form>
-                </li>-->
+            <div class="collapse navbar-collapse col-10" id="navbarSupportedContent">
+              <ul class="navbar-nav ml-auto">
                 <li class="nav-item pl-4 m-auto">
                   <router-link class="nav-link" :to="{name:'index'}">HOME</router-link>
                 </li>
@@ -67,11 +54,6 @@
                 <li class="nav-item pl-4 my-auto">
                   <a class="navbar-link" href="#" @click.stop.prevent="gotoContact('#contact')">聯絡我們</a>
                 </li>
-              </ul>
-            </div>
-
-            <div class="collapse navbar-collapse col-4" id="navbarSupportedContent">
-              <ul class="navbar-nav ml-auto">
                 <template v-if="!isAuthenticated || !currentUser.role === 'admin'">
                   <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
                     <router-link class="nav-link" :to="{name:'signIn'}">Login / LogUp</router-link>
@@ -136,6 +118,10 @@ export default {
   created() {
     this.fetchCategories();
   },
+  beforeRouteUpdate(to, from, next) {
+    this.fetchCategories();
+    next();
+  },
   methods: {
     logout() {
       this.$store.commit("revokeAuthentication");
@@ -144,8 +130,8 @@ export default {
 
     async fetchCategories() {
       try {
+        this.$store.dispatch("updateProcessing", false);
         const { data, statusText } = await categoriesAPI.getCategories();
-        console.log(data);
         if (statusText !== "OK") {
           throw new Error(statusText);
         }

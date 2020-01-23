@@ -1,7 +1,10 @@
 <template>
   <div>
     <adminNav />
-    <div class="container mb-5">
+    <div v-if="isLoading">
+      <spinner />
+    </div>
+    <div v-else class="container mb-5">
       <div class="text-left">
         <h1>會員列表</h1>
       </div>
@@ -71,11 +74,13 @@
 <script>
 import adminNav from "./../components/adminNav";
 import adminAPI from "./../apis/admin";
-// import { Toast } from "./../utils/helpers";
+import { Toast } from "./../utils/helpers";
+import spinner from "./../components/spinner";
 
 export default {
   components: {
-    adminNav
+    adminNav,
+    spinner
   },
   data() {
     return {
@@ -101,11 +106,15 @@ export default {
       return this.currentPage + 1 > this.totalPage
         ? null
         : this.currentPage + 1;
+    },
+    isLoading() {
+      return this.$store.state.isLoading;
     }
   },
   methods: {
     async fetchUsers({ page = 1 }) {
       try {
+        this.$store.dispatch("updateLoading", true);
         const { data, statusText } = await adminAPI.users.get({
           page
         });
@@ -117,12 +126,13 @@ export default {
         this.users = data.users.rows;
         this.currentPage = data.page;
         this.totalPage = data.totalPage.length;
+        this.$store.dispatch("updateLoading", false);
       } catch (error) {
-        // Toast.fire({
-        //   type: "error",
-        //   title: "無法取得會員資料"
-        // });
-        console.log(error)
+        this.$store.dispatch("updateLoading", false);
+        Toast.fire({
+          type: "error",
+          title: "無法取得會員資料"
+        });
       }
     }
   }
