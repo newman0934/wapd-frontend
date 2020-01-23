@@ -134,7 +134,6 @@ export default {
         const { data, statusText } = await adminAPI.orders.getDetail({
           orderId
         });
-        console.log(data)
         if (statusText !== "OK") {
           throw new Error(statusText);
         }
@@ -166,7 +165,6 @@ export default {
           type: "error",
           title: "無法取得訂單詳細資訊"
         });
-        console.log(error);
       }
     },
     goToBack() {
