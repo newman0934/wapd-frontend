@@ -50,7 +50,7 @@
                 href="https://www.facebook.com/KGT-%E5%B0%8F%E5%BA%B5%E7%9A%84%E5%BA%97-405388429508237/"
                 target="_blank"
               >
-                <font-awesome-icon :icon="['fab', 'facebook']" size="3x" />
+                <font-awesome-icon :icon="['fab', 'facebook-square']" size="3x" />
               </a>
             </div>
           </div>

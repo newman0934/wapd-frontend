@@ -48,9 +48,9 @@
                   </div>
                 </li>
 
-                <li class="nav-item pl-4 my-auto">
+                <!-- <li class="nav-item pl-4 my-auto">
                   <router-link class="nav-link" :to="{name:'index'}">FAQ</router-link>
-                </li>
+                </li> -->
                 <li class="nav-item pl-4 my-auto">
                   <a class="navbar-link" href="#" @click.stop.prevent="gotoContact('#contact')">聯絡我們</a>
                 </li>

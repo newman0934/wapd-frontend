@@ -223,7 +223,7 @@ export default {
           throw new Error(statusText);
         }
         this.spgResponse = data.response.Result;
-        await this.fetchAdminOrders();
+        await this.fetchAdminOrders(1);
         this.openOrderModal();
       } catch (error) {
         Toast.fire({
