@@ -190,7 +190,6 @@ export default {
         const { data, statusText } = await adminAPI.orders.getDetail({
           orderId: id
         });
-        console.log(data);
         if (statusText !== "OK" && data.status !== "success") {
           throw new Error(statusText);
         }
@@ -249,13 +248,6 @@ export default {
           id,
           formData
         });
-
-        // console.log(data)
-        // for (let [name, value] of formData.entries()) {
-        //   console.log(name + ": " + value);
-        // }
-        // console.log(id);
-
         if (statusText !== "OK" || data.status !== "OK") {
           throw new Error(statusText);
         }

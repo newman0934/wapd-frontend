@@ -17,16 +17,18 @@ export default {
     }
   },
   users: {
-    get() {
-      return apiHelper.get("/admins/users");
+    get({ page }) {
+      const searchParams = new URLSearchParams({page})
+      return apiHelper.get(`/admins/users?${searchParams}`);
     },
     getOrder({ id }) {
       return apiHelper.get(`/admins/users/${id}/orders`);
     }
   },
   orders: {
-    get() {
-      return apiHelper.get("/admins/orders");
+    get({ page }) {
+      const searchParams = new URLSearchParams({page})
+      return apiHelper.get(`/admins/orders?${searchParams}`);
     },
     getDetail({ orderId }) {
       return apiHelper.get(`/admins/orders/${orderId}`);
@@ -39,8 +41,9 @@ export default {
     }
   },
   products: {
-    get() {
-      return apiHelper.get("/admins/products");
+    get({ page }) {
+      const searchParams = new URLSearchParams({page})
+      return apiHelper.get(`/admins/products?${searchParams.toString()}`);
     },
     post({ formData, images }) {
       
@@ -78,7 +81,6 @@ export default {
       return apiHelper.delete(`/admins/products/${id}/stocks/${stock_id}`);
     },
     deleteImage(id) {
-      console.log("revoked");
       return apiHelper.delete(`/admins/image/${id}`);
     },
     getProductDetail({ id }) {

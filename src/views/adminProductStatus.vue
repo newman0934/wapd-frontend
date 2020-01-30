@@ -1,7 +1,10 @@
 <template>
   <div>
     <adminNav />
-    <div class="container">
+    <div v-if="isLoading">
+      <spinner />
+    </div>
+    <div v-else class="container">
       <h3 class="text-left my-5">商品ID：{{$route.params.id}}</h3>
       <div class="text-left">
         <router-link class="btn btn-outline-primary" :to="{name:'adminProductStatusCreate'}">新增種類</router-link>
@@ -47,13 +50,14 @@
   </div>
 </template>
 <script>
-/* eslint-disable */
+import spinner from "./../components/spinner";
 import adminNav from "./../components/adminNav";
 import adminAPI from "./../apis/admin";
 import { Toast } from "./../utils/helpers";
 export default {
   components: {
-    adminNav
+    adminNav,
+    spinner
   },
   data() {
     return {
@@ -69,18 +73,25 @@ export default {
     this.fetchProductStatus(id);
     next();
   },
+  computed: {
+    isLoading() {
+      return this.$store.state.isLoading;
+    }
+  },
   methods: {
     async fetchProductStatus(id) {
       try {
+        this.$store.dispatch("updateLoading", true);
         const { data, statusText } = await adminAPI.products.getStatus({
           id
         });
-        console.log(data);
         if (statusText !== "OK") {
           throw new Error(statusText);
         }
         this.productStatus = data.productStatus;
+        this.$store.dispatch("updateLoading", false);
       } catch (error) {
+        this.$store.dispatch("updateLoading", false);
         Toast.fire({
           icon: "error",
           title: "無法取得商品狀態"

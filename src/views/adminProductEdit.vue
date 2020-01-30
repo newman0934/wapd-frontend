@@ -137,7 +137,6 @@ export default {
         const { data, statusText } = await adminAPI.products.getProductDetail({
           id
         });
-        console.log(data);
         if (statusText !== "OK" && data.status !== "success") {
           throw new Error(status);
         }
@@ -190,10 +189,7 @@ export default {
         let e = window.event;
         const form = e.target;
         const formData = new FormData(form);
-        // for (let [name, value] of formData.entries()) {
-        //   console.log(name + ": " + value);
-        // }
-        // console.log(id);
+
         const { data, statusText } = await adminAPI.products.put({
           id,
           formData
@@ -227,7 +223,6 @@ export default {
           title: "成功刪除圖片!!"
         });
       } catch (error) {
-        console.log(error);
         Toast.fire({
           icon: "error",
           title: "刪除圖片失敗"

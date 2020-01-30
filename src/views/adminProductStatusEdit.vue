@@ -99,7 +99,6 @@ export default {
           id,
           stock_id
         });
-        console.log(data);
         if (statusText !== "OK") {
           throw new Error(statusText);
         }
@@ -139,7 +138,6 @@ export default {
           size: this.productStatus.size,
           stock: this.productStatus.stock
         });
-        console.log(id, stock_id);
         if (statusText !== "OK" && data.status !== "success") {
           throw new Error(statusText);
         }

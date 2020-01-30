@@ -1,7 +1,10 @@
 <template>
   <div>
     <adminNav />
-    <div class="container mb-5">
+    <div v-if="isLoading">
+      <spinner />
+    </div>
+    <div v-else class="container mb-5">
       <div class="text-left">
         <h1>優惠碼列表</h1>
         <form class="my-4">
@@ -62,13 +65,15 @@
   </div>
 </template>
 <script>
+import spinner from "./../components/spinner";
 import adminNav from "./../components/adminNav";
 import adminAPI from "./../apis/admin";
 import { Toast } from "./../utils/helpers";
 
 export default {
   components: {
-    adminNav
+    adminNav,
+    spinner
   },
   data() {
     return {
@@ -83,18 +88,23 @@ export default {
   computed: {
     isProcessing() {
       return this.$store.state.isProcessing;
+    },
+    isLoading() {
+      return this.$store.state.isLoading;
     }
   },
   methods: {
     async fetchCoupons() {
       try {
+        this.$store.dispatch("updateLoading", true);
         const { data, statusText } = await adminAPI.coupons.get();
-        console.log(data);
         if (statusText !== "OK") {
           throw new Error(statusText);
         }
         this.coupons = data.coupons;
+        this.$store.dispatch("updateLoading", false);
       } catch (error) {
+        this.$store.dispatch("updateLoading", false);
         Toast.fire({
           icon: "error",
           title: "取得優惠碼資料失敗"

@@ -1,7 +1,10 @@
 <template>
   <div>
     <adminNav />
-    <div class="container mb-5">
+    <div v-if="isLoading">
+      <spinner />
+    </div>
+    <div v-else class="container mb-5">
       <div class="text-left">
         <h1>訂單列表</h1>
       </div>
@@ -108,10 +111,40 @@
           </tbody>
         </table>
       </div>
+      <nav v-if="totalPage > 1" aria-label="Page navigation">
+        <ul class="pagination">
+          <li v-show="previousPage" class="page-item">
+            <router-link
+              class="page-link"
+              aria-label="Previous"
+              :to="{name: 'adminOrders', query: { page: previousPage }}"
+            >
+              <span aria-hidden="true">&laquo;</span>
+            </router-link>
+          </li>
+          <li
+            v-for="page in totalPage"
+            :key="page"
+            :class="['page-item', { active: currentPage === page }]"
+          >
+            <router-link class="page-link" :to="{name: 'adminOrders', query: { page }}">{{ page }}</router-link>
+          </li>
+          <li v-show="nextPage" class="page-item">
+            <router-link
+              class="page-link"
+              :to="{name: 'adminOrders', query: { page: nextPage }}"
+              aria-label="Next"
+            >
+              <span aria-hidden="true">&raquo;</span>
+            </router-link>
+          </li>
+        </ul>
+      </nav>
     </div>
   </div>
 </template>
 <script>
+import spinner from "./../components/spinner";
 import adminNav from "./../components/adminNav";
 import adminAPI from "./../apis/admin";
 import { Toast } from "./../utils/helpers";
@@ -119,33 +152,59 @@ import ordersAPI from "./../apis/orders";
 import $ from "jquery";
 export default {
   components: {
-    adminNav
+    adminNav,
+    spinner
   },
   data() {
     return {
       orders: [],
-      spgResponse: []
+      spgResponse: [],
+      totalPage: 0,
+      currentPage: 0
     };
   },
   created() {
-    this.fetchAdminOrders();
+    const { page } = this.$route.query;
+    this.fetchAdminOrders({ page });
+  },
+  beforeRouteUpdate(to, from, next) {
+    const { page } = to.query;
+    this.fetchAdminOrders({ page });
+    next();
   },
   computed: {
     filterOrders() {
       return this.orders.filter(order => order.payment_status !== "99");
+    },
+    previousPage() {
+      return this.currentPage === 1 ? null : this.currentPage - 1;
+    },
+    nextPage() {
+      return this.currentPage + 1 > this.totalPage
+        ? null
+        : this.currentPage + 1;
+    },
+    isLoading() {
+      return this.$store.state.isLoading;
     }
   },
   methods: {
-    async fetchAdminOrders() {
+    async fetchAdminOrders({ page = 1 }) {
       try {
-        const { data, statusText } = await adminAPI.orders.get();
-        console.log(data);
+        this.$store.dispatch("updateLoading", true);
+        const { data, statusText } = await adminAPI.orders.get({
+          page
+        });
         if (statusText !== "OK") {
           throw new Error(statusText);
         }
 
         this.orders = data.orders;
+        this.currentPage = data.page;
+        this.totalPage = data.totalPage.length;
+        this.$store.dispatch("updateLoading", false);
       } catch (error) {
+        this.$store.dispatch("updateLoading", false);
         Toast.fire({
           icon: "error",
           title: "無法取得訂單資料"
@@ -164,7 +223,7 @@ export default {
           throw new Error(statusText);
         }
         this.spgResponse = data.response.Result;
-        await this.fetchAdminOrders();
+        await this.fetchAdminOrders(1);
         this.openOrderModal();
       } catch (error) {
         Toast.fire({

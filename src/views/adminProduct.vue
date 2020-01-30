@@ -83,7 +83,6 @@ export default {
         const { data, statusText } = await adminAPI.products.getProductDetail({
           id
         });
-        console.log(data);
         if (statusText !== "OK") {
           throw new Error(statusText);
         }

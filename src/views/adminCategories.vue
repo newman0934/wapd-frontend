@@ -1,7 +1,10 @@
 <template>
   <div>
     <adminNav />
-    <div class="container mb-5">
+    <div v-if="isLoading">
+      <spinner />
+    </div>
+    <div v-else class="container mb-5">
       <div class="text-left">
         <h1>分類列表</h1>
         <form class="my-4">
@@ -88,14 +91,15 @@
 </template>
 
 <script>
-/* eslint-disable */
+import spinner from "./../components/spinner";
 import adminNav from "./../components/adminNav";
 import adminAPI from "./../apis/admin";
 import { Toast } from "./../utils/helpers";
 
 export default {
   components: {
-    adminNav
+    adminNav,
+    spinner
   },
 
   data() {
@@ -110,11 +114,15 @@ export default {
   computed: {
     isProcessing() {
       return this.$store.state.isProcessing;
+    },
+    isLoading() {
+      return this.$store.state.isLoading;
     }
   },
   methods: {
     async fetchCategories() {
       try {
+        this.$store.dispatch("updateLoading", true);
         const { data, statusText } = await adminAPI.categories.get();
 
         if (statusText !== "OK") {
@@ -124,7 +132,9 @@ export default {
           ...category,
           isEditing: false
         }));
+        this.$store.dispatch("updateLoading", false);
       } catch (error) {
+        this.$store.dispatch("updateLoading", false);
         Toast.fire({
           icon: "error",
           title: "無法取得類別"
@@ -145,8 +155,6 @@ export default {
         const { data, statusText } = await adminAPI.categories.create({
           category: this.newCategoryName
         });
-        console.log(data);
-
         if (statusText !== "OK" || data.status !== "success") {
           throw new Error(statusText);
         }
