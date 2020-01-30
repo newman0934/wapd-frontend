@@ -94,21 +94,21 @@ export default {
     async handleSubmit() {
       if (!this.usedPassword || !this.newPassword || !this.passwordCheck) {
         Toast.fire({
-          type: "warning",
+          icon: "warning",
           title: "所有欄位皆需填寫"
         });
         return;
       }
       if (this.usedPassword == this.newPassword) {
         Toast.fire({
-          type: "warning",
+          icon: "warning",
           title: "新密碼與舊密碼不可相同"
         });
         return;
       }
       if (this.newPassword !== this.passwordCheck) {
         Toast.fire({
-          type: "warning",
+          icon: "warning",
           title: "新密碼兩次輸入不一樣"
         });
         return;
@@ -123,7 +123,7 @@ export default {
           throw new Error(statusText);
         }
         Toast.fire({
-          type: "success",
+          icon: "success",
           title: "密碼更新成功，請用新密碼登入"
         });
         this.$router.push({ name: "signIn" });
@@ -131,7 +131,7 @@ export default {
       } catch (error) {
         this.$store.dispatch("updateProcessing", false);
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "密碼更新失敗，請確認密碼是否輸入正確"
         });
       }

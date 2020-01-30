@@ -75,14 +75,14 @@ export default {
         const { data, statusText } = await adminAPI.products.getStatus({
           id
         });
-        console.log(data)
+        console.log(data);
         if (statusText !== "OK") {
           throw new Error(statusText);
         }
         this.productStatus = data.productStatus;
       } catch (error) {
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "無法取得商品狀態"
         });
       }
@@ -105,7 +105,7 @@ export default {
         );
       } catch (error) {
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "刪除商品資訊失敗"
         });
       }

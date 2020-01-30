@@ -135,7 +135,7 @@ export default {
     async handleSubmit() {
       if (this.email !== this.currentUser.email.toString()) {
         Toast.fire({
-          type: "warning",
+          icon: "warning",
           title: "更新錯誤"
         });
         return;
@@ -148,7 +148,7 @@ export default {
           throw new Error(statusText);
         }
         Toast.fire({
-          type: "success",
+          icon: "success",
           title: "使用者資料更新成功"
         });
         await this.$store.dispatch("updateCurrentUser", formData);
@@ -157,7 +157,7 @@ export default {
       } catch (error) {
         this.$store.dispatch("updateProcessing", false);
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "無法更新使用者資料，請稍後再試"
         });
       }

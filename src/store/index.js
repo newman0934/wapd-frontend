@@ -108,7 +108,7 @@ export default new Vuex.Store({
         context.commit('WISHLIST', data.products);
       } catch (error) {
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "無法取得商品資訊，請稍後再試"
         });
       }
@@ -124,14 +124,14 @@ export default new Vuex.Store({
         }
         await context.dispatch('fetchUserFavorite')
         Toast.fire({
-          type: "success",
+          icon: "success",
           title: "商品成功加入Wish List"
         });
         context.dispatch("updateProcessing", false);
       } catch (error) {
         context.dispatch("updateProcessing", false);
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "無法將商品加入Wish List，請稍後再試"
         });
       }
@@ -147,14 +147,14 @@ export default new Vuex.Store({
         }
         await context.dispatch('fetchUserFavorite')
         Toast.fire({
-          type: "success",
+          icon: "success",
           title: "商品成功從Wish List移除"
         });
         context.dispatch("updateProcessing", false);
       } catch (error) {
         context.dispatch("updateProcessing", false);
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "無法將商品從Wish List移除，請稍後再試"
         });
       }
@@ -169,7 +169,7 @@ export default new Vuex.Store({
         // this.items = data.userCart.cartItem;
       } catch (error) {
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "暫時無法取得使用者購物車資料，請稍後再試"
         });
       }

@@ -37,7 +37,10 @@
                 >查詢</router-link>
               </td>
               <td scope="col">
-                <router-link :to="{name:'adminProductEdit', params:{id:product.id}}" class="btn btn-outline-dark">編輯</router-link>
+                <router-link
+                  :to="{name:'adminProductEdit', params:{id:product.id}}"
+                  class="btn btn-outline-dark"
+                >編輯</router-link>
               </td>
             </tr>
           </tbody>
@@ -80,7 +83,7 @@ export default {
         this.products = data.products;
       } catch (error) {
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "無法取得商品資料"
         });
       }

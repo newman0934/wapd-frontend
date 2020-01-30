@@ -68,7 +68,7 @@ export default {
       try {
         if (!this.newColor || !this.newSize) {
           Toast.fire({
-            type: "error",
+            icon: "error",
             title: "請輸入顏色、尺寸"
           });
           return;
@@ -91,7 +91,7 @@ export default {
       } catch (error) {
         this.$store.dispatch("updateProcessing", false);
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "新增商品顏色與尺寸失敗"
         });
       }

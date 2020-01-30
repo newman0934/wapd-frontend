@@ -65,7 +65,7 @@ export default {
         this.orders = data.orders;
       } catch (error) {
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "無法取得訂單資料，請稍後再試"
         });
       }

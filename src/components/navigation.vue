@@ -152,7 +152,7 @@ export default {
         this.categories = data.categories;
       } catch (error) {
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "取得類別資料失敗"
         });
       }

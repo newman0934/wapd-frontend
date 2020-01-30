@@ -26,7 +26,12 @@
               <td scope="row">{{user.email}}</td>
               <td scope="row">{{user.address}}</td>
               <td scope="row">{{user.role}}</td>
-              <td scope="row"><router-link  class="btn btn-outline-info" :to="{name:'adminUserOrders', params:{ id:user.id }}">歷史訂單</router-link></td>
+              <td scope="row">
+                <router-link
+                  class="btn btn-outline-info"
+                  :to="{name:'adminUserOrders', params:{ id:user.id }}"
+                >歷史訂單</router-link>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -37,8 +42,8 @@
 <script>
 /* eslint-disable */
 import adminNav from "./../components/adminNav";
-import adminAPI from "./../apis/admin"
-import { Toast} from "./../utils/helpers"
+import adminAPI from "./../apis/admin";
+import { Toast } from "./../utils/helpers";
 
 export default {
   components: {
@@ -47,26 +52,26 @@ export default {
   data() {
     return {
       users: []
-    }
+    };
   },
-  created(){
-    this.fetchUsers()
+  created() {
+    this.fetchUsers();
   },
-  methods:{
-    async fetchUsers(){
-      try{
-        const {data, statusText} = await adminAPI.users.get()
+  methods: {
+    async fetchUsers() {
+      try {
+        const { data, statusText } = await adminAPI.users.get();
 
-        if(statusText !== "OK"){
-          throw new Error(statusText)
+        if (statusText !== "OK") {
+          throw new Error(statusText);
         }
 
-        this.users = data.users
-      }catch(error){
+        this.users = data.users;
+      } catch (error) {
         Toast.fire({
-          type:"error",
-          title:"無法取得會員資料"
-        })
+          icon: "error",
+          title: "無法取得會員資料"
+        });
       }
     }
   }

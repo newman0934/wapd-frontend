@@ -10,7 +10,13 @@
               <h3>新增類別：</h3>
             </div>
             <div class="col-auto">
-              <input v-model="newCategoryName" type="text" class="form-control" required placeholder="請輸入類別" />
+              <input
+                v-model="newCategoryName"
+                type="text"
+                class="form-control"
+                required
+                placeholder="請輸入類別"
+              />
             </div>
             <div class="col-auto">
               <button
@@ -120,18 +126,16 @@ export default {
         }));
       } catch (error) {
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "無法取得類別"
         });
       }
     },
     async createCategory() {
       try {
-        if (
-          !this.newCategoryName
-        ) {
+        if (!this.newCategoryName) {
           Toast.fire({
-            type: "warning",
+            icon: "warning",
             title: "請輸入類別"
           });
           return;
@@ -158,7 +162,7 @@ export default {
       } catch (error) {
         this.$store.dispatch("updateProcessing", false);
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "無法新增類別"
         });
       }
@@ -180,7 +184,7 @@ export default {
       } catch (error) {
         this.$store.dispatch("updateProcessing", false);
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "無法修改類別"
         });
       }
@@ -202,7 +206,7 @@ export default {
       } catch (error) {
         this.$store.dispatch("updateProcessing", false);
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "無法刪除類別"
         });
       }

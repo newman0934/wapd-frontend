@@ -105,7 +105,7 @@ export default {
       } catch (error) {
         console.log(error);
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "網址有誤，請確認後再試"
         });
       }
@@ -113,7 +113,7 @@ export default {
     async handleSubmit() {
       if (this.password !== this.passwordCheck) {
         Toast.fire({
-          type: "warning",
+          icon: "warning",
           title: "新密碼兩次輸入不一樣"
         });
         return;
@@ -127,13 +127,13 @@ export default {
           throw new Error(statusText);
         }
         Toast.fire({
-          type: "success",
+          icon: "success",
           title: "密碼更新成功，請用新密碼登入"
         });
         this.$router.push({ name: "signIn" });
       } catch (error) {
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "密碼更新失敗，請確認資料是否正確"
         });
       }

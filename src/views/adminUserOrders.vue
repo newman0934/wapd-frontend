@@ -72,7 +72,7 @@ export default {
         this.orders = data.users.orders;
       } catch (error) {
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "無法取得會員訂單"
         });
       }

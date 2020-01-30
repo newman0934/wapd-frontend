@@ -100,7 +100,7 @@ export default {
         this.images = data.product.images;
       } catch (error) {
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "無法取得商品詳細資料"
         });
       }

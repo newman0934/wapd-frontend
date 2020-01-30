@@ -89,7 +89,7 @@ export default {
       } catch (error) {
         this.$store.dispatch("updateLoading", false);
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "無法取得商品資訊，請稍後再試"
         });
       }

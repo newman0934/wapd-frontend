@@ -152,7 +152,7 @@ export default {
         this.images = data.product.images;
       } catch (error) {
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "無法取得商品資訊"
         });
       }
@@ -167,7 +167,7 @@ export default {
         this.categories = data.categories;
       } catch (error) {
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "無法取得類別資料"
         });
       }
@@ -181,7 +181,7 @@ export default {
           !this.product.description
         ) {
           Toast.fire({
-            type: "warning",
+            icon: "warning",
             title: "請確認輸入的內容"
           });
           return;
@@ -203,11 +203,11 @@ export default {
           throw new Error(statusText);
         }
         this.$store.dispatch("updateProcessing", false);
-        this.$router.push({name:"adminProducts"});
+        this.$router.push({ name: "adminProducts" });
       } catch (error) {
         this.$store.dispatch("updateProcessing", false);
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "修改商品資料失敗"
         });
       }
@@ -223,13 +223,13 @@ export default {
         }
         this.images.splice(this.images.indexOf(imageid), 1);
         Toast.fire({
-          type: "success",
+          icon: "success",
           title: "成功刪除圖片!!"
         });
       } catch (error) {
         console.log(error);
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "刪除圖片失敗"
         });
       }

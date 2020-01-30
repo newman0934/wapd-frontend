@@ -45,13 +45,13 @@ export default {
           throw new Error(statusText);
         }
         Toast.fire({
-          type: "success",
+          icon: "success",
           title: "變更密碼信件已寄送，請確認電子信箱或垃圾信箱"
         });
         this.$router.push({ name: "userForgetPassword" });
       } catch (error) {
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "變更密碼信件寄送失敗，請稍後再試"
         });
       }
