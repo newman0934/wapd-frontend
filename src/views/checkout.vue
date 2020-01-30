@@ -381,7 +381,7 @@ export default {
         this.total = data.total;
       } catch (error) {
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "無法取得訂單資訊，請稍後再試"
         });
       }
@@ -396,7 +396,7 @@ export default {
         }
         console.log(data);
         Toast.fire({
-          type: "success",
+          icon: "success",
           title: "使用者資料更新成功"
         });
         await this.$store.dispatch("updateCurrentUser", formData);
@@ -404,7 +404,7 @@ export default {
       } catch (error) {
         this.$store.dispatch("updateProcessing", false);
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "無法更新使用者資料，請稍後再試"
         });
       }
@@ -429,7 +429,7 @@ export default {
         !this.receiver.address
       ) {
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "收件人相關資訊皆需填寫"
         });
         return;

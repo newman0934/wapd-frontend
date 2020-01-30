@@ -77,7 +77,6 @@
           總計：
           <span>{{order.totalPrice}}</span>
         </h3>
-        
       </div>
       <div class="container text-left">
         <h3>備註</h3>
@@ -86,7 +85,10 @@
     </div>
     <div class="container">
       <button @click="goToBack" class="btn btn-outline-success mx-3 my-5">回上一頁</button>
-      <router-link :to="{name:'adminOrderEdit', params:{id:order.id}}" class="btn btn-outline-dark mx-3 my-5">編輯訂單</router-link>
+      <router-link
+        :to="{name:'adminOrderEdit', params:{id:order.id}}"
+        class="btn btn-outline-dark mx-3 my-5"
+      >編輯訂單</router-link>
     </div>
   </div>
 </template>
@@ -137,7 +139,7 @@ export default {
         if (statusText !== "OK") {
           throw new Error(statusText);
         }
-        let sum = 0
+        let sum = 0;
         let priceArray = data.order.orderItems.map(item => {
           return item.SellPrice * item.quantity;
         });
@@ -157,12 +159,15 @@ export default {
           paymentMethod: data.order.payment_method,
           comment: data.order.comment
         };
-        this.coupon = data.order.coupon || { coupon_code: "沒有使用優惠卷", discount_amount: 0};
+        this.coupon = data.order.coupon || {
+          coupon_code: "沒有使用優惠卷",
+          discount_amount: 0
+        };
         this.productItems = data.order.orderItems;
         this.originPrice = sum;
       } catch (error) {
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "無法取得訂單詳細資訊"
         });
       }

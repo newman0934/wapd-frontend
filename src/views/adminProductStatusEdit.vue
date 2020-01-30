@@ -76,7 +76,6 @@ export default {
         size: "",
         stock: 0
       }
-
     };
   },
   created() {
@@ -113,19 +112,23 @@ export default {
         };
       } catch (error) {
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "取得商品尺寸、顏色、庫存失敗"
         });
       }
     },
     async putAdminProductStatus(id, stock_id) {
       try {
-        if(!this.productStatus.color || !this.productStatus.size || !this.productStatus.stock){
+        if (
+          !this.productStatus.color ||
+          !this.productStatus.size ||
+          !this.productStatus.stock
+        ) {
           Toast.fire({
-            type:"error",
-            title:"請輸入顏色、尺寸與庫存"
-          })
-          return
+            icon: "error",
+            title: "請輸入顏色、尺寸與庫存"
+          });
+          return;
         }
         this.$store.dispatch("updateProcessing", true);
         const { data, statusText } = await adminAPI.products.putStatus({
@@ -139,11 +142,11 @@ export default {
           throw new Error(statusText);
         }
         this.$store.dispatch("updateProcessing", false);
-        this.$router.push({name:"adminProductStatus",params:{id:id}});
+        this.$router.push({ name: "adminProductStatus", params: { id: id } });
       } catch (error) {
         this.$store.dispatch("updateProcessing", false);
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "編輯商品尺寸、顏色、庫存失敗"
         });
       }

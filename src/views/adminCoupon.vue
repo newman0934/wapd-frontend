@@ -106,7 +106,7 @@ export default {
       } catch (error) {
         this.$store.dispatch("updateLoading", false);
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "取得優惠碼資料失敗"
         });
       }
@@ -115,7 +115,7 @@ export default {
       try {
         if (!this.newCouponCode || !this.newCouponAmount) {
           Toast.fire({
-            type: "warning",
+            icon: "warning",
             title: "請輸入優惠碼編號跟金額"
           });
           return;
@@ -141,7 +141,7 @@ export default {
       } catch (error) {
         this.$store.dispatch("updateProcessing", false);
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "新增優惠碼失敗"
         });
       }
@@ -162,7 +162,7 @@ export default {
       } catch (error) {
         this.$store.dispatch("updateProcessing", false);
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "刪除優惠碼失敗"
         });
       }

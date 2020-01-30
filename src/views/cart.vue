@@ -156,7 +156,7 @@ export default {
       let total = this.items.reduce((t, p) => t + p.sell_price * p.quantity, 0);
       if (total * 0.3 <= this.coupon.discount_amount && this.items.length > 0) {
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "折扣碼已未達金額限制"
         });
         this.cleanCoupon();
@@ -195,12 +195,12 @@ export default {
         //render view
         this.items = this.items.filter(item => item.id !== itemId);
         Toast.fire({
-          type: "success",
+          icon: "success",
           title: "商品成功從購物車移除"
         });
       } catch (error) {
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "暫時無法移除該項商品，請稍後再試"
         });
       }
@@ -226,7 +226,7 @@ export default {
           throw new Error(statusText);
         }
         Toast.fire({
-          type: "success",
+          icon: "success",
           title: "商品更新成功"
         });
         //update vuex
@@ -239,7 +239,7 @@ export default {
         this.cacheQty = 0;
       } catch (error) {
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "暫時無法更新購物車，請稍後再試"
         });
       }
@@ -248,7 +248,7 @@ export default {
       const couponCode = code;
       if (!code) {
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "請輸入折扣碼後再試"
         });
         return;
@@ -260,7 +260,7 @@ export default {
         }
         if (this.total * 0.3 <= data.CouponId.discount_amount) {
           Toast.fire({
-            type: "error",
+            icon: "error",
             title: "折扣碼條件不符，請確認後再試"
           });
           this.couponCode = "";
@@ -275,7 +275,7 @@ export default {
         this.couponCode = "";
       } catch (error) {
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "折扣碼有誤，請確認後再試"
         });
       }
@@ -297,7 +297,7 @@ export default {
       } catch (error) {
         this.$store.dispatch("updateProcessing", false);
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "Error"
         });
       }

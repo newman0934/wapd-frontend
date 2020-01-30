@@ -126,9 +126,9 @@
             <span>{{order.coupon.discount_amount}}</span>
           </h3>
           <h3 class="my-2">
-          運費：
-          <span>100</span>
-        </h3>
+            運費：
+            <span>100</span>
+          </h3>
           <h3 class="my-2">
             總計：
             <span>{{order.totalPrice}}</span>
@@ -193,7 +193,7 @@ export default {
         if (statusText !== "OK" && data.status !== "success") {
           throw new Error(statusText);
         }
-        let sum = 0
+        let sum = 0;
         let priceArray = data.order.orderItems.map(item => {
           return item.SellPrice * item.quantity;
         });
@@ -213,25 +213,32 @@ export default {
           paymentStatus: data.order.payment_status,
           paymentMethod: data.order.payment_method,
           comment: data.order.comment,
-          coupon: data.order.coupon || { coupon_code: "沒有使用優惠卷", discount_amount: 0}
+          coupon: data.order.coupon || {
+            coupon_code: "沒有使用優惠卷",
+            discount_amount: 0
+          }
         };
         this.products = data.order.orderItems;
         this.originPrice = sum;
       } catch (error) {
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "取得訂單資料失敗"
         });
       }
     },
     async putAdminOrder(id) {
       try {
-        if(!this.order.receiverName || !this.order.receiverPhone || !this.order.receiverAddress){
+        if (
+          !this.order.receiverName ||
+          !this.order.receiverPhone ||
+          !this.order.receiverAddress
+        ) {
           Toast.fire({
-            type:"error",
-            title:"請確認輸入的內容，每個欄位都要有資料"
-          })
-          return 
+            icon: "error",
+            title: "請確認輸入的內容，每個欄位都要有資料"
+          });
+          return;
         }
         this.$store.dispatch("updateProcessing", true);
         let e = window.event;
@@ -249,7 +256,7 @@ export default {
       } catch (error) {
         this.$store.dispatch("updateProcessing", false);
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "編輯訂單資料失敗"
         });
       }
