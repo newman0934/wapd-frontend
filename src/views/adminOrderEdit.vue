@@ -127,7 +127,7 @@
           </h3>
           <h3 class="my-2">
             運費：
-            <span>100</span>
+            <span>{{feight}}</span>
           </h3>
           <h3 class="my-2">
             總計：
@@ -172,7 +172,8 @@ export default {
         coupon: {}
       },
       products: [],
-      originPrice: 0
+      originPrice: 0,
+      feight:0
     };
   },
   created() {
@@ -190,6 +191,7 @@ export default {
         const { data, statusText } = await adminAPI.orders.getDetail({
           orderId: id
         });
+        console.log(data)
         if (statusText !== "OK" && data.status !== "success") {
           throw new Error(statusText);
         }
@@ -220,6 +222,11 @@ export default {
         };
         this.products = data.order.orderItems;
         this.originPrice = sum;
+        if(data.order.shipping_method === "0"){
+          this.feight = 100
+        }else{
+          this.feight = 0
+        }
       } catch (error) {
         Toast.fire({
           icon: "error",

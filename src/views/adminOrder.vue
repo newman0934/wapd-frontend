@@ -71,7 +71,7 @@
         </h3>
         <h3 class="my-2">
           運費：
-          <span>100</span>
+          <span>{{freight}}</span>
         </h3>
         <h3 class="my-2">
           總計：
@@ -118,7 +118,8 @@ export default {
       },
       coupon: 0,
       productItems: [],
-      originPrice: 0
+      originPrice: 0,
+      freight:0
     };
   },
   created() {
@@ -165,6 +166,12 @@ export default {
         };
         this.productItems = data.order.orderItems;
         this.originPrice = sum;
+        if(data.order.shipping_method === "0"){
+          this.freight = 100
+        }else{
+          this.freight = 0
+        }
+
       } catch (error) {
         Toast.fire({
           icon: "error",
