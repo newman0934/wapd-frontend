@@ -1,7 +1,10 @@
 <template>
   <div>
     <adminNav />
-    <div class="container">
+    <div v-if="isLoading">
+      <spinner />
+    </div>
+    <div v-else class="container">
       <div class="col-sm-6 mx-auto">
         <h3>商品ID：{{productStatus.ProductId}}</h3>
         <form class="mb-5">
@@ -60,12 +63,14 @@
   </div>
 </template>
 <script>
+import spinner from "./../components/spinner";
 import adminNav from "./../components/adminNav";
 import adminAPI from "./../apis/admin";
 import { Toast } from "./../utils/helpers";
 export default {
   components: {
-    adminNav
+    adminNav,
+    spinner
   },
   data() {
     return {
@@ -85,6 +90,9 @@ export default {
   computed: {
     isProcessing() {
       return this.$store.state.isProcessing;
+    },
+    isLoading() {
+      return this.$store.state.isLoading;
     }
   },
   beforeRouteUpdate(to, from, next) {
@@ -95,6 +103,7 @@ export default {
   methods: {
     async fetchAdminProductStatus(id, stock_id) {
       try {
+        this.$store.dispatch("updateLoading", true);
         const { data, statusText } = await adminAPI.products.getStatusDatail({
           id,
           stock_id
@@ -110,7 +119,9 @@ export default {
           size: data.productStatus.size,
           stock: data.productStatus.stock
         };
+        this.$store.dispatch("updateLoading", false);
       } catch (error) {
+        this.$store.dispatch("updateLoading", false);
         Toast.fire({
           icon: "error",
           title: "取得商品尺寸、顏色、庫存失敗"
