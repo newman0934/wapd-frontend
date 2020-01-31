@@ -1,7 +1,10 @@
 <template>
   <div>
     <admin-nav></admin-nav>
-    <form class="container mb-5" @submit.stop.prevent="handleSubmit($route.params.id)">
+    <div v-if="isLoading">
+      <spinner />
+    </div>
+    <form v-else class="container mb-5" @submit.stop.prevent="handleSubmit($route.params.id)">
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="name">名稱</label>
@@ -95,12 +98,14 @@
   </div>
 </template>
 <script>
+import spinner from "./../components/spinner";
 import adminNav from "./../components/adminNav";
 import adminAPI from "./../apis/admin";
 import { Toast } from "./../utils/helpers";
 export default {
   components: {
-    adminNav
+    adminNav,
+    spinner
   },
   data() {
     return {
@@ -124,6 +129,9 @@ export default {
   computed: {
     isProcessing() {
       return this.$store.state.isProcessing;
+    },
+    isLoading() {
+      return this.$store.state.isLoading;
     }
   },
   beforeRouteUpdate(to, from, next) {
@@ -134,6 +142,7 @@ export default {
   methods: {
     async fetchAdminProduct(id) {
       try {
+        this.$store.dispatch("updateLoading", true);
         const { data, statusText } = await adminAPI.products.getProductDetail({
           id
         });
@@ -149,24 +158,29 @@ export default {
           description: data.product.description
         };
         this.images = data.product.images;
+        this.$store.dispatch("updateLoading", false);
       } catch (error) {
+        this.$store.dispatch("updateLoading", false);
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "無法取得商品資訊"
         });
       }
     },
     async fetchAdminCategories() {
       try {
+        this.$store.dispatch("updateLoading", true);
         const { data, statusText } = await adminAPI.categories.get();
         if (statusText !== "OK") {
           throw new Error(statusText);
         }
 
         this.categories = data.categories;
+        this.$store.dispatch("updateLoading", false);
       } catch (error) {
+        this.$store.dispatch("updateLoading", false);
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "無法取得類別資料"
         });
       }
@@ -180,7 +194,7 @@ export default {
           !this.product.description
         ) {
           Toast.fire({
-            type: "warning",
+            icon: "warning",
             title: "請確認輸入的內容"
           });
           return;
@@ -199,11 +213,11 @@ export default {
           throw new Error(statusText);
         }
         this.$store.dispatch("updateProcessing", false);
-        this.$router.push({name:"adminProducts"});
+        this.$router.push({ name: "adminProducts" });
       } catch (error) {
         this.$store.dispatch("updateProcessing", false);
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "修改商品資料失敗"
         });
       }
@@ -219,12 +233,12 @@ export default {
         }
         this.images.splice(this.images.indexOf(imageid), 1);
         Toast.fire({
-          type: "success",
+          icon: "success",
           title: "成功刪除圖片!!"
         });
       } catch (error) {
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "刪除圖片失敗"
         });
       }

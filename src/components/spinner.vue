@@ -29,7 +29,7 @@
   }
 }
 .ldio-s8txmxlwrj div {
-  left: 94px;
+  /* left: 94px; */
   top: 48px;
   position: absolute;
   animation: ldio-s8txmxlwrj linear 1s infinite;

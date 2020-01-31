@@ -151,7 +151,7 @@ export default {
       try {
         if (!this.email || !this.password) {
           Toast.fire({
-            type: "warning",
+            icon: "warning",
             title: "請填入 email 和 password"
           });
           return;
@@ -170,7 +170,7 @@ export default {
         await this.$store.commit("setCurrentUser", data.user);
         await this.$store.dispatch("fetchUserFavorite", data.user.id);
         Toast.fire({
-          type: "success",
+          icon: "success",
           title: "登入成功"
         });
         // 成功登入後轉址到上一頁
@@ -180,7 +180,7 @@ export default {
         this.password = "";
         this.$store.dispatch("updateProcessing", false);
         Toast.fire({
-          type: "warning",
+          icon: "warning",
           title: "請確認您輸入的帳號密碼錯誤"
         });
       }
@@ -194,14 +194,14 @@ export default {
           !this.registerPasswordCheck
         ) {
           Toast.fire({
-            type: "warning",
+            icon: "warning",
             title: "請確認，註冊欄位皆需填寫"
           });
           return;
         }
         if (this.registerPassword !== this.registerPasswordCheck) {
           Toast.fire({
-            type: "warning",
+            icon: "warning",
             title: "兩次密碼不同"
           });
           return;
@@ -220,7 +220,7 @@ export default {
         //let data into Vuex
         this.$store.commit("setCurrentUser", data.user);
         Toast.fire({
-          type: "success",
+          icon: "success",
           title: "註冊成功"
         });
         // 成功登入後轉址到上一頁
@@ -231,7 +231,7 @@ export default {
         this.registerPassword = "";
         this.registerPasswordCheck = "";
         Toast.fire({
-          type: "warning",
+          icon: "warning",
           title: "請確認您註冊的帳號密碼是否正確"
         });
       }

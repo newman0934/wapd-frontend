@@ -184,14 +184,14 @@ export default {
     async addToCartSubmit() {
       if (!this.color || !this.size) {
         Toast.fire({
-          type: "warning",
+          icon: "warning",
           title: "請確認顏色、尺寸、數量皆需填寫！"
         });
         return;
       }
       if (this.quantity <= 0 && this.quantity >= 10) {
         Toast.fire({
-          type: "warning",
+          icon: "warning",
           title: "請確認確認數量喔！"
         });
         return;
@@ -206,7 +206,7 @@ export default {
           //update vuex
           await this.$store.dispatch("fetchUserCart", this.currentUser.id);
           Toast.fire({
-            type: "success",
+            icon: "success",
             title: "商品已加入購物車"
           });
         } else {
@@ -217,13 +217,13 @@ export default {
             throw new Error(statusText);
           }
           Toast.fire({
-            type: "success",
+            icon: "success",
             title: "商品已加入購物車，請登入查看購物車"
           });
         }
       } catch (error) {
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "商品暫時無法加入購物車，請稍後再試"
         });
       }

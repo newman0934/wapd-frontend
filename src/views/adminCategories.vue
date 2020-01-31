@@ -136,7 +136,7 @@ export default {
       } catch (error) {
         this.$store.dispatch("updateLoading", false);
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "無法取得類別"
         });
       }
@@ -145,7 +145,7 @@ export default {
       try {
         if (!this.newCategoryName) {
           Toast.fire({
-            type: "warning",
+            icon: "warning",
             title: "請輸入類別"
           });
           return;
@@ -170,7 +170,7 @@ export default {
       } catch (error) {
         this.$store.dispatch("updateProcessing", false);
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "無法新增類別"
         });
       }
@@ -192,7 +192,7 @@ export default {
       } catch (error) {
         this.$store.dispatch("updateProcessing", false);
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "無法修改類別"
         });
       }
@@ -214,7 +214,7 @@ export default {
       } catch (error) {
         this.$store.dispatch("updateProcessing", false);
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "無法刪除類別"
         });
       }

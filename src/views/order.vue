@@ -42,7 +42,7 @@
             <tr class="table-light">
               <th></th>
               <td colspan="3">運費</td>
-              <td>NTD amount</td>
+              <td>{{deliveryCost | currency}}</td>
             </tr>
             <tr v-if="coupon" class="table-light">
               <th></th>
@@ -124,6 +124,13 @@ export default {
         (t, p) => t + p.OrderItem.sell_price * p.OrderItem.quantity,
         0
       );
+    },
+    deliveryCost() {
+      if (this.order.paymentStatus == 1) {
+        return 100;
+      } else {
+        return 0;
+      }
     }
   },
   created() {
@@ -157,9 +164,10 @@ export default {
         };
         this.coupon = data.orders.Coupon;
         this.productItems = data.orders.items;
+        console.log(data);
       } catch (error) {
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "暫時無法取得訂單資料，請稍後再試"
         });
       }

@@ -206,7 +206,7 @@ export default {
       } catch (error) {
         this.$store.dispatch("updateLoading", false);
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "無法取得訂單資料"
         });
       }
@@ -227,7 +227,7 @@ export default {
         this.openOrderModal();
       } catch (error) {
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "暫無法查詢/更新訂單，請稍後再試"
         });
       }

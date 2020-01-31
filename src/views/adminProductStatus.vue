@@ -93,7 +93,7 @@ export default {
       } catch (error) {
         this.$store.dispatch("updateLoading", false);
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "無法取得商品狀態"
         });
       }
@@ -116,7 +116,7 @@ export default {
         );
       } catch (error) {
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "刪除商品資訊失敗"
         });
       }

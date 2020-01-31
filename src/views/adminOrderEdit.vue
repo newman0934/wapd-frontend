@@ -1,7 +1,10 @@
 <template>
   <div class="adminOrderEdit">
     <admin-nav></admin-nav>
-    <form class="container mb-5" @submit.stop.prevent="putAdminOrder($route.params.id)">
+    <div v-if="isLoading">
+      <spinner />
+    </div>
+    <form v-else class="container mb-5" @submit.stop.prevent="putAdminOrder($route.params.id)">
       <h3 class="container text-left">會員資料</h3>
       <div class="table-responsive-md">
         <table class="userInfo table container mb-5">
@@ -126,9 +129,9 @@
             <span>{{order.coupon.discount_amount}}</span>
           </h3>
           <h3 class="my-2">
-          運費：
-          <span>100</span>
-        </h3>
+            運費：
+            <span>{{feight}}</span>
+          </h3>
           <h3 class="my-2">
             總計：
             <span>{{order.totalPrice}}</span>
@@ -147,12 +150,14 @@
   </div>
 </template>
 <script>
+import spinner from "./../components/spinner";
 import adminNav from "./../components/adminNav";
 import adminAPI from "./../apis/admin";
 import { Toast } from "../utils/helpers";
 export default {
   components: {
-    adminNav
+    adminNav,
+    spinner
   },
   data() {
     return {
@@ -172,7 +177,8 @@ export default {
         coupon: {}
       },
       products: [],
-      originPrice: 0
+      originPrice: 0,
+      feight: 0
     };
   },
   created() {
@@ -184,16 +190,23 @@ export default {
     this.fetchAdminOrder(id);
     next();
   },
+  computed: {
+    isLoading() {
+      return this.$store.state.isLoading;
+    }
+  },
   methods: {
     async fetchAdminOrder(id) {
       try {
+        this.$store.dispatch("updateLoading", true);
         const { data, statusText } = await adminAPI.orders.getDetail({
           orderId: id
         });
+        console.log(data);
         if (statusText !== "OK" && data.status !== "success") {
           throw new Error(statusText);
         }
-        let sum = 0
+        let sum = 0;
         let priceArray = data.order.orderItems.map(item => {
           return item.SellPrice * item.quantity;
         });
@@ -213,25 +226,39 @@ export default {
           paymentStatus: data.order.payment_status,
           paymentMethod: data.order.payment_method,
           comment: data.order.comment,
-          coupon: data.order.coupon || { coupon_code: "沒有使用優惠卷", discount_amount: 0}
+          coupon: data.order.coupon || {
+            coupon_code: "沒有使用優惠卷",
+            discount_amount: 0
+          }
         };
         this.products = data.order.orderItems;
         this.originPrice = sum;
+        if (data.order.shipping_method === "0") {
+          this.feight = 100;
+        } else {
+          this.feight = 0;
+        }
+        this.$store.dispatch("updateLoading", false);
       } catch (error) {
+        this.$store.dispatch("updateLoading", false);
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "取得訂單資料失敗"
         });
       }
     },
     async putAdminOrder(id) {
       try {
-        if(!this.order.receiverName || !this.order.receiverPhone || !this.order.receiverAddress){
+        if (
+          !this.order.receiverName ||
+          !this.order.receiverPhone ||
+          !this.order.receiverAddress
+        ) {
           Toast.fire({
-            type:"error",
-            title:"請確認輸入的內容，每個欄位都要有資料"
-          })
-          return 
+            icon: "error",
+            title: "請確認輸入的內容，每個欄位都要有資料"
+          });
+          return;
         }
         this.$store.dispatch("updateProcessing", true);
         let e = window.event;
@@ -249,7 +276,7 @@ export default {
       } catch (error) {
         this.$store.dispatch("updateProcessing", false);
         Toast.fire({
-          type: "error",
+          icon: "error",
           title: "編輯訂單資料失敗"
         });
       }
