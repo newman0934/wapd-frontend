@@ -1,7 +1,10 @@
 <template>
   <div class="adminOrderEdit">
     <admin-nav></admin-nav>
-    <form class="container mb-5" @submit.stop.prevent="putAdminOrder($route.params.id)">
+    <div v-if="isLoading">
+      <spinner />
+    </div>
+    <form v-else class="container mb-5" @submit.stop.prevent="putAdminOrder($route.params.id)">
       <h3 class="container text-left">會員資料</h3>
       <div class="table-responsive-md">
         <table class="userInfo table container mb-5">
@@ -147,12 +150,14 @@
   </div>
 </template>
 <script>
+import spinner from "./../components/spinner";
 import adminNav from "./../components/adminNav";
 import adminAPI from "./../apis/admin";
 import { Toast } from "../utils/helpers";
 export default {
   components: {
-    adminNav
+    adminNav,
+    spinner
   },
   data() {
     return {
@@ -173,7 +178,7 @@ export default {
       },
       products: [],
       originPrice: 0,
-      feight:0
+      feight: 0
     };
   },
   created() {
@@ -185,13 +190,19 @@ export default {
     this.fetchAdminOrder(id);
     next();
   },
+  computed: {
+    isLoading() {
+      return this.$store.state.isLoading;
+    }
+  },
   methods: {
     async fetchAdminOrder(id) {
       try {
+        this.$store.dispatch("updateLoading", true);
         const { data, statusText } = await adminAPI.orders.getDetail({
           orderId: id
         });
-        console.log(data)
+        console.log(data);
         if (statusText !== "OK" && data.status !== "success") {
           throw new Error(statusText);
         }
@@ -222,12 +233,14 @@ export default {
         };
         this.products = data.order.orderItems;
         this.originPrice = sum;
-        if(data.order.shipping_method === "0"){
-          this.feight = 100
-        }else{
-          this.feight = 0
+        if (data.order.shipping_method === "0") {
+          this.feight = 100;
+        } else {
+          this.feight = 0;
         }
+        this.$store.dispatch("updateLoading", false);
       } catch (error) {
+        this.$store.dispatch("updateLoading", false);
         Toast.fire({
           icon: "error",
           title: "取得訂單資料失敗"
