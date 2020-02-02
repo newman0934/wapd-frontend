@@ -12,7 +12,7 @@
         <table class="table table-striped">
           <thead class="thead-dark">
             <tr>
-              <th scope="col">id</th>
+              <!-- <th scope="col">id</th> -->
               <th scope="col">名稱</th>
               <th scope="col">電話</th>
               <th scope="col">Email</th>
@@ -23,7 +23,7 @@
           </thead>
           <tbody>
             <tr v-for="user in users" :key="user.id">
-              <td scope="row">{{user.id}}</td>
+              <!-- <td scope="row">{{user.id}}</td> -->
               <td scope="row">{{user.name}}</td>
               <td scope="row">{{user.phone}}</td>
               <td scope="row">{{user.email}}</td>

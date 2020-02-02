@@ -72,8 +72,8 @@
                   v-model="order.shippingMethod"
                 >
                   <option value="0">宅配</option>
-                  <option value="1">超商</option>
-                  <option value="2">超商</option>
+                  <option value="1">超商取貨</option>
+                  <option value="2">超商取貨付款</option>
                 </select>
               </td>
               <td class="font-weight-bold">配送地址</td>
@@ -137,10 +137,10 @@
             <span>{{order.totalPrice}}</span>
           </h3>
         </div>
-        <div class="container text-left">
+        <!-- <div class="container text-left">
           <h3>備註</h3>
           <div>{{order.comment}}</div>
-        </div>
+        </div> -->
       </div>
       <div class="container">
         <a href="#" class="btn btn-outline-success mx-3 my-5" @click="$router.go(-1)">回上一頁</a>

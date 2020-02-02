@@ -15,7 +15,7 @@
         <table class="table table-striped">
           <thead class="thead-dark">
             <tr>
-              <th scope="col">id</th>
+              <!-- <th scope="col">id</th> -->
               <th scope="col">商品名稱</th>
               <th scope="col">商品分類</th>
               <th scope="col">價格</th>
@@ -26,7 +26,7 @@
           </thead>
           <tbody>
             <tr v-for="product in products" :key="product.id">
-              <td scope="col">{{product.id}}</td>
+              <!-- <td scope="col">{{product.id}}</td> -->
               <td scope="col">
                 <router-link :to="{name:'adminProduct',params:{id:product.id}}">{{product.name}}</router-link>
               </td>

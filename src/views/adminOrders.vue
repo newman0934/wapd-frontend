@@ -12,8 +12,8 @@
         <table class="table table-striped">
           <thead class="thead-dark">
             <tr>
-              <th scope="col">id</th>
-              <th scope="col">訂購會員ID</th>
+              <!-- <th scope="col">id</th> -->
+              <!-- <th scope="col">訂購會員ID</th> -->
               <th scope="col">收件人</th>
               <th scope="col">收件人電話</th>
               <th scope="col">訂單編號</th>
@@ -25,18 +25,18 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="order in filterOrders" :key="order.id">
-              <td scope="row">
-                <router-link :to="{name:'adminOrder', params:{ order_id:order.id }}">{{order.id}}</router-link>
-              </td>
-              <td scope="row">{{order.UserId}}</td>
+            <tr v-for="order in orders" :key="order.id">
+              <!-- <td scope="row">
+                {{order.id}}
+              </td> -->
+              <!-- <td scope="row">{{order.UserId}}</td> -->
               <td scope="row">{{order.receiver_name}}</td>
               <td scope="row">{{order.phone}}</td>
-              <td scope="row">{{order.sn || "訂單尚未成立"}}</td>
+              <td scope="row"><router-link :to="{name:'adminOrder', params:{ order_id:order.id }}">{{order.sn || "訂單尚未成立"}}</router-link></td>
               <td scope="row">{{order.total_price}}</td>
               <td scope="row">{{order.payment_method}}</td>
-              <td scope="row">{{order.payment_status==1?"已付款":"未付款"}}</td>
-              <td scope="row">{{order.shipping_status}}</td>
+              <td scope="row">{{order.payment_status==1?"已付款":order.payment_status==99?"取消付款":"尚未付款"}}</td>
+              <td scope="row">{{order.shipping_status==0?"尚未出貨":"已出貨"}}</td>
               <td scope="row">
                 <button
                   type="button"
@@ -173,9 +173,6 @@ export default {
     next();
   },
   computed: {
-    filterOrders() {
-      return this.orders.filter(order => order.payment_status !== "99");
-    },
     previousPage() {
       return this.currentPage === 1 ? null : this.currentPage - 1;
     },
@@ -195,6 +192,7 @@ export default {
         const { data, statusText } = await adminAPI.orders.get({
           page
         });
+        console.log(data)
         if (statusText !== "OK") {
           throw new Error(statusText);
         }
@@ -219,6 +217,8 @@ export default {
           amt,
           sn
         });
+
+        console.log(data)
         if (statusText !== "OK") {
           throw new Error(statusText);
         }
@@ -226,10 +226,11 @@ export default {
         await this.fetchAdminOrders(1);
         this.openOrderModal();
       } catch (error) {
-        Toast.fire({
-          icon: "error",
-          title: "暫無法查詢/更新訂單，請稍後再試"
-        });
+        // Toast.fire({
+        //   icon: "error",
+        //   title: "暫無法查詢/更新訂單，請稍後再試"
+        // });
+        console.log(error)
       }
     },
     openOrderModal() {
