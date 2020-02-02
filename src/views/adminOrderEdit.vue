@@ -72,8 +72,8 @@
                   v-model="order.shippingMethod"
                 >
                   <option value="0">宅配</option>
-                  <option value="1">超商</option>
-                  <option value="2">超商</option>
+                  <option value="1">超商取貨</option>
+                  <option value="2">超商取貨付款</option>
                 </select>
               </td>
               <td class="font-weight-bold">配送地址</td>
