@@ -82,10 +82,10 @@
             <span>{{order.totalPrice}}</span>
           </h3>
         </div>
-        <div class="container text-left">
+        <!-- <div class="container text-left">
           <h3>備註</h3>
           <div>{{order.comment}}</div>
-        </div>
+        </div> -->
       </div>
       <div class="container">
         <button @click="goToBack" class="btn btn-outline-success mx-3 my-5">回上一頁</button>

@@ -36,7 +36,7 @@
         <table class="table table-striped">
           <thead class="thead-dark">
             <tr>
-              <th scope="col">id</th>
+              <!-- <th scope="col">id</th> -->
               <th scope="col">類別名稱</th>
               <th scope="col">編輯</th>
               <th scope="col">刪除</th>
@@ -44,7 +44,7 @@
           </thead>
           <tbody>
             <tr v-for="category in categories" :key="category.id">
-              <td scope="row">{{category.id}}</td>
+              <!-- <td scope="row">{{category.id}}</td> -->
               <td class="position-relative">
                 <div v-show="!category.isEditing" class="category-name">{{ category.category }}</div>
                 <input

@@ -13,7 +13,7 @@
         <table class="table table-striped">
           <thead class="thead-dark">
             <tr>
-              <th scope="col">#</th>
+              <!-- <th scope="col">#</th> -->
               <th scope="col">顏色</th>
               <th scope="col">尺寸</th>
               <th scope="col">存貨</th>
@@ -23,7 +23,7 @@
           </thead>
           <tbody>
             <tr v-for="status in productStatus" :key="status.id">
-              <td scope="col">{{status.id}}</td>
+              <!-- <td scope="col">{{status.id}}</td> -->
               <td scope="col">{{status.color}}</td>
               <td scope="col">{{status.size}}</td>
               <td scope="col">{{status.stock}}</td>

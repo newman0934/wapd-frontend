@@ -38,7 +38,7 @@
         <table class="table table-striped">
           <thead class="thead-dark">
             <tr>
-              <th scope="col">id</th>
+              <!-- <th scope="col">id</th> -->
               <th scope="col">coupon code</th>
               <th scope="col">折扣金額</th>
               <th scope="col">刪除</th>
@@ -46,7 +46,7 @@
           </thead>
           <tbody>
             <tr v-for="coupon in coupons" :key="coupon.id">
-              <td scope="row">{{coupon.id}}</td>
+              <!-- <td scope="row">{{coupon.id}}</td> -->
               <td scope="row">{{coupon.coupon_code}}</td>
               <td scope="row">{{coupon.discount_amount}}</td>
               <td scope="row">
