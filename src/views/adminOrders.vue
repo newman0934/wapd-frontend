@@ -25,7 +25,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="order in filterOrders" :key="order.id">
+            <tr v-for="order in orders" :key="order.id">
               <!-- <td scope="row">
                 {{order.id}}
               </td> -->
@@ -173,9 +173,6 @@ export default {
     next();
   },
   computed: {
-    filterOrders() {
-      return this.orders.filter(order => order.payment_status !== "99");
-    },
     previousPage() {
       return this.currentPage === 1 ? null : this.currentPage - 1;
     },
