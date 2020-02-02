@@ -12,8 +12,8 @@
         <table class="table table-striped">
           <thead class="thead-dark">
             <tr>
-              <th scope="col">id</th>
-              <th scope="col">訂購會員ID</th>
+              <!-- <th scope="col">id</th> -->
+              <!-- <th scope="col">訂購會員ID</th> -->
               <th scope="col">收件人</th>
               <th scope="col">收件人電話</th>
               <th scope="col">訂單編號</th>
@@ -26,13 +26,13 @@
           </thead>
           <tbody>
             <tr v-for="order in filterOrders" :key="order.id">
-              <td scope="row">
-                <router-link :to="{name:'adminOrder', params:{ order_id:order.id }}">{{order.id}}</router-link>
-              </td>
-              <td scope="row">{{order.UserId}}</td>
+              <!-- <td scope="row">
+                {{order.id}}
+              </td> -->
+              <!-- <td scope="row">{{order.UserId}}</td> -->
               <td scope="row">{{order.receiver_name}}</td>
               <td scope="row">{{order.phone}}</td>
-              <td scope="row">{{order.sn || "訂單尚未成立"}}</td>
+              <td scope="row"><router-link :to="{name:'adminOrder', params:{ order_id:order.id }}">{{order.sn || "訂單尚未成立"}}</router-link></td>
               <td scope="row">{{order.total_price}}</td>
               <td scope="row">{{order.payment_method}}</td>
               <td scope="row">{{order.payment_status==1?"已付款":"未付款"}}</td>
