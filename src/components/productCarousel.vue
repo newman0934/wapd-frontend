@@ -22,6 +22,7 @@
               slot="image"
               class="card-img-top"
               :src="image.url"
+              style="cursor: pointer;"
               @click.stop.prevent="toggleImageUrl(image.url)"
             />
             <img slot="preloader" class="card-img-top" src="./../static/1260x750.png" />
