@@ -103,7 +103,6 @@ export default {
         this.token = data.token;
         this.tokenValidation = data.status == "success" ? true : false;
       } catch (error) {
-        console.log(error);
         Toast.fire({
           icon: "error",
           title: "網址有誤，請確認後再試"

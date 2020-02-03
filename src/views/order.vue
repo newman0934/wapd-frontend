@@ -1,6 +1,9 @@
 <template>
   <div class="container mt-4">
-    <div class="row">
+    <div v-if="isLoading">
+      <spinner />
+    </div>
+    <div v-else class="row">
       <div class="col-md-8">
         <h5>訂單編號#{{order.sn}}</h5>
         <table class="table table-striped">
@@ -17,7 +20,7 @@
             <tr v-for="product in productItems" :key="product.id">
               <th scope="row">
                 <img
-                  src="https://picsum.photos/id/1004/5616/3744"
+                  :src="product.Images[0].url"
                   class="img-fluid"
                   alt="Responsive image"
                   width="150px"
@@ -76,11 +79,11 @@
             </tr>
             <tr>
               <th scope="row">運送狀態</th>
-              <td>{{order.shippingStatus}}</td>
+              <td>{{order.shippingStatus==0? "尚未出貨": "其他"}}</td>
             </tr>
             <tr>
               <th scope="row">付款方式</th>
-              <td>{{order.paymentMethod}}</td>
+              <td>{{payment}}</td>
             </tr>
             <tr>
               <th scope="row">出貨時間</th>
@@ -94,11 +97,15 @@
 </template>
 <script>
 import usersAPI from "./../apis/users";
+import spinner from "./../components/spinner";
 import { mapState } from "vuex";
 import { currencyFilter } from "../utils/mixins";
 import { Toast } from "./../utils/helpers";
 export default {
   mixins: [currencyFilter],
+  components: {
+    spinner
+  },
   data() {
     return {
       order: {
@@ -118,7 +125,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["currentUser"]),
+    ...mapState(["currentUser", "isLoading"]),
     subtotal() {
       return this.productItems.reduce(
         (t, p) => t + p.OrderItem.sell_price * p.OrderItem.quantity,
@@ -131,6 +138,15 @@ export default {
       } else {
         return 0;
       }
+    },
+    payment() {
+      const methodsToChinese = {
+        null: "尚未付款",
+        CREDIT: "信用卡",
+        CVSCOM: "超商貨到付款"
+      };
+      let method = this.order.paymentMethod;
+      return methodsToChinese[method];
     }
   },
   created() {
@@ -145,6 +161,7 @@ export default {
   methods: {
     async fetchUserOrder(orderId) {
       try {
+        this.$store.dispatch("updateLoading", true);
         const { data, statusText } = await usersAPI.getUserOrder({
           orderId
         });
@@ -164,8 +181,9 @@ export default {
         };
         this.coupon = data.orders.Coupon;
         this.productItems = data.orders.items;
-        console.log(data);
+        this.$store.dispatch("updateLoading", false);
       } catch (error) {
+        this.$store.dispatch("updateLoading", false);
         Toast.fire({
           icon: "error",
           title: "暫時無法取得訂單資料，請稍後再試"
