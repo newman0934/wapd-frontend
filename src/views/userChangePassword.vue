@@ -21,7 +21,7 @@
         </div>
         <div class="form-label-group mb-2">
           <label for="name" class="d-flex">新密碼:</label>
-          <ValidationProvider rules="required|password" v-slot="{ errors }">
+          <ValidationProvider rules="required|password" v-slot="{ errors }" vid="newPassword">
             <input
               id="new-password"
               name="newPassword"

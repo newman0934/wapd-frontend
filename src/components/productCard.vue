@@ -65,10 +65,9 @@
               type="button"
               class="btn text-danger mr-2 mt-n1"
               data-container="body"
-              data-toggle="popover"
+              data-toggle="popover-hover"
               data-placement="bottom"
-              data-content="立即登入/註冊"
-              @mouseover="heartToggle"
+              data-content="<a href='/#/signin'>立即登入/註冊</a>"
             >
               <font-awesome-icon class="heart-icon" :icon="['far', 'heart']" />
             </button>
@@ -106,6 +105,15 @@ export default {
     //this.sizeSet = this.fetchSizeSet();
     this.cardImg = this.product.image[0].url;
   },
+  mounted() {
+    $(function() {
+      $('[data-toggle="popover-hover"]').popover({
+        html: true,
+        trigger: "hover",
+        delay: { hide: 500 }
+      });
+    });
+  },
   computed: {
     isAuthenticated() {
       return this.$store.state.isAuthenticated;
@@ -139,9 +147,6 @@ export default {
       } catch (error) {
         return false;
       }
-    },
-    heartToggle() {
-      $('[data-toggle="popover"]').popover();
     },
     imgMouseover(imgs) {
       this.cardImg = imgs[1].url;
