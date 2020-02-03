@@ -1,6 +1,6 @@
 <template>
   <div class="pt-3">
-    <div class="header">
+    <div class="header" id="aboutUs">
       <div class="info">
         <h1>WE ALWAYS PERSIST IN DREAM</h1>
         <p>

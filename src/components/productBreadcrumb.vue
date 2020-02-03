@@ -27,9 +27,6 @@ export default {
       required: true
     }
   },
-  created() {
-    console.log(this.path);
-  },
   data() {
     return {
       product: this.path
