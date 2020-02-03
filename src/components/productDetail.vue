@@ -97,7 +97,7 @@
       <social-sharing :url="currentURL" class="d-inline" inline-template>
         <div id="sharing-icon">
           <network class="mr-2 text-primary" network="facebook">
-            <font-awesome-icon :icon="['fab', 'facebook']" size="2x" />
+            <font-awesome-icon :icon="['fab', 'facebook-square']" size="2x" />
           </network>
           <network class="text-success" network="line">
             <font-awesome-icon :icon="['fab', 'line']" size="2x" />

@@ -1,6 +1,9 @@
 <template>
   <div class="container py-5">
-    <div class="row">
+    <div v-if="products.length == 0">
+      <h3 class="mt-4">您還沒加入商品到Wish List喔，快去商場看看吧！</h3>
+    </div>
+    <div v-else class="row">
       <productCard v-for="product in products" :key="product.id" :initial-product="product" />
     </div>
   </div>
