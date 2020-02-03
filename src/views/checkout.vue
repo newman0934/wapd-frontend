@@ -394,7 +394,6 @@ export default {
         if (statusText !== "OK" || data.status !== "success") {
           throw new Error(statusText);
         }
-        console.log(data);
         Toast.fire({
           icon: "success",
           title: "使用者資料更新成功"
@@ -439,7 +438,6 @@ export default {
         if (data.status === "success") {
           this.$router.push(`/orders/${orderId}/payment`);
         }
-        console.log(data);
       } catch (error) {
         console.log(error);
       }
