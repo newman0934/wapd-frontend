@@ -26,7 +26,13 @@
                   <router-link class="nav-link" :to="{name:'index'}">HOME</router-link>
                 </li>
                 <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
-                  <router-link class="nav-link" :to="{name:'about'}">關於我們</router-link>
+                  <a
+                    v-if="inAboutPage"
+                    class="nav-link"
+                    v-scroll-to="'#aboutUs'"
+                    style="cursor: pointer;"
+                  >關於我們</a>
+                  <router-link v-else class="nav-link" :to="{name:'about'}">關於我們</router-link>
                 </li>
 
                 <li class="nav-item dropdown my-auto pl-4 pl-md-0 ml-0 ml-md-4">
@@ -50,9 +56,15 @@
 
                 <!-- <li class="nav-item pl-4 my-auto">
                   <router-link class="nav-link" :to="{name:'index'}">FAQ</router-link>
-                </li> -->
+                </li>-->
                 <li class="nav-item pl-4 my-auto">
-                  <a class="navbar-link" href="#" @click.stop.prevent="gotoContact('#contact')">聯絡我們</a>
+                  <a v-if="inAboutPage" class="navbar-link" v-scroll-to="'#contact'" href="#">聯絡我們</a>
+                  <a
+                    v-else
+                    class="navbar-link"
+                    href="#"
+                    @click.stop.prevent="gotoContact('#contact')"
+                  >聯絡我們</a>
                 </li>
                 <template v-if="!isAuthenticated || !currentUser.role === 'admin'">
                   <li class="nav-item pl-4 my-auto pl-md-0 ml-0 ml-md-4">
@@ -102,7 +114,6 @@
 </template>
 <script>
 import { mapState } from "vuex";
-
 import categoriesAPI from "./../apis/categories";
 import { Toast } from "./../utils/helpers";
 export default {
@@ -113,7 +124,14 @@ export default {
   },
 
   computed: {
-    ...mapState(["currentUser", "isAuthenticated"])
+    ...mapState(["currentUser", "isAuthenticated"]),
+    inAboutPage() {
+      if (this.$route.name == "about") {
+        return true;
+      } else {
+        return false;
+      }
+    }
   },
   created() {
     this.fetchCategories();
