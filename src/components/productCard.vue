@@ -67,7 +67,7 @@
               data-container="body"
               data-toggle="popover-hover"
               data-placement="bottom"
-              data-content="<a href='/#/signin'>立即登入/註冊</a>"
+              :data-content="dataContent"
             >
               <font-awesome-icon class="heart-icon" :icon="['far', 'heart']" />
             </button>
@@ -121,8 +121,12 @@ export default {
     isProcessing() {
       return this.$store.state.isProcessing;
     },
-    isLoading() {
-      return this.$store.state.isLoading;
+    dataContent() {
+      if (process.env.NODE_ENV == "development") {
+        return "<a href='/#/signin'>立即登入/註冊</a>";
+      } else {
+        return "<a href='/wapd-frontend/#/signin'>立即登入/註冊</a>";
+      }
     }
   },
   methods: {
