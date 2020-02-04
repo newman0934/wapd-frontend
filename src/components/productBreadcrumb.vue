@@ -6,7 +6,7 @@
         <span class="divider">></span>
       </li>
       <li>
-        <router-link :to="{name:'products'}">store</router-link>
+        <router-link :to="{name:'products'}">購物商城</router-link>
         <span class="divider">></span>
       </li>
       <li>
