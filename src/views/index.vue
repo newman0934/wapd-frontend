@@ -10,7 +10,12 @@
           <h1>最新商品</h1>
           <hr />
           <div class="row">
-            <productCard v-for="product in products" :key="product.id" :initial-product="product" />
+            <productCard
+              v-for="product in products"
+              :key="product.id"
+              :initial-product="product"
+              :card-height="productCardHeight"
+            />
           </div>
           <hr />
           <index-category></index-category>
@@ -36,7 +41,8 @@ export default {
   },
   data() {
     return {
-      products: []
+      products: [],
+      productCardHeight: 31.5
     };
   },
   computed: {
