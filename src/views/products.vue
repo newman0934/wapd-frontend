@@ -9,7 +9,12 @@
       </div>
       <div class="col-md-10">
         <div class="row">
-          <productCard v-for="product in products" :key="product.id" :initial-product="product" />
+          <productCard
+            v-for="product in products"
+            :key="product.id"
+            :initial-product="product"
+            :card-height="productCardHeight"
+          />
         </div>
         <productsPagination
           v-if="totalPage>1"
@@ -42,7 +47,8 @@ export default {
       categories: [],
       categoryId: "",
       currentPage: 1,
-      totalPage: 0
+      totalPage: 0,
+      productCardHeight: 26.5
     };
   },
   computed: {

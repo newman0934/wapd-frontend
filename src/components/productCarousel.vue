@@ -1,9 +1,9 @@
 <template>
   <div>
     <div>
-      <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+      <div class="carousel">
         <div class="carousel-inner">
-          <div v-for="image in images" :key="image.id" class="carousel-item active">
+          <div class="carousel-item active">
             <vue-load-image>
               <img slot="image" :src="imageUrl" class="d-block w-100" alt="slide" />
               <img slot="preloader" class="d-block w-100" src="./../static/loading.gif" />
@@ -15,7 +15,7 @@
     </div>
 
     <div class="row mt-2 mb-2">
-      <div v-for="image in images" :key="image.id" class="col-xs-2 col-sm-2 col-md-2">
+      <div v-for="image in images" :key="image.id" class="col-2 col-sm-2 col-md-2">
         <div class="card">
           <vue-load-image>
             <img

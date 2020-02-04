@@ -2,10 +2,7 @@
   <div class="col-md-6 col-lg-4">
     <div class="card mb-3" id="product-card">
       <router-link :to="{name:'product', params:{id:product.id}}">
-        <div
-          class="image-frame border rounded"
-          style="height:31.5rem;line-height: 31.5rem; background:#f2f2f2"
-        >
+        <div class="image-frame border rounded" :style="imageFrameStyle">
           <div style="vertical-align: middle;">
             <vue-load-image>
               <img
@@ -14,7 +11,7 @@
                 class="img-fluid"
                 :src="cardImg"
                 alt="card-image-cap"
-                style="max-height=31.5rem; transition: opacity .5s linear;"
+                :style="imageStyle"
               />
               <!-- <img slot="preloader" class="img-fluid" src="./../static/1260x750.png" /> -->
               <div slot="error" class="align-middle">圖片下載失敗</div>
@@ -27,7 +24,7 @@
         </div>
       </router-link>
       <div class="row ml-1 mt-0">
-        <div class="col">
+        <div class="col-8">
           <p class="price text-left">
             <span class="text-muted font-weight-bold mr-1">
               <del>{{product.origin_price | currency}}</del>
@@ -36,7 +33,7 @@
           </p>
         </div>
 
-        <div v-if="isAuthenticated" class="col text-right position-relative">
+        <div v-if="isAuthenticated" class="col-4 text-right position-relative">
           <div class="d-inline">
             <button
               v-if="product.isFavorited"
@@ -59,7 +56,7 @@
           </div>
         </div>
 
-        <div v-else class="col text-right position-relative">
+        <div v-else class="col-4 text-right position-relative">
           <div class="d-inline">
             <button
               type="button"
@@ -90,6 +87,10 @@ export default {
     initialProduct: {
       type: Object,
       required: true
+    },
+    cardHeight: {
+      type: Number,
+      required: true
     }
   },
   data() {
@@ -97,7 +98,15 @@ export default {
       product: this.initialProduct,
       //colorSet: [],
       //sizeSet: [],
-      cardImg: ""
+      cardImg: "",
+      imageFrameStyle: {
+        height: this.cardHeight + "rem",
+        lineHeight: this.cardHeight + "rem",
+        background: "#f2f2f2"
+      },
+      imageStyle: {
+        maxHeight: this.cardHeight + "rem"
+      }
     };
   },
   created() {
