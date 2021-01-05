@@ -18,7 +18,7 @@
     "@uppy/file-input": "^1.4.1",
     "@uppy/url": "^1.4.1",
     "@uppy/xhr-upload": "^1.4.1",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "bootstrap": "^4.4.1",
     "core-js": "^3.4.3",
     "jquery": "^3.4.1",
